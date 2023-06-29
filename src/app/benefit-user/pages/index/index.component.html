@@ -1,0 +1,110 @@
+<div class="row mt-5">
+  <div class="col">
+
+    <form [formGroup]="viewBenefitUser">
+      <div class="row p-3">
+
+        <div class="col-3">
+          <div class=" input-group">
+            <label class="input-group-text" for="years">Año</label>
+            <select class="form-select" formControlName="years" (change)="getBenefitDetail($event)">
+              <option *ngFor="let year of years" value="{{ year }}">{{ year }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-9">
+          <div class=" input-group">
+            <label class="input-group-text" for="user">Colaborador</label>
+            <select class="form-select" formControlName="users" (change)="getBenefitDetail($event)">
+
+              <option value=" {{ user?.id }}">
+                {{user?.name}}
+              </option>
+
+              <option *ngFor="let user of user?.subordinates" value=" {{ user.id }}">
+                {{user.name}}
+              </option>
+
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<div *ngIf="viewBenefitUser.valid; then BenefitDetailTemplate"></div>
+<hr>
+
+<div class="row p-3">
+  <h2>Calendario de beneficios MiViernes - Mis colaboradores</h2>
+</div>
+
+<div class="row pb-3">
+  <calendar-component [data]="calendarData"></calendar-component>
+</div>
+
+
+
+
+<!-- <div class="row">
+  <div class="col-6">
+    <bar-chart-component [input]="onClickString"></bar-chart-component>
+  </div>
+
+  <div class="col-6">
+    <calendar-component></calendar-component>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-6">
+    <doughnut-chart-component></doughnut-chart-component>
+  </div>
+
+</div> -->
+
+
+<ng-template #BenefitDetailTemplate>
+  <hr>
+  <div class="row p-3">
+    <h2>Detalle de beneficios de {{ currentUserBenefits?.name }}</h2>
+  </div>
+
+  <div class="row">
+
+    <div *ngFor="let benefit of benefits" class="col-3 my-2">
+      <div class="card">
+        <div class="card-header">
+          {{ benefit.name }}
+        </div>
+
+        <ul class="list-group list-group-flush" [innerHTML]="selectBenefit(benefit.id!)"></ul>
+
+        <div *ngIf="benefit.name === 'Mi Banco de Horas' ">
+          <doughnut-chart-component [totalBancoHoras]="totalBancoHoras"></doughnut-chart-component>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+
+
+
+
+
+<!-- <button class="btn btn-primary" (click)="emitir()">
+  Emitir
+</button> -->
+
+<!-- <pre>
+  {{ user | json }}
+</pre>
+<br> -->

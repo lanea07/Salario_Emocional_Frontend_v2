@@ -1,0 +1,28 @@
+<div class="row mt-5">
+  <div class="col">
+    <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
+
+      <div class="mb-3">
+        <label class="form-label" for="name">Nombre del Beneficio</label>
+        <input [ngClass]="{'invalid': campoEsValido('name')}" class="form-control" type="text" formControlName="name"
+          id="name" placeholder="Nombre Completo">
+        <span class="form-text text-danger" *ngIf="campoEsValido('name')">Obligatorio</span>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="time_hours">Tiempo en horas (Opcional)</label>
+        <input [ngClass]="{'invalid': campoEsValido('time_hours')}" class="form-control" type="number"
+          formControlName="time_hours" id="time_hours" placeholder="Nombre Completo">
+        <span class="form-text text-danger" *ngIf="campoEsValido('time_hours')">Si es diligenciado, asegúrese que sea
+          mayor que cero</span>
+      </div>
+
+      <div class="mb-3">
+        <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
+          {{ ( benefitDetail.id ) ? 'Actualizar' : 'Crear' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

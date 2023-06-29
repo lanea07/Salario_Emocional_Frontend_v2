@@ -1,0 +1,100 @@
+<nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary sticky-top" data-bs-theme="dark">
+  <div class="container-fluid">
+
+    <a class="navbar-brand">
+      <img src="/assets/images/pajaro_transparencia.png" height="40px;">
+      Salario Emocional
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+        <!-- Beneficios -->
+        <li class="nav-item dropdown" *ngIf="isAdmin">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+            [class.active]="router.isActive('/benefit', false)">
+            Beneficios
+          </a>
+          <ul class=" dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/benefit/create">Nuevo</a></li>
+            <li><a class="dropdown-item" routerLink="/benefit/index">Listado</a></li>
+          </ul>
+        </li>
+
+        <!-- Beneficios Detalles -->
+        <li class="nav-item dropdown" *ngIf="isAdmin">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+            [class.active]="router.isActive('/benefit-detail', false)">
+            Beneficios - Detalles
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/benefit-detail/create" routerLinkActive="active">Nuevo</a></li>
+            <li><a class="dropdown-item" routerLink="/benefit-detail/index" routerLinkActive="active">Listado</a></li>
+          </ul>
+        </li>
+
+        <!-- Beneficios Empleados -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+            [class.active]="router.isActive('/benefit-employee', false)">
+            Beneficios - Empleados
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/benefit-employee/create" routerLinkActive="active">Nuevo</a></li>
+            <li><a class="dropdown-item" routerLink="/benefit-employee/index" routerLinkActive="active">Listado</a></li>
+          </ul>
+        </li>
+
+        <!-- Cargos -->
+        <li class="nav-item dropdown" *ngIf="isAdmin">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+            [class.active]="router.isActive('/position', false)">
+            Cargos
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/position/create" routerLinkActive="active">Nuevo</a></li>
+            <li><a class="dropdown-item" routerLink="/position/index" routerLinkActive="active">Listado</a></li>
+          </ul>
+        </li>
+
+        <!-- Usuarios -->
+        <li class="nav-item dropdown" *ngIf="isAdmin">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+            [class.active]="router.isActive('/user', false)">
+            Usuarios
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/user/create" routerLinkActive="active">Nuevo</a></li>
+            <li><a class="dropdown-item" routerLink="/user/index" routerLinkActive="active">Listado</a></li>
+          </ul>
+        </li>
+
+        <!-- Roles -->
+        <li class="nav-item dropdown" *ngIf="isAdmin">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+            [class.active]="router.isActive('/role', false)">
+            Roles
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/role/create" routerLinkActive="active">Nuevo</a></li>
+            <li><a class="dropdown-item" routerLink="/role/index" routerLinkActive="active">Listado</a></li>
+          </ul>
+        </li>
+
+      </ul>
+
+      <button class="btn btn-outline-light btn-sm" (click)="logout()">
+        Cerrar Sesión
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+
+    </div>
+
+  </div>
+</nav>

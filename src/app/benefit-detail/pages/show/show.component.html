@@ -1,0 +1,54 @@
+<div class="row mt-5">
+  <div class="col">
+
+    <div class="row p-5">
+
+      <div class="col-12 d-flex flex-column">
+        <div *ngIf="!loaded">
+          <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+        </div>
+        {{ benefitDetail.name }}
+        <span class="form-text">Nombre</span>
+      </div>
+
+    </div>
+
+    <div class="row p-5">
+
+      <div class="col-12">
+
+        <div *ngIf="!loaded else benefitdetail">
+          <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="btn-group float-end mt-5 mb-5">
+      <a routerLink="/benefit-detail/edit/{{benefitDetail.id}}" class="btn btn-warning" aria-current="page">Editar</a>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Templates -->
+
+<ng-template #benefitdetail>
+  <table class="table table-hover table-sm">
+    <thead class="bg-dark text-light">
+      <tr>
+        <th>Beneficio al que pertenece</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let benefit of benefitDetail.benefit">
+        <td>
+          <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+            routerLink="/benefit/show/{{ benefit.id }}">{{ benefit.name }}</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>

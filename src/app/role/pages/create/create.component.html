@@ -1,0 +1,20 @@
+<div class="row mt-5">
+  <div class="col">
+    <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
+
+      <div class="mb-3">
+        <label class="form-label" for="name">Nombre del Rol</label>
+        <input [ngClass]="{'invalid': campoEsValido('name')}" class="form-control" type="text" formControlName="name"
+          id="name" placeholder="Nombre Completo">
+        <span class="form-text text-danger" *ngIf="campoEsValido('name')">Obligatorio</span>
+      </div>
+
+      <div class="mb-3">
+        <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
+          {{ ( role.id ) ? 'Actualizar' : 'Crear' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

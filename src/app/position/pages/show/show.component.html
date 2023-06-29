@@ -1,0 +1,22 @@
+<div class="row mt-5">
+  <div class="col">
+
+    <div class="row p-5">
+
+      <div class="col-12 d-flex flex-column">
+        <div *ngIf="!loaded">
+          <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+        </div>
+        {{ position?.name }}
+        <span class="form-text">Nombre</span>
+      </div>
+
+    </div>
+
+    <div class="btn-group float-end mt-5 mb-5">
+      <a routerLink="/position/edit/{{position?.id}}" class="btn btn-warning" aria-current="page">Editar</a>
+      <a class="btn btn-outline-danger" (click)="destroy()">Eliminar</a>
+    </div>
+
+  </div>
+</div>

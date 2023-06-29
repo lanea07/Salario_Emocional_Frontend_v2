@@ -1,0 +1,23 @@
+<div class="row mt-5">
+  <div class="col">
+    <table class="table table-hover table-sm">
+      <thead class="bg-dark text-light">
+        <tr>
+          <th>Nombre</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let role of roles">
+          <td>{{ role?.name }}</td>
+          <td>
+            <a routerLink="/role/show/{{ role.id }}">
+              Detalle
+              <i class="fa-solid fa-circle-info fa-xs"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="row mt-5">
+  <div class="col">
+    <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
+
+      <div class="row mb-3">
+        <div class="col-6 px-2 d-flex flex-row">
+
+          <ngb-datepicker class="m-2" #dp formControlName="model" (navigate)="date = $event.next" required
+            [ngClass]="{'invalid': campoEsValido('model')}"></ngb-datepicker>
+          <ngb-timepicker class="m-2" formControlName="time" required
+            [ngClass]="{'invalid': campoEsValido('time')}"></ngb-timepicker>
+
+        </div>
+        <div class="col-6 px-2 d-flex flex-column justify-content-evenly">
+
+          <div>
+            <label for="benefit">Selecciona un colaborador</label>
+            <select class="form-select" formControlName="user_id" id="user_id" required
+              [ngClass]="{'invalid': campoEsValido('user_id')}">
+              <option value="">-- Seleccione Colaborador --</option>
+              <option *ngFor="let user of users" value="{{ user.id }}">{{ user.name }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="benefit">Selecciona un beneficio</label>
+            <select class="form-select" formControlName="benefit_id" id="benefit_id" required
+              [ngClass]="{'invalid': campoEsValido('benefit_id')}">
+              <option value="">-- Seleccione Beneficio --</option>
+              <option *ngFor="let benefit of benefits" value="{{ benefit.id }}">{{ benefit.name }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="benefit_detail">Selecciona un Detalle</label>
+            <select class="form-select" formControlName="benefit_detail_id" id="benefit_detail_id" required
+              [ngClass]="{'invalid': campoEsValido('benefit_detail_id')}">
+              <option *ngFor="let benefit_detail of benefit_details" value="{{ benefit_detail.id }}">
+                {{ benefit_detail.name }}</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <input type="hidden" formControlName="benefit_begin_time" value="{{ benefit_begin_time }}">
+      <input type="hidden" formControlName="benefit_end_time">
+
+      <div class="mb-3">
+        <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
+          <!-- {{ ( benefits ) ? 'Actualizar' : 'Crear' }} -->
+          Crear
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
+<pre>{{ createForm.value | json }}</pre>
+<br>
+
+<pre>{{ createForm.get('model')!.valid | json }}</pre>

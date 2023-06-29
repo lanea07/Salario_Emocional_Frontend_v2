@@ -1,0 +1,29 @@
+<div class="row mt-5">
+  <div class="col">
+    <table class="table table-hover table-sm">
+      <thead class="bg-dark text-light">
+        <tr>
+          <th>Nombre</th>
+          <th>Beneficio Asociado</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let benefitDetail of benefitDetails">
+          <td>{{ benefitDetail.name }}</td>
+          <td>
+            <a *ngFor="let benefit of benefitDetail.benefit"
+              class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover px-1"
+              routerLink="/benefit/show/{{ benefit.id }}">{{ benefit.name }}</a>
+          </td>
+          <td>
+            <a routerLink="/benefit-detail/show/{{ benefitDetail.id }}">
+              Detalle
+              <i class="fa-solid fa-circle-info fa-xs"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

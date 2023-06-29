@@ -1,0 +1,42 @@
+<div class="row mt-5">
+  <div class="col">
+    <table class="table table-hover table-sm">
+      <thead class="bg-dark text-light">
+        <tr>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Roles</th>
+          <th>Cargo</th>
+          <th>Jefe Directo</th>
+          <th>Empleados a cargo</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.name }}</td>
+          <td>
+            <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              href="mailto:{{ user.email }}">{{ user.email }}</a>
+          </td>
+          <td>
+            <div *ngFor="let role of user.roles">
+              {{ role.name }}
+            </div>
+          </td>
+          <td>
+            {{ user.positions!.name }}
+          </td>
+          <td>{{ user.leader?.name }}</td>
+          <td>{{ user.subordinates?.length }}</td>
+          <td>
+            <a routerLink="/user/show/{{ user.id }}">
+              Detalle
+              <i class="fa-solid fa-circle-info fa-xs"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
