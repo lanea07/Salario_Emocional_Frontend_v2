@@ -7,12 +7,12 @@ import { tap, switchMap } from 'rxjs/operators';
 import { NgbTimeAdapter, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { addHours } from 'date-fns';
 import { formatDate } from '@angular/common';
-import { BenefitUserService } from '../../services/benefit-user.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { UserService } from '../../../user/services/user.service';
 import { User } from '../../../user/interfaces/user.interface';
 import { AuthService } from '../../../auth/services/auth.service';
+import { BenefitUserService } from '../../services/benefit-user.service';
 
 const pad = ( i: number ): string => ( i < 10 ? `0${ i }` : `${ i }` );
 
@@ -47,19 +47,22 @@ export class CreateComponent implements OnInit {
   benefits!: Benefit[];
   benefit_details?: BenefitDetail[];
   createForm: FormGroup = this.fb.group( {
-    benefit_id: [ '', Validators.required ],
-    benefit_detail_id: [ '', Validators.required ],
+    benefit_id: [ { value: '', disabled: true }, Validators.required ],
+    benefit_detail_id: [ { value: '', disabled: true }, Validators.required ],
     time: [ '', Validators.required ],
     model: [ '', Validators.required ],
     benefit_begin_time: [ '' ],
     benefit_end_time: [ '' ],
-    user_id: [ '' ]
+    user_id: [ { value: '', disabled: true } ]
   } );
   date!: { year: number, month: number };
   time!: { hour: number, minute: number };
   selectedBenefitDetail?: BenefitDetail;
   benefit_begin_time!: string;
   users!: User[];
+  meridian: boolean = true;
+  userAndBenefitSpinner: boolean = true;
+  benefitDetailSpinner: boolean = true;
 
 
   constructor (
@@ -82,12 +85,20 @@ export class CreateComponent implements OnInit {
             : this.userService.show( Number.parseInt( localStorage.getItem( 'uid' )! ) );
         } )
       )
-      .subscribe( users => this.users = Object.values( users ) );
+      .subscribe( users => {
+        this.users = Object.values( users );
+        this.createForm.get( 'user_id' )?.enable();
+      } );
 
     // this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
     this.benefitService.index()
       .subscribe( {
-        next: ( benefits ) => this.benefits = benefits,
+        next: ( benefits ) => {
+          this.benefits = benefits;
+          this.createForm.get( 'benefit_id' )?.enable();
+          this.userAndBenefitSpinner = false;
+
+        },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );
           Swal.fire( {
@@ -108,17 +119,23 @@ export class CreateComponent implements OnInit {
       .pipe(
         tap( ( _ ) => {
           this.createForm.get( 'benefit_detail_id' )?.reset( '' );
+          if ( this.createForm.get( 'benefit_id' )?.valid ) this.benefitDetailSpinner = false;
         } ),
         switchMap( benefit => this.benefitService.show( benefit ) )
       )
       .subscribe( benefit_details => {
-        this.benefit_details = Object.values( benefit_details )[ 0 ].benefit_detail
+        this.benefit_details = Object.values( benefit_details )[ 0 ].benefit_detail;
+        if ( this.createForm.get( 'benefit_id' )?.valid ) {
+          this.benefitDetailSpinner = true;
+          this.createForm.get( 'benefit_detail_id' )?.enable();
+        }
       } );
 
     this.createForm.get( 'benefit_detail_id' )?.valueChanges
       .subscribe( currentBenefitDetail => {
         this.selectedBenefitDetail = this.benefit_details?.find( benefits => benefits.id === Number.parseInt( currentBenefitDetail ) );
       } );
+
   }
 
   ngAfterViewChecked (): void {
@@ -139,8 +156,22 @@ export class CreateComponent implements OnInit {
     let date = `${ this.createForm.get( 'model' )?.value[ 'year' ] }-${ this.createForm.get( 'model' )?.value[ 'month' ] }-${ this.createForm.get( 'model' )?.value[ 'day' ] } ${ this.createForm.get( 'time' )?.value }`;
     this.createForm.get( 'benefit_begin_time' )?.setValue( formatDate( new Date( date ), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
     this.createForm.get( 'benefit_end_time' )?.setValue( formatDate( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ).toString(), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
-    // this.benefitUserService.create( this.createForm.value )
-    //   .subscribe( benefitUserCreated => this.router.navigateByUrl( `/benefit-employee/index` ) );
+    this.benefitUserService.create( this.createForm.value )
+      .subscribe( {
+        next: ( resp ) => {
+          Swal.fire( {
+            title: 'Creado',
+            text: JSON.stringify( resp ),
+            icon: 'success',
+            showClass: {
+              popup: 'animate__animated animate__fadeIn'
+            },
+            hideClass: {
+              popup: 'animate__animated animate__fadeOutUp'
+            }
+          } )
+        }
+      } );
   }
 
 }
