@@ -81,7 +81,7 @@ export class AuthService {
       );
   }
 
-  validarToken (): Observable<boolean | void> {
+  validarToken (): Observable<boolean> {
 
     const url = `${ this.baseUrl }/validate-token`;
     const token = localStorage.getItem( 'token' );

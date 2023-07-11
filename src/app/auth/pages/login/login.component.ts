@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import Swal from 'sweetalert2';
+import { tap } from 'rxjs';
 
 @Component( {
   selector: 'auth-login',
@@ -22,9 +23,12 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router ) {
-    this.authService.validarToken()
-      .subscribe( resp => !resp || this.router.navigateByUrl( '/benefit-employee' ) )
 
+    // TODO: poner un flag que oculte el formulario de login hasta que se valide el token, si es falso mostrar formulario, si es verdadero dejar la redirección
+    this.authService.validarToken()
+      .subscribe( {
+        next: ( resp ) => { if ( resp ) this.router.navigate( [ 'benefit-employee' ] ) }
+      } )
   }
 
   login () {
