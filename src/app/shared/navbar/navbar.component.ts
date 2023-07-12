@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { User } from 'src/app/user/interfaces/user.interface';
 import Swal from 'sweetalert2';
 
 @Component( {
@@ -10,6 +11,7 @@ import Swal from 'sweetalert2';
 export class NavbarComponent implements OnInit {
 
   isAdmin: boolean = false;
+  user?: User;
 
   constructor ( public authService: AuthService,
     public router: Router
@@ -20,6 +22,7 @@ export class NavbarComponent implements OnInit {
       .subscribe( {
         next: ( isAdmin: any ) => {
           this.isAdmin = isAdmin.admin;
+          this.user = JSON.parse( localStorage.getItem( 'user' )! );
         },
         error: ( error ) => {
           Swal.fire( {
@@ -42,6 +45,16 @@ export class NavbarComponent implements OnInit {
       .subscribe( resp => {
         this.router.navigateByUrl( '/login' );
       } );
+  }
+
+  addClass ( event: any ): void {
+    event.target.className = event.target.className.replace( ' btn-outline-light', '' );
+    event.target.className += ' btn-outline-danger';
+  }
+
+  removeClass ( event: any ): void {
+    event.target.className = event.target.className.replace( ' btn-outline-danger', '' );
+    event.target.className += ' btn-outline-light';
   }
 
 }

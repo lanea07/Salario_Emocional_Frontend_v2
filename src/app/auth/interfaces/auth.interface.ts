@@ -1,9 +1,12 @@
+import { User } from "src/app/user/interfaces/user.interface";
+
 export interface AuthResponse {
   token: string;
   message: string;
   errors: Errors;
   can: Can;
   id: number;
+  user: User;
 }
 
 export interface Errors {

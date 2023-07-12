@@ -89,10 +89,15 @@
 
       </ul>
 
-      <button class="btn btn-outline-light btn-sm" (click)="logout()">
-        Cerrar Sesión
-        <i class="fa-solid fa-right-from-bracket"></i>
-      </button>
+      <div class="container-fluid d-flex justify-content-end">
+        <span class="navbar-text mx-3">
+          {{ user!.name }}
+        </span>
+        <button class="btn btn-outline-light btn-sm" (click)="logout()" (mouseover)="addClass($event)" (mouseleave)="removeClass($event)">
+          Cerrar Sesión
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
 
     </div>
 

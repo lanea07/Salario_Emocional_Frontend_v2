@@ -152,7 +152,6 @@ export class CreateComponent implements OnInit {
       this.createForm.markAllAsTouched();
       return;
     }
-    this.createForm.markAllAsTouched();
     let date = `${ this.createForm.get( 'model' )?.value[ 'year' ] }-${ this.createForm.get( 'model' )?.value[ 'month' ] }-${ this.createForm.get( 'model' )?.value[ 'day' ] } ${ this.createForm.get( 'time' )?.value }`;
     this.createForm.get( 'benefit_begin_time' )?.setValue( formatDate( new Date( date ), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
     this.createForm.get( 'benefit_end_time' )?.setValue( formatDate( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ).toString(), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
@@ -169,7 +168,8 @@ export class CreateComponent implements OnInit {
             hideClass: {
               popup: 'animate__animated animate__fadeOutUp'
             }
-          } )
+          } );
+          this.createForm.reset();
         }
       } );
   }

@@ -104,15 +104,17 @@ export class CalendarComponent implements OnChanges {
 
   dayClicked ( { date, events }: { date: Date; events: CalendarEvent[] } ): void {
     if ( isSameMonth( date, this.viewDate ) ) {
-      if (
-        ( isSameDay( this.viewDate, date ) && this.activeDayIsOpen === true ) ||
-        events.length === 0
-      ) {
+      if ( ( isSameDay( this.viewDate, date ) && this.activeDayIsOpen === true ) || events.length === 0 ) {
         this.activeDayIsOpen = false;
-      } else {
+      }
+      else {
         this.activeDayIsOpen = true;
       }
       this.viewDate = date;
+    }
+    else {
+      this.viewDate = date
+      this.activeDayIsOpen = false;
     }
   }
 

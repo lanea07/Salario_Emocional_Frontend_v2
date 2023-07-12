@@ -82,8 +82,8 @@ export class IndexComponent implements OnInit {
 
       this.benefitUserService.index( Number.parseInt( localStorage.getItem( 'uid' )! ), this.viewBenefitUser.get( 'years' )?.value )
         .subscribe( currentUserBenefits => {
-          this.currentUserBenefits = this.allUsersBenefits!.find( benefitUser => benefitUser.id === Number.parseInt( this.viewBenefitUser.controls[ 'users' ].value ) );
           this.allUsersBenefits = currentUserBenefits;
+          this.currentUserBenefits = this.allUsersBenefits!.find( benefitUser => benefitUser.id === Number.parseInt( this.viewBenefitUser.controls[ 'users' ].value ) );
           this.calendarData = this.allUsersBenefits
         } );
     }

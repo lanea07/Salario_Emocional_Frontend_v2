@@ -19,6 +19,8 @@ export class LoginComponent {
     device_name: [ 'PC' ]
   } );
 
+  showScreen: boolean = false;
+
   constructor (
     private fb: FormBuilder,
     private authService: AuthService,
@@ -27,7 +29,7 @@ export class LoginComponent {
     // TODO: poner un flag que oculte el formulario de login hasta que se valide el token, si es falso mostrar formulario, si es verdadero dejar la redirección
     this.authService.validarToken()
       .subscribe( {
-        next: ( resp ) => { if ( resp ) this.router.navigate( [ 'benefit-employee' ] ) }
+        next: ( resp ) => resp ? this.router.navigate( [ 'benefit-employee' ] ) : this.showScreen = true
       } )
   }
 

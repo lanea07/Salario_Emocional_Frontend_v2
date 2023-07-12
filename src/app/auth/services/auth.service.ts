@@ -31,6 +31,7 @@ export class AuthService {
               if ( resp ) {
                 localStorage.setItem( 'token', resp.token! );
                 localStorage.setItem( 'can', JSON.stringify( resp.can! ) );
+                localStorage.setItem( 'user', JSON.stringify( resp.user! ) );
                 localStorage.setItem( 'uid', resp.id!.toString() );
               }
             } ),
