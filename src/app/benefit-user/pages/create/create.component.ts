@@ -169,7 +169,7 @@ export class CreateComponent implements OnInit {
               popup: 'animate__animated animate__fadeOutUp'
             }
           } );
-          this.createForm.reset();
+          // this.createForm.reset();
         }
       } );
   }

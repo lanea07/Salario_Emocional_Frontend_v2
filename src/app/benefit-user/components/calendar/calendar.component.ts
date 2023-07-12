@@ -33,23 +33,23 @@ export class CalendarComponent implements OnChanges {
   viewDate: Date = new Date();
   modalData!: { action: string; event: CalendarEvent; };
 
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
-      a11yLabel: 'Edit',
-      onClick: ( { event }: { event: CalendarEvent } ): void => {
-        this.handleEvent( 'Edited', event );
-      },
-    },
-    {
-      label: '<i class="fas fa-fw fa-trash-alt"></i>',
-      a11yLabel: 'Delete',
-      onClick: ( { event }: { event: CalendarEvent } ): void => {
-        this.events = this.events.filter( ( iEvent ) => iEvent !== event );
-        this.handleEvent( 'Deleted', event );
-      },
-    },
-  ];
+  // actions: CalendarEventAction[] = [
+  //   {
+  //     label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+  //     a11yLabel: 'Edit',
+  //     onClick: ( { event }: { event: CalendarEvent } ): void => {
+  //       this.handleEvent( 'Edited', event );
+  //     },
+  //   },
+  //   {
+  //     label: '<i class="fas fa-fw fa-trash-alt"></i>',
+  //     a11yLabel: 'Delete',
+  //     onClick: ( { event }: { event: CalendarEvent } ): void => {
+  //       this.events = this.events.filter( ( iEvent ) => iEvent !== event );
+  //       this.handleEvent( 'Deleted', event );
+  //     },
+  //   },
+  // ];
 
   refresh = new Subject<void>();
 
@@ -133,13 +133,13 @@ export class CalendarComponent implements OnChanges {
       }
       return iEvent;
     } );
-    this.handleEvent( 'Dropped or resized', event );
+    // this.handleEvent( 'Dropped or resized', event );
   }
 
-  handleEvent ( action: string, event: CalendarEvent ): void {
-    this.modalData = { event, action };
-    this.modal.open( this.modalContent, { size: 'lg' } );
-  }
+  // handleEvent ( action: string, event: CalendarEvent ): void {
+  //   this.modalData = { event, action };
+  //   this.modal.open( this.modalContent, { size: 'lg' } );
+  // }
 
   // addEvent (): void {
   //   this.events = [
@@ -184,7 +184,7 @@ export class CalendarComponent implements OnChanges {
               end: new Date( benefit.benefit_end_time ),
               color: ( element.id === Number.parseInt( localStorage.getItem( 'uid' )! ) ) ? colors[ 'primary' ] : colors[ 'secondary' ],
               draggable: false,
-              actions: this.actions,
+              //actions: this.actions,
               meta: element
             }
           ];
