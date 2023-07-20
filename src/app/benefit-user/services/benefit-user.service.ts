@@ -17,7 +17,7 @@ export class BenefitUserService {
   public index ( id: number, year: number ): Observable<BenefitUser[]> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser?userId=${ id }&year=${ year }`, { headers, withCredentials: true } )
   }
@@ -25,7 +25,7 @@ export class BenefitUserService {
   public show ( id: number, year: number ): Observable<BenefitUser[]> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser/${ id }?year=${ year }`, { headers, withCredentials: true } )
   }
@@ -33,7 +33,7 @@ export class BenefitUserService {
   create ( formValues: any ): Observable<BenefitUser> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.post<BenefitUser>( `${ this.apiBaseUrl }/benefituser`, formValues, { headers, withCredentials: true } );
   }

@@ -18,7 +18,7 @@ export class BenefitService {
   index (): Observable<Benefit[]> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     this.http.get( `${ this.baseUrl }/sanctum/csrf-cookie` ).subscribe()
     return this.http.get<Benefit[]>( `${ this.apiBaseUrl }/benefit`, { headers, withCredentials: true } )
@@ -27,7 +27,7 @@ export class BenefitService {
   show ( id: number ): Observable<Benefit> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<Benefit>( `${ this.apiBaseUrl }/benefit/${ id }`, { headers, withCredentials: true } )
   }
@@ -35,7 +35,7 @@ export class BenefitService {
   create ( formValues: any ): Observable<Benefit> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.post<Benefit>( `${ this.apiBaseUrl }/benefit`, formValues, { headers, withCredentials: true } );
   }
@@ -43,7 +43,7 @@ export class BenefitService {
   update ( id: number | undefined, formValues: any ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.put<Benefit>( `${ this.apiBaseUrl }/benefit/${ id }`, formValues, { headers, withCredentials: true } );
   }
@@ -51,7 +51,7 @@ export class BenefitService {
   destroy ( id: number | undefined ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.delete( `${ this.apiBaseUrl }/benefit/${ id }`, { headers, withCredentials: true } );
   }

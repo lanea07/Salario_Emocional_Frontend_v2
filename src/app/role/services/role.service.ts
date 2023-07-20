@@ -17,7 +17,7 @@ export class RoleService {
   index (): Observable<Role[]> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<Role[]>( `${ this.apiBaseUrl }/role`, { headers, withCredentials: true } )
   }
@@ -25,7 +25,7 @@ export class RoleService {
   show ( id: number ): Observable<Role> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<Role>( `${ this.apiBaseUrl }/role/${ id }`, { headers, withCredentials: true } )
   }
@@ -33,7 +33,7 @@ export class RoleService {
   create ( formValues: any ): Observable<Role> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.post<Role>( `${ this.apiBaseUrl }/role`, formValues, { headers, withCredentials: true } );
   }
@@ -41,7 +41,7 @@ export class RoleService {
   update ( id: number | undefined, formValues: any ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.put<Role>( `${ this.apiBaseUrl }/role/${ id }`, formValues, { headers, withCredentials: true } );
   }
@@ -49,7 +49,7 @@ export class RoleService {
   destroy ( id: number | undefined ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.delete( `${ this.apiBaseUrl }/role/${ id }`, { headers, withCredentials: true } );
   }

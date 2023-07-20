@@ -19,7 +19,7 @@ export class UserService {
   index (): Observable<User[]> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<User[]>( `${ this.apiBaseUrl }/user`, { headers, withCredentials: true } )
   }
@@ -27,7 +27,7 @@ export class UserService {
   show ( id: number ): Observable<User> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<User>( `${ this.apiBaseUrl }/user/${ id }`, { headers, withCredentials: true } )
   }
@@ -35,7 +35,7 @@ export class UserService {
   create ( formValues: any ): Observable<User> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.post<User>( `${ this.apiBaseUrl }/user`, formValues, { headers, withCredentials: true } );
   }
@@ -43,7 +43,7 @@ export class UserService {
   update ( id: number | undefined, formValues: any ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.put<User>( `${ this.apiBaseUrl }/user/${ id }`, formValues, { headers, withCredentials: true } );
   }
@@ -51,7 +51,7 @@ export class UserService {
   destroy ( id: number | undefined ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.delete( `${ this.apiBaseUrl }/user/${ id }`, { headers, withCredentials: true } );
   }

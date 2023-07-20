@@ -18,7 +18,7 @@ export class PositionService {
   index (): Observable<Position[]> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<Position[]>( `${ this.apiBaseUrl }/position`, { headers, withCredentials: true } )
   }
@@ -26,7 +26,7 @@ export class PositionService {
   show ( id: number ): Observable<Position> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<Position>( `${ this.apiBaseUrl }/position/${ id }`, { headers, withCredentials: true } )
   }
@@ -34,7 +34,7 @@ export class PositionService {
   create ( formValues: any ): Observable<Position> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.post<Position>( `${ this.apiBaseUrl }/position`, formValues, { headers, withCredentials: true } );
   }
@@ -42,7 +42,7 @@ export class PositionService {
   update ( id: number | undefined, formValues: any ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.put<Position>( `${ this.apiBaseUrl }/position/${ id }`, formValues, { headers, withCredentials: true } );
   }
@@ -50,7 +50,7 @@ export class PositionService {
   destroy ( id: number | undefined ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.delete( `${ this.apiBaseUrl }/position/${ id }`, { headers, withCredentials: true } );
   }

@@ -17,7 +17,7 @@ export class BenefitDetailService {
   index (): Observable<BenefitDetail[]> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<BenefitDetail[]>( `${ this.apiBaseUrl }/benefitdetail`, { headers, withCredentials: true } )
   }
@@ -25,7 +25,7 @@ export class BenefitDetailService {
   show ( id: number ): Observable<BenefitDetail> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail/${ id }`, { headers, withCredentials: true } )
   }
@@ -33,7 +33,7 @@ export class BenefitDetailService {
   create ( formValues: any ): Observable<BenefitDetail> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.post<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail`, formValues, { headers, withCredentials: true } );
   }
@@ -41,7 +41,7 @@ export class BenefitDetailService {
   update ( id: number | undefined, formValues: any ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.put<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail/${ id }`, formValues, { headers, withCredentials: true } );
   }
@@ -49,7 +49,7 @@ export class BenefitDetailService {
   destroy ( id: number | undefined ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ this.token }` );
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.delete( `${ this.apiBaseUrl }/benefitdetail/${ id }`, { headers, withCredentials: true } );
   }
