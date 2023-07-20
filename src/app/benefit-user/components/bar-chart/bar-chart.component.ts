@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component( {
   selector: 'bar-chart-component',
@@ -8,9 +9,11 @@ import DataLabelsPlugin from 'chartjs-plugin-datalabels';
   styles: [
   ]
 } )
-export class BarChartComponent {
+export class BarChartComponent implements OnChanges {
 
-  @Input() input!: string;
+  @Input() input!: number[];
+  @ViewChild( BaseChartDirective ) chart?: BaseChartDirective;
+
 
   public barChartOptions: ChartConfiguration[ 'options' ] = {
     responsive: true,
@@ -18,7 +21,10 @@ export class BarChartComponent {
     scales: {
       x: {},
       y: {
-        min: 10
+        max: 16,
+        ticks: {
+          stepSize: 0
+        }
       }
     },
     plugins: {
@@ -37,11 +43,16 @@ export class BarChartComponent {
   ];
 
   public barChartData: ChartData<'bar'> = {
-    labels: [ '2006', '2007', '2008', '2009', '2010', '2011', '2012' ],
+    labels: [ 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic' ],
     datasets: [
-      { data: [ 65, 59, 80, 81, 56, 55, 40 ], label: 'Series A' },
-      { data: [ 28, 48, 40, 19, 86, 27, 90 ], label: 'Series B' }
+      { data: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], label: 'Horas', backgroundColor: "rgba(200, 16, 46, 0.5)" },
     ]
   };
+
+  ngOnChanges ( changes: SimpleChanges ): void {
+    this.barChartData.datasets[ 0 ].data = this.input;
+    this.chart?.update();
+  }
+
 
 }

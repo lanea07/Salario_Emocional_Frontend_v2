@@ -28,6 +28,7 @@ export class IndexComponent implements OnInit {
   currentUserBenefits?: BenefitUser;
   totalBancoHoras: number = 0;
   calendarData: any;
+  bancosHoras: number[] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
   viewBenefitUser: FormGroup = this.fb.group( {
     years: [ new Date().getFullYear().toString(), Validators.required ],
@@ -85,13 +86,14 @@ export class IndexComponent implements OnInit {
           this.allUsersBenefits = currentUserBenefits;
           this.currentUserBenefits = this.allUsersBenefits!.find( benefitUser => benefitUser.id === Number.parseInt( this.viewBenefitUser.controls[ 'users' ].value ) );
           this.calendarData = this.allUsersBenefits
+
+          this.bancosHoras = this.bancosHoras.map( mes => 0 );
+          this.allUsersBenefits[ 0 ].benefit_user.filter( benefitUser => benefitUser.benefits.name = "Mi Banco de Horas" ).map( benefit => {
+            this.bancosHoras[ new Date( benefit.benefit_begin_time ).getMonth() ] += benefit.benefit_detail.time_hours || 0;
+          } )
+
         } );
     }
-  }
-
-  emitir () {
-    // this.onClickString = 'Emitted'
-    this.totalBancoHoras = Math.round( Math.random() * 100 );
   }
 
   selectBenefit ( benefitId: number ) {
