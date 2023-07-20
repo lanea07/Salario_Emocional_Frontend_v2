@@ -3,7 +3,6 @@ import { User } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
-import { Role } from 'src/app/role/interfaces/role.interface';
 import Swal from 'sweetalert2';
 
 @Component( {

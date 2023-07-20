@@ -90,7 +90,6 @@ export class CreateComponent implements OnInit {
         this.createForm.get( 'user_id' )?.enable();
       } );
 
-    // this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
     this.benefitService.index()
       .subscribe( {
         next: ( benefits ) => {
@@ -115,25 +114,9 @@ export class CreateComponent implements OnInit {
         }
       } );
 
-    this.createForm.get( 'benefit_id' )?.valueChanges
-      .pipe(
-        tap( ( _ ) => {
-          this.createForm.get( 'benefit_detail_id' )?.reset( '' );
-          if ( this.createForm.get( 'benefit_id' )?.valid ) this.benefitDetailSpinner = false;
-        } ),
-        switchMap( benefit => this.benefitService.show( benefit ) )
-      )
-      .subscribe( benefit_details => {
-        this.benefit_details = Object.values( benefit_details )[ 0 ].benefit_detail;
-        if ( this.createForm.get( 'benefit_id' )?.valid ) {
-          this.benefitDetailSpinner = true;
-          this.createForm.get( 'benefit_detail_id' )?.enable();
-        }
-      } );
-
-    this.createForm.get( 'benefit_detail_id' )?.valueChanges
+    this.createForm.get( 'benefit_detail_id' )!.valueChanges
       .subscribe( currentBenefitDetail => {
-        this.selectedBenefitDetail = this.benefit_details?.find( benefits => benefits.id === Number.parseInt( currentBenefitDetail ) );
+        this.selectedBenefitDetail = this.benefit_details?.find( benefits => benefits.id === Number.parseInt( currentBenefitDetail || 0 ) );
       } );
 
   }
@@ -174,4 +157,22 @@ export class CreateComponent implements OnInit {
       } );
   }
 
+  fillBenefitDetail ( event: any ) {
+
+    this.createForm.get( 'benefit_detail_id' )!.reset( '' );
+    this.benefitService.show( event.target.value )
+      .pipe(
+        tap( ( _ ) => {
+          if ( this.createForm.get( 'benefit_id' )!.valid ) this.benefitDetailSpinner = false;
+        } )
+      )
+      .subscribe( benefit_details => {
+        this.benefit_details = Object.values( benefit_details )[ 0 ].benefit_detail;
+        if ( this.createForm.get( 'benefit_id' )!.valid ) {
+          this.benefitDetailSpinner = true;
+          this.createForm.get( 'benefit_detail_id' )!.enable();
+        }
+      } );
+
+  }
 }

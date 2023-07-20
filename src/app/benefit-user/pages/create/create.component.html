@@ -25,7 +25,7 @@
           <label for="benefit">Selecciona un beneficio</label>
           <div class="input-group">
             <select class="form-select" formControlName="benefit_id" id="benefit_id" required
-              [ngClass]="{'invalid': campoEsValido('benefit_id')}">
+              [ngClass]="{'invalid': campoEsValido('benefit_id')}" (change)="fillBenefitDetail($event)">
               <option value="">-- Seleccione Beneficio --</option>
               <option *ngFor="let benefit of benefits" value="{{ benefit.id }}">{{ benefit.name }}</option>
             </select>
