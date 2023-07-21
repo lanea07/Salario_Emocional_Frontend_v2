@@ -88,7 +88,8 @@ export class IndexComponent implements OnInit {
           this.calendarData = this.allUsersBenefits
 
           this.bancosHoras = this.bancosHoras.map( mes => 0 );
-          this.allUsersBenefits[ 0 ].benefit_user.filter( benefitUser => benefitUser.benefits.name = "Mi Banco de Horas" ).map( benefit => {
+          let filteredBenefit = this.currentUserBenefits!.benefit_user.filter( benefitUser => benefitUser.benefits.name === "Mi Banco de Horas" )
+          filteredBenefit.map( benefit => {
             this.bancosHoras[ new Date( benefit.benefit_begin_time ).getMonth() ] += benefit.benefit_detail.time_hours || 0;
           } )
 
