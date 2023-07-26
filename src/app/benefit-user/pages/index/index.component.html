@@ -19,13 +19,21 @@
             <label class="input-group-text" for="user">Colaborador</label>
             <select class="form-select" formControlName="users" (change)="getBenefitDetail($event)">
 
-              <option value=" {{ user?.id }}">
-                {{user?.name}}
-              </option>
+              <ng-container *ngIf="isAdmin">
+                <option *ngFor="let user of users" value=" {{ user?.id }}">
+                  {{user?.name}}
+                </option>
+              </ng-container>
 
-              <option *ngFor="let user of user?.subordinates" value=" {{ user.id }}">
-                {{user.name}}
-              </option>
+              <ng-container *ngIf="!isAdmin">
+                <option value=" {{ user?.id }}">
+                  {{user?.name}}
+                </option>
+
+                <option *ngFor="let user of user?.subordinates" value=" {{ user.id }}">
+                  {{user.name}}
+                </option>
+              </ng-container>
 
             </select>
           </div>

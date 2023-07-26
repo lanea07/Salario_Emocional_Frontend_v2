@@ -5,6 +5,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
+import Swal from 'sweetalert2';
+import { BenefitUserService } from '../../services/benefit-user.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 const colors: Record<string, EventColor> = {
   primary: {
@@ -32,6 +35,7 @@ export class CalendarComponent implements OnChanges {
   CalendarView = CalendarView;
   viewDate: Date = new Date();
   modalData!: { action: string; event: CalendarEvent; };
+  isAdmin: boolean = false;
 
   // actions: CalendarEventAction[] = [
   //   {
@@ -96,7 +100,33 @@ export class CalendarComponent implements OnChanges {
 
   activeDayIsOpen: boolean = false;
 
-  constructor ( private modal: NgbModal ) { }
+  constructor (
+    private modal: NgbModal,
+    private benefitUserService: BenefitUserService,
+    private authService: AuthService
+  ) { }
+
+  ngOnInit () {
+    this.authService.validarAdmin()
+      .subscribe( {
+        next: ( isAdmin: any ) => {
+          this.isAdmin = isAdmin.admin;
+        },
+        error: ( error ) => {
+          Swal.fire( {
+            title: 'Error',
+            icon: 'error',
+            html: error.error.msg,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: ( toast ) => {
+              toast.addEventListener( 'mouseenter', Swal.stopTimer )
+              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+            }
+          } )
+        }
+      } );
+  }
 
   ngOnChanges ( changes: SimpleChanges ) {
     this.addEventsToCalendar( this.data );
@@ -136,10 +166,10 @@ export class CalendarComponent implements OnChanges {
     // this.handleEvent( 'Dropped or resized', event );
   }
 
-  // handleEvent ( action: string, event: CalendarEvent ): void {
-  //   this.modalData = { event, action };
-  //   this.modal.open( this.modalContent, { size: 'lg' } );
-  // }
+  handleEvent ( action: string, event: CalendarEvent ): void {
+    this.modalData = { event, action };
+    this.modal.open( this.modalContent, { size: 'lg' } );
+  }
 
   // addEvent (): void {
   //   this.events = [
@@ -158,9 +188,9 @@ export class CalendarComponent implements OnChanges {
   //   ];
   // }
 
-  deleteEvent ( eventToDelete: CalendarEvent ) {
-    this.events = this.events.filter( ( event ) => event !== eventToDelete );
-  }
+  // deleteEvent ( eventToDelete: CalendarEvent ) {
+  //   this.events = this.events.filter( ( event ) => event !== eventToDelete );
+  // }
 
   setView ( view: CalendarView ) {
     this.view = view;
@@ -175,7 +205,7 @@ export class CalendarComponent implements OnChanges {
     data?.flat().forEach( ( element: BenefitUser ) => {
       let { benefit_user } = element;
       benefit_user.forEach( benefit => {
-        if ( benefit.benefits.name === 'Mi Viernes' || benefit.benefits.name === 'Mi Banco de Horas' ) {
+        if ( benefit.benefits.name === 'Mi Viernes' || benefit.benefits.name === 'Mi Banco de Horas' || benefit.benefits.name === 'Mi Cumpleaños' ) {
           this.events = [
             ...this.events,
             {
@@ -185,7 +215,7 @@ export class CalendarComponent implements OnChanges {
               color: ( element.id === Number.parseInt( localStorage.getItem( 'uid' )! ) ) ? colors[ 'primary' ] : colors[ 'secondary' ],
               draggable: false,
               //actions: this.actions,
-              meta: element
+              meta: benefit
             }
           ];
         }
@@ -193,5 +223,36 @@ export class CalendarComponent implements OnChanges {
       } )
     } );
 
+  }
+
+  deleteBenefit ( eventID: number ) {
+    Swal.fire( {
+      title: 'Eliminar beneficio?',
+      text: 'Confirme que desea eliminar el beneficio.',
+      icon: 'question',
+      showClass: {
+        popup: 'animate__animated animate__fadeIn'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp'
+      },
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+    } ).then( ( result ) => {
+      if ( result.isConfirmed ) {
+        this.benefitUserService.destroy( this.modalData.event.meta.id )
+          .subscribe( {
+            next: () => {
+              this.events = this.events.filter( event => event.meta.id !== eventID );
+              this.refresh.next();
+              this.modal.dismissAll();
+              this.activeDayIsOpen = false;
+            },
+            error: ( err ) => console.log( err )
+          } )
+      }
+    } );
   }
 }

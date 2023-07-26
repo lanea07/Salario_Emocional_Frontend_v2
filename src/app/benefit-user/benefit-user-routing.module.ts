@@ -10,6 +10,7 @@ const routes: Routes = [ {
   component: MainContainerComponent,
   children: [
     { path: 'index', component: IndexComponent },
+    { path: 'edit/:id', component: CreateComponent },
     { path: 'show/:id', component: ShowComponent },
     { path: 'create', component: CreateComponent },
     { path: '**', redirectTo: 'index' }

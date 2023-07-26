@@ -36,15 +36,15 @@ export class LoginComponent {
   login () {
     const { email, password, device_name } = this.miFormulario.value;
     this.authService.login( email, password, device_name )
-      .subscribe( resp => {
-        if ( resp.token ) {
+      .subscribe( {
+        next: ( resp ) => {
           this.router.navigateByUrl( '/benefit-employee' );
-        }
-        else {
+        },
+        error: ( err ) => {
           Swal.fire( {
             title: 'Error',
             icon: 'error',
-            text: resp,
+            text: err.error.message,
             showClass: {
               popup: 'animate__animated animate__fadeIn'
             },

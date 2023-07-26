@@ -22,12 +22,12 @@ export class BenefitUserService {
     return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser?userId=${ id }&year=${ year }`, { headers, withCredentials: true } )
   }
 
-  public show ( id: number, year: number ): Observable<BenefitUser[]> {
+  public show ( id: number ): Observable<BenefitUser> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser/${ id }?year=${ year }`, { headers, withCredentials: true } )
+    return this.http.get<BenefitUser>( `${ this.apiBaseUrl }/benefituser/${ id }`, { headers, withCredentials: true } )
   }
 
   create ( formValues: any ): Observable<BenefitUser> {
@@ -36,6 +36,22 @@ export class BenefitUserService {
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.post<BenefitUser>( `${ this.apiBaseUrl }/benefituser`, formValues, { headers, withCredentials: true } );
+  }
+
+  update ( id: number | undefined, formValues: any ) {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.put<BenefitUser>( `${ this.apiBaseUrl }/benefituser/${ id }`, formValues, { headers, withCredentials: true } );
+  }
+
+  destroy ( id: number ) {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.delete( `${ this.apiBaseUrl }/benefituser/${ id }`, { headers, withCredentials: true } );
   }
 
 }

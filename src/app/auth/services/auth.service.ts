@@ -28,16 +28,13 @@ export class AuthService {
         return this.http.post<AuthResponse>( url, body, { headers, withCredentials: true } )
           .pipe(
             tap( resp => {
-              if ( resp ) {
+              if ( resp.token ) {
                 localStorage.setItem( 'token', resp.token! );
                 localStorage.setItem( 'can', JSON.stringify( resp.can! ) );
                 localStorage.setItem( 'user', JSON.stringify( resp.user! ) );
                 localStorage.setItem( 'uid', resp.id!.toString() );
               }
-            } ),
-            map( resp => resp ),
-            catchError( err =>
-              of( err.error.message ) )
+            } )
           );
       } )
     )

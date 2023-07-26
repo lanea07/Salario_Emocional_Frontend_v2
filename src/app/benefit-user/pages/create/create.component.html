@@ -1,5 +1,5 @@
 <div class="row mt-5 p-5">
-  <h1>Registrar Nuevo Beneficio</h1>
+  <h1>{{ currentUserBenefits?.id ? 'Actualizar' : 'Nuevo' }} beneficio para {{ currentUserBenefits?.name }}</h1>
   <hr>
 
   <div class="col">
@@ -51,9 +51,9 @@
 
         <div class="col-xl-3 px-2 d-flex flex-column">
 
-          <ngb-datepicker class=" m-2" #dp formControlName="model" (navigate)="date = $event.next" required
+          <ngb-datepicker #dp class=" m-2" formControlName="model" (navigate)="date = $event.next" required
             [ngClass]="{'invalid': campoEsValido('model')}"></ngb-datepicker>
-          <ngb-timepicker class="m-2 d-flex justify-content-around" formControlName="time" required
+          <ngb-timepicker #tp class="m-2 d-flex justify-content-around" formControlName="time" required
             [ngClass]="{'invalid': campoEsValido('time')}" [meridian]="meridian"></ngb-timepicker>
 
         </div>
@@ -64,8 +64,7 @@
 
       <div class="mb-3">
         <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
-          <!-- {{ ( benefits ) ? 'Actualizar' : 'Crear' }} -->
-          Crear
+          {{ ( currentUserBenefits?.id ) ? 'Actualizar' : 'Crear' }}
         </button>
       </div>
 

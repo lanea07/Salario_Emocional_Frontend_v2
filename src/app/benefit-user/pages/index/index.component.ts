@@ -10,6 +10,8 @@ import { DatePipe } from '@angular/common';
 import { TotalBancoHorasPipe } from 'src/app/shared/pipes/TotalBancoHoras.pipe';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component( {
   selector: 'benefitemployee-index',
@@ -23,12 +25,14 @@ export class IndexComponent implements OnInit {
 
   years: number[] = [];
   user?: User;
+  users?: User[];
   benefits!: Benefit[];
   allUsersBenefits?: BenefitUser[];
   currentUserBenefits?: BenefitUser;
   totalBancoHoras: number = 0;
   calendarData: any;
   bancosHoras: number[] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+  isAdmin: boolean = false;
 
   viewBenefitUser: FormGroup = this.fb.group( {
     years: [ new Date().getFullYear().toString(), Validators.required ],
@@ -40,35 +44,68 @@ export class IndexComponent implements OnInit {
     private benefitUserService: BenefitUserService,
     private benefitService: BenefitService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     const currentYear = new Date().getFullYear();
     for ( let i = currentYear; i > currentYear - 5; i-- ) {
       this.years.push( i );
     };
+
   }
 
   ngOnInit () {
-    this.userService.show( Number.parseInt( localStorage.getItem( 'uid' )! ) )
+
+    this.authService.validarAdmin()
       .subscribe( {
-        next: ( user ) => {
-          this.user = Object.values( user )[ 0 ];
-        },
-        error: ( error ) => {
-          this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
+        next: ( isAdmin: any ) => {
+          this.isAdmin = isAdmin.admin;
+          if ( this.isAdmin ) {
+            this.userService.index()
+              .subscribe( {
+                next: ( user ) => {
+                  this.users = user;
+                },
+                error: ( error ) => {
+                  this.router.navigateByUrl( 'benefit-employee' );
+                  Swal.fire( {
+                    title: 'Error',
+                    icon: 'error',
+                    html: error.error.msg,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: ( toast ) => {
+                      toast.addEventListener( 'mouseenter', Swal.stopTimer )
+                      toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+                    }
+                  } )
+                }
+              } );
+          } else {
+            this.userService.show( Number.parseInt( localStorage.getItem( 'uid' )! ) )
+              .subscribe( {
+                next: ( user ) => {
+                  this.user = Object.values( user )[ 0 ];
+                },
+                error: ( error ) => {
+                  this.router.navigateByUrl( 'benefit-employee' );
+                  Swal.fire( {
+                    title: 'Error',
+                    icon: 'error',
+                    html: error.error.msg,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: ( toast ) => {
+                      toast.addEventListener( 'mouseenter', Swal.stopTimer )
+                      toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+                    }
+                  } )
+                }
+              } );
+          }
         }
       } );
+
     this.benefitService.index()
       .subscribe( benefits => this.benefits = benefits );
     this.benefitUserService.index( Number.parseInt( localStorage.getItem( 'uid' )! ), this.viewBenefitUser.get( 'years' )?.value )
@@ -88,7 +125,7 @@ export class IndexComponent implements OnInit {
           this.calendarData = this.allUsersBenefits
 
           this.bancosHoras = this.bancosHoras.map( mes => 0 );
-          let filteredBenefit = this.currentUserBenefits!.benefit_user.filter( benefitUser => benefitUser.benefits.name === "Mi Banco de Horas" )
+          let filteredBenefit = this.currentUserBenefits!.benefit_user.filter( benefitUser => benefitUser.benefits.name === "Mi Banco de Horas" );
           filteredBenefit.map( benefit => {
             this.bancosHoras[ new Date( benefit.benefit_begin_time ).getMonth() ] += benefit.benefit_detail.time_hours || 0;
           } )
