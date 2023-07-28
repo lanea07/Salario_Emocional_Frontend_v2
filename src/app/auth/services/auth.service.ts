@@ -84,6 +84,7 @@ export class AuthService {
         catchError( err => of( false ) )
       );
   }
+
   validarRequirePassChange (): Observable<boolean> {
     const url = `${ this.baseUrl }/validate-requirePassChange`;
     const token = localStorage.getItem( 'token' );
