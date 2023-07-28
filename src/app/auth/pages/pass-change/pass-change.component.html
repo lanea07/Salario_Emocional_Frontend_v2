@@ -1,0 +1,58 @@
+<form autocomplete="off" [formGroup]="miFormulario" (ngSubmit)="submitPassChange()" *ngIf="showScreen">
+  <!-- *ngIf="showScreen" -->
+  <section class="vh-100 gradient-custom">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+
+              <div class="mb-md-5 mt-md-4 pb-5">
+
+                <h2 class="mb-2">Cambio de contraseña requerido</h2>
+
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="currentPassword" formControlName="currentPassword"
+                    placeholder="Nueva Contraseña" [ngClass]="{'invalid': campoEsValido('currentPassword')}">
+                  <label for="currentPassword" class="form-label">Contraseña Actual</label>
+                  <small *ngIf="campoEsValido('currentPassword')" class="text-danger">Obligatorio</small>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="password" formControlName="password"
+                    placeholder="Nueva Contraseña" [ngClass]="{'invalid': campoEsValido('password')}">
+                  <label for="password" class="form-label">Nueva Contraseña</label>
+                  <small *ngIf="campoEsValido('password')" class="text-danger">{{ passErrorMsg }}</small>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="retypePassword" formControlName="retypePassword"
+                    placeholder="Repita la contraseña" [ngClass]="{'invalid': campoEsValido('retypePassword')}">
+                  <label for="retypePassword" class="form-label">Repita la contraseña</label>
+                  <small *ngIf="campoEsValido('retypePassword')" class="text-danger">{{ 'Las contraseña no coinciden'
+                    }}</small>
+                </div>
+
+                <input type="hidden" id="device_name" formControlName="device_name" />
+
+                <button class="btn btn-secondary" [disabled]="!miFormulario.valid">Login</button>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</form>
+
+<pre>
+  {{ miFormulario.value | json }}
+</pre>
+<br>
+<pre>
+  {{ miFormulario.controls['password'].errors | json }}
+</pre>
+<br>
+<pre>
+  {{ miFormulario.controls['retypePassword'].errors | json }}
+</pre>

@@ -18,7 +18,6 @@ export class LoginComponent {
     password: [ '', [ Validators.required, Validators.minLength( 6 ) ] ],
     device_name: [ 'PC' ]
   } );
-
   showScreen: boolean = false;
 
   constructor (
@@ -26,7 +25,6 @@ export class LoginComponent {
     private authService: AuthService,
     private router: Router ) {
 
-    // TODO: poner un flag que oculte el formulario de login hasta que se valide el token, si es falso mostrar formulario, si es verdadero dejar la redirección
     this.authService.validarToken()
       .subscribe( {
         next: ( resp ) => resp ? this.router.navigate( [ 'benefit-employee' ] ) : this.showScreen = true

@@ -14,7 +14,7 @@
         <input [ngClass]="{'invalid': campoEsValido('time_hours')}" class="form-control" type="number"
           formControlName="time_hours" id="time_hours" placeholder="Nombre Completo">
         <span class="form-text text-danger" *ngIf="campoEsValido('time_hours')">Si es diligenciado, asegúrese que sea
-          mayor que cero</span>
+          mayor o igual a cero</span>
       </div>
 
       <div class="mb-3">

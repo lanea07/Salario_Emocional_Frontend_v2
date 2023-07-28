@@ -40,28 +40,6 @@ export class AuthService {
     )
   }
 
-  // login ( email: string, password: string, device_name: string ) {
-
-  //   const url = `${ this.baseUrl }/login`;
-  //   const body = { email, password, device_name };
-  //   const headers = new HttpHeaders().set( 'Accept', 'application/json' );
-
-  //   return this.http.post<AuthResponse>( url, body, { headers, withCredentials: true } } )
-  //     .pipe(
-  //       tap( resp => {
-  //         if ( resp ) {
-  //           localStorage.setItem( 'token', resp.token! );
-  //           localStorage.setItem( 'can', JSON.stringify( resp.can! ) );
-  //           localStorage.setItem( 'uid', resp.id!.toString() );
-  //         }
-  //       } ),
-  //       map( resp => resp ),
-  //       catchError( err =>
-  //         of( err.error.message ) )
-  //     );
-
-  // }
-
   logout () {
 
     const url = `${ this.baseUrl }/logout`;
@@ -105,6 +83,24 @@ export class AuthService {
         map( resp => resp ),
         catchError( err => of( false ) )
       );
+  }
+  validarRequirePassChange (): Observable<boolean> {
+    const url = `${ this.baseUrl }/validate-requirePassChange`;
+    const token = localStorage.getItem( 'token' );
+    const headers = new HttpHeaders()
+      .append( 'Authorization', `Bearer ${ token }` );
+
+    return this.http.post<boolean>( url, [], { headers, withCredentials: true } )
+  }
+
+  passwordChange ( formValues: any ) {
+    const url = `${ this.baseUrl }/passwordChange`;
+    const token = localStorage.getItem( 'token' );
+    const headers = new HttpHeaders()
+      .append( 'Authorization', `Bearer ${ token }` );
+
+    return this.http.post<boolean>( url, formValues, { headers, withCredentials: true } )
+
   }
 
 }

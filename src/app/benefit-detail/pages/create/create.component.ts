@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { BenefitService } from 'src/app/benefit/services/benefit.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { switchMap } from 'rxjs';
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
 import Swal from 'sweetalert2';
-import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
 
 @Component( {
   selector: 'benefitdetail-create',
@@ -26,7 +24,7 @@ export class CreateComponent {
   disableSubmitBtn: boolean = false;
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
-    time_hours: [ '', [ this.validatorService.minIfFilled( 1 ) ] ]
+    time_hours: [ '', [ this.validatorService.minIfFilled( 0 ) ] ]
   } );
 
 
@@ -76,6 +74,7 @@ export class CreateComponent {
           const extractBenefitDetail = Object.values( benefitDetail )[ 0 ];
           this.benefitDetail = extractBenefitDetail;
           this.createForm.get( 'name' )?.setValue( extractBenefitDetail.name );
+          this.createForm.get( 'time_hours' )?.setValue( extractBenefitDetail.time_hours );
         },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );

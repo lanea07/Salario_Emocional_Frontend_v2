@@ -15,6 +15,7 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { BenefitUserService } from '../../services/benefit-user.service';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { forkJoin, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 const pad = ( i: number ): string => ( i < 10 ? `0${ i }` : `${ i }` );
 
@@ -200,7 +201,22 @@ export class CreateComponent implements OnInit {
                 popup: 'animate__animated animate__fadeOutUp'
               }
             } );
-            // this.createForm.reset();
+            if ( environment.production ) {
+              this.createForm.reset();
+            }
+          },
+          error: ( err ) => {
+            Swal.fire( {
+              title: 'Creado',
+              text: err.error.message,
+              icon: 'error',
+              showClass: {
+                popup: 'animate__animated animate__fadeIn'
+              },
+              hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+              }
+            } );
           }
         } );
     }
