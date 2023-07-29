@@ -45,7 +45,7 @@ export class CreateComponent implements OnInit {
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
     email: [ '', [ Validators.required, Validators.pattern( this.emailPattern ) ] ],
-    password: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
+    password: [ '', [ this.passwordRequiredIfNotNull() ] ],
     leader: [ '' ],
     subordinates: [ '' ],
     position_id: [ '', Validators.required ]
@@ -57,6 +57,14 @@ export class CreateComponent implements OnInit {
 
   get rolesFormGroup (): FormGroup | any {
     return this.createForm.controls[ 'rolesFormGroup' ];
+  }
+
+  get passErrorMsg (): string {
+    const errors = this.createForm.get( 'password' )?.errors;
+    if ( errors![ 'minlength' ] ) {
+      return 'La contraseña no cumple con el largo mínimo de 6 caracteres';
+    }
+    return '';
   }
 
   constructor (
@@ -207,6 +215,22 @@ export class CreateComponent implements OnInit {
 
   filterSubordinates ( evt: any ) {
     this.filteredSubordinates = this.posibleSubordinates.filter( subordinate => subordinate.id !== evt.value )
+  }
+
+  passwordRequiredIfNotNull ( minRequired = 6 ): ValidationErrors {
+    return function validate ( control: AbstractControl ) {
+
+      if ( !control.value )
+        return null;
+
+      if ( control.value.length < minRequired ) {
+        return {
+          minlength: true,
+        };
+      }
+
+      return null;
+    };
   }
 
 }

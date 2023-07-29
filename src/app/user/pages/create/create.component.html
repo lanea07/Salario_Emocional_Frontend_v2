@@ -20,7 +20,7 @@
         <label class="form-label" for="password">Contraseña</label>
         <input [ngClass]="{'invalid': campoEsValido('password')}" class="form-control" type="password"
           formControlName="password" id="password" placeholder="password">
-        <span class="form-text text-danger" *ngIf="campoEsValido('password')">Obligatorio</span>
+        <span class="form-text text-danger" *ngIf="campoEsValido('password')">{{ passErrorMsg }}</span>
       </div>
 
 

@@ -207,7 +207,7 @@ export class CreateComponent implements OnInit {
           },
           error: ( err ) => {
             Swal.fire( {
-              title: 'Creado',
+              title: 'Error al crear beneficio',
               text: err.error.message,
               icon: 'error',
               showClass: {
