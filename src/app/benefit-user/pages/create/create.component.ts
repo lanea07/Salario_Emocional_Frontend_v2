@@ -4,7 +4,7 @@ import { BenefitService } from '../../../benefit/services/benefit.service';
 import { Benefit } from '../../../benefit/interfaces/benefit.interface';
 import { BenefitDetail } from '../../../benefit-detail/interfaces/benefit-detail.interface';
 import { tap, switchMap } from 'rxjs/operators';
-import { NgbCalendar, NgbDatepicker, NgbTimeAdapter, NgbTimeStruct, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDate, NgbDatepicker, NgbTimeAdapter, NgbTimeStruct, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 import { addHours, monthsInYear } from 'date-fns';
 import { formatDate } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -46,6 +46,7 @@ export class NgbTimeStringAdapter extends NgbTimeAdapter<string> {
 } )
 export class CreateComponent implements OnInit {
 
+
   disableSubmitBtn: boolean = false;
   benefits!: Benefit[];
   benefit_details?: BenefitDetail[];
@@ -71,6 +72,10 @@ export class CreateComponent implements OnInit {
   @ViewChild( NgbDatepicker ) dp?: NgbDatepicker;
   @ViewChild( NgbTimepicker ) tp?: NgbTimepicker;
 
+  public isDayDisabled = ( date: NgbDate ) =>
+    this.ngbCalendar.getWeekday( date ) === 6 || this.ngbCalendar.getWeekday( date ) === 7;
+
+
   constructor (
     private fb: FormBuilder,
     private authService: AuthService,
@@ -79,7 +84,8 @@ export class CreateComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private ngbCalendar: NgbCalendar
   ) { }
 
   ngOnInit (): void {
@@ -93,7 +99,7 @@ export class CreateComponent implements OnInit {
               : this.userService.show( Number.parseInt( localStorage.getItem( 'uid' )! ) );
           } )
         ),
-      loadServices: this.benefitService.index()
+      loadBenefits: this.benefitService.index()
         .pipe(
           tap( ( benefits ) => {
             this.benefits = benefits;
@@ -103,7 +109,7 @@ export class CreateComponent implements OnInit {
         )
     } )
       .subscribe( {
-        next: ( { validarAdmin, loadServices } ) => {
+        next: ( { validarAdmin, loadBenefits } ) => {
           this.users = Object.values( validarAdmin );
           this.createForm.get( 'user_id' )?.enable();
 
@@ -237,6 +243,13 @@ export class CreateComponent implements OnInit {
           this.createForm.get( 'benefit_detail_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefit_detail.id );
         }
       } );
+    if ( event.target.options[ event.target.options.selectedIndex ].text == "Mi Viernes" ) {
+      this.isDayDisabled = ( date: NgbDate ) =>
+        this.ngbCalendar.getWeekday( date ) !== 5;
+    } else {
+      this.isDayDisabled = ( date: NgbDate ) =>
+        this.ngbCalendar.getWeekday( date ) === 6 || this.ngbCalendar.getWeekday( date ) === 7;
+    }
 
   }
 }

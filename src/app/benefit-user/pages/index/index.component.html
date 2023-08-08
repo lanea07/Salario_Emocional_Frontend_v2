@@ -19,6 +19,8 @@
             <label class="input-group-text" for="user">Colaborador</label>
             <select class="form-select" formControlName="users" (change)="getBenefitDetail($event)">
 
+              <option value="">-- Seleccione un colaborador --</option>
+
               <ng-container *ngIf="isAdmin">
                 <option *ngFor="let user of users" value=" {{ user?.id }}">
                   {{user?.name}}
@@ -61,7 +63,10 @@
 
   <div class="row shadow rounded mb-3 pb-3 bg-light">
 
-    <h2>Detalle de beneficios de {{ currentUserBenefits?.name }}</h2>
+    <div class="d-flex flex-row justify-content-between align-items-center">
+      <h2>Detalle de beneficios de {{ currentUserBenefits?.name }}</h2>
+      <button (click)="closePanel()" type="button" class="btn-close" aria-label="Close"></button>
+    </div>
     <div *ngFor="let benefit of benefits">
 
       <div class="input-group mt-3">

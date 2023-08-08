@@ -184,4 +184,8 @@ export class IndexComponent implements OnInit {
     return '<li class="list-group-item">No se encontraron beneficios registrados</li>';
   }
 
+  closePanel () {
+    this.viewBenefitUser.controls[ 'users' ].setValue( "" );
+  }
+
 }

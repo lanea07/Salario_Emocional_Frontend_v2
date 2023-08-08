@@ -52,7 +52,7 @@
         <div class="col-xl-3 px-2 d-flex flex-column">
 
           <ngb-datepicker #dp class=" m-2" formControlName="model" (navigate)="date = $event.next" required
-            [ngClass]="{'invalid': campoEsValido('model')}"></ngb-datepicker>
+            [ngClass]="{'invalid': campoEsValido('model')}" [markDisabled]="isDayDisabled"></ngb-datepicker>
           <ngb-timepicker #tp class="m-2 d-flex justify-content-around" formControlName="time" required
             [ngClass]="{'invalid': campoEsValido('time')}" [meridian]="meridian"></ngb-timepicker>
 
