@@ -12,19 +12,19 @@
                 <h2 class="mb-2">Cambio de contraseña requerido</h2>
 
                 <div class="form-floating mb-3">
-                  <input type="text" class="form-control" id="currentPassword" formControlName="currentPassword"
+                  <input type="password" class="form-control" id="currentPassword" formControlName="currentPassword"
                     placeholder="Nueva Contraseña" [ngClass]="{'invalid': campoEsValido('currentPassword')}">
                   <label for="currentPassword" class="form-label">Contraseña Actual</label>
                   <small *ngIf="campoEsValido('currentPassword')" class="text-danger">Obligatorio</small>
                 </div>
                 <div class="form-floating mb-3">
-                  <input type="text" class="form-control" id="password" formControlName="password"
+                  <input type="password" class="form-control" id="password" formControlName="password"
                     placeholder="Nueva Contraseña" [ngClass]="{'invalid': campoEsValido('password')}">
                   <label for="password" class="form-label">Nueva Contraseña</label>
                   <small *ngIf="campoEsValido('password')" class="text-danger">{{ passErrorMsg }}</small>
                 </div>
                 <div class="form-floating mb-3">
-                  <input type="text" class="form-control" id="retypePassword" formControlName="retypePassword"
+                  <input type="password" class="form-control" id="retypePassword" formControlName="retypePassword"
                     placeholder="Repita la contraseña" [ngClass]="{'invalid': campoEsValido('retypePassword')}">
                   <label for="retypePassword" class="form-label">Repita la contraseña</label>
                   <small *ngIf="campoEsValido('retypePassword')" class="text-danger">{{ 'Las contraseña no coinciden'

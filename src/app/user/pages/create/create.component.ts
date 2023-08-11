@@ -35,7 +35,8 @@ export class CreateComponent implements OnInit {
     updated_at: new Date,
     subordinates: [],
     positions: undefined,
-    roles: []
+    roles: [],
+    requirePassChange: false
   };
   roles: Role[] = [];
   positions: Position[] = [];
@@ -48,7 +49,8 @@ export class CreateComponent implements OnInit {
     password: [ '', [ this.passwordRequiredIfNotNull() ] ],
     leader: [ '' ],
     subordinates: [ '' ],
-    position_id: [ '', Validators.required ]
+    position_id: [ '', Validators.required ],
+    requirePassChange: [ false ]
 
   } );
   loaded: boolean = false;
@@ -64,6 +66,10 @@ export class CreateComponent implements OnInit {
     if ( errors![ 'minlength' ] ) {
       return 'La contraseña no cumple con el largo mínimo de 6 caracteres';
     }
+    if ( errors![ 'required' ] ) {
+      return 'La contraseña es obligatoria';
+    }
+
     return '';
   }
 
@@ -139,7 +145,7 @@ export class CreateComponent implements OnInit {
         if ( extractUser.leader ) this.createForm.get( 'leader' )?.setValue( extractUser.leader.id );
         if ( extractUser.subordinates ) this.createForm.get( 'subordinates' )?.setValue( extractUser.subordinates?.map( subordinate => subordinate.id ) );
         this.createForm.get( 'position_id' )?.setValue( extractUser.positions?.id?.toString() )
-
+        this.createForm.get( 'requirePassChange' )?.setValue( extractUser.requirePassChange )
       } );
 
   }
@@ -157,26 +163,46 @@ export class CreateComponent implements OnInit {
 
     if ( this.user.id ) {
       this.userService.update( this.user.id, this.createForm.value )
-        .subscribe( resp => {
-          Swal.fire( {
-            title: 'Actualizado',
-            icon: 'success',
-            showClass: {
-              popup: 'animate__animated animate__fadeIn'
+        .subscribe(
+          {
+            next: () => {
+              this.router.navigateByUrl( `/user/show/${ this.user.id }` )
+              Swal.fire( {
+                title: 'Actualizado',
+                icon: 'success',
+              } );
             },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp'
+            error: err => {
+              Swal.fire( {
+                title: 'Error',
+                text: err.error.message,
+                icon: 'error',
+              } );
+              this.disableSubmitBtn = false;
             }
-          } )
-          this.router.navigateByUrl( `/user/show/${ this.user.id }` )
-        } );
+          } );
 
     } else {
 
       this.userService.create( this.createForm.value )
-        .subscribe( userCreated => {
-          this.router.navigateByUrl( `/user/show/${ userCreated.id }` )
-        } );
+        .subscribe(
+          {
+            next: userCreated => {
+              this.router.navigateByUrl( `/user/show/${ userCreated.id }` )
+              Swal.fire( {
+                title: 'Creado',
+                icon: 'success',
+              } );
+            },
+            error: err => {
+              Swal.fire( {
+                title: 'Error',
+                text: err.error.message,
+                icon: 'error',
+              } );
+              this.disableSubmitBtn = false;
+            }
+          } );
     }
     this.disableSubmitBtn = true;
   }
@@ -220,7 +246,7 @@ export class CreateComponent implements OnInit {
   passwordRequiredIfNotNull ( minRequired = 6 ): ValidationErrors {
     return function validate ( control: AbstractControl ) {
 
-      if ( !control.value )
+      if ( !control.value && !control.hasValidator( Validators.required ) )
         return null;
 
       if ( control.value.length < minRequired ) {

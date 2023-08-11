@@ -13,4 +13,5 @@ export interface User {
   subordinates?: User[];
   positions?: Position;
   roles: Role[];
+  requirePassChange: boolean;
 }

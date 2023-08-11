@@ -114,28 +114,48 @@ export class CreateComponent {
 
     if ( this.benefit.id ) {
       this.benefitService.update( this.benefit.id, this.createForm.value )
-        .subscribe( resp => {
-          Swal.fire( {
-            title: 'Actualizado',
-            icon: 'success',
-            showClass: {
-              popup: 'animate__animated animate__fadeIn'
+        .subscribe(
+          {
+            next: () => {
+              Swal.fire( {
+                title: 'Actualizado',
+                icon: 'success'
+              } )
+              this.router.navigateByUrl( `/benefit/show/${ this.benefit.id }` )
             },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp'
+            error: err => {
+              Swal.fire( {
+                title: 'Error',
+                text: err.error.message,
+                icon: 'error'
+              } )
+              this.disableSubmitBtn = false;
             }
-          } )
-          this.router.navigateByUrl( `/benefit/show/${ this.benefit.id }` )
-        } );
+          } );
 
     } else {
 
       this.benefitService.create( this.createForm.value )
-        .subscribe( benefitCreated => {
-          this.router.navigateByUrl( `/benefit/show/${ benefitCreated.id }` )
-        } );
+        .subscribe(
+          {
+            next: benefitCreated => {
+              this.router.navigateByUrl( `/benefit/show/${ benefitCreated.id }` )
+              Swal.fire( {
+                title: 'Creado',
+                icon: 'success'
+              } );
+            },
+            error: err => {
+              Swal.fire( {
+                title: 'Error',
+                text: err.error.message,
+                icon: 'error'
+              } )
+              this.disableSubmitBtn = false;
+            }
+          } );
     }
-    //this.disableSubmitBtn = true;
+    this.disableSubmitBtn = true;
   }
 
   buildBenefitDetailFormGroup ( benefitDetails: Benefit[], selectedbenefitDetailsIds: number[] = [] ): FormGroup {

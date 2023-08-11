@@ -98,26 +98,46 @@ export class CreateComponent {
 
     if ( this.position.id ) {
       this.positionService.update( this.position.id, this.createForm.value )
-        .subscribe( resp => {
-          Swal.fire( {
-            title: 'Actualizado',
-            icon: 'success',
-            showClass: {
-              popup: 'animate__animated animate__fadeIn'
+        .subscribe(
+          {
+            next: () => {
+              Swal.fire( {
+                title: 'Actualizado',
+                icon: 'success',
+              } );
+              this.router.navigateByUrl( `/position/show/${ this.position.id }` )
             },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp'
+            error: err => {
+              Swal.fire( {
+                title: 'Error',
+                text: err.error.message,
+                icon: 'error',
+              } );
+              this.disableSubmitBtn = false;
             }
-          } )
-          this.router.navigateByUrl( `/position/show/${ this.position.id }` )
-        } );
+          } );
 
     } else {
 
       this.positionService.create( this.createForm.value )
-        .subscribe( positionCreated => {
-          this.router.navigateByUrl( `/position/show/${ positionCreated.id }` )
-        } );
+        .subscribe(
+          {
+            next: positionCreated => {
+              Swal.fire( {
+                title: 'Creado',
+                icon: 'success',
+              } );
+              this.router.navigateByUrl( `/position/show/${ positionCreated.id }` )
+            },
+            error: err => {
+              Swal.fire( {
+                title: 'Error',
+                text: err.error.message,
+                icon: 'error',
+              } );
+              this.disableSubmitBtn = false;
+            }
+          } );
     }
     this.disableSubmitBtn = true;
   }

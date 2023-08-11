@@ -79,28 +79,48 @@ export class CreateComponent {
 
     if ( this.role.id ) {
       this.roleService.update( this.role.id, this.createForm.value )
-        .subscribe( resp => {
-          Swal.fire( {
-            title: 'Actualizado',
-            icon: 'success',
-            showClass: {
-              popup: 'animate__animated animate__fadeIn'
+        .subscribe(
+          {
+            next: () => {
+              Swal.fire( {
+                title: 'Actualizado',
+                icon: 'success',
+              } );
+              this.router.navigateByUrl( `/role/show/${ this.role.id }` )
             },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp'
+            error: err => {
+              Swal.fire( {
+                title: 'Error',
+                text: err.error.message,
+                icon: 'error',
+              } );
+              this.disableSubmitBtn = false;
             }
-          } )
-          this.router.navigateByUrl( `/role/show/${ this.role.id }` )
-        } );
+          } );
 
     } else {
 
       this.roleService.create( this.createForm.value )
-        .subscribe( roleCreated => {
-          this.router.navigateByUrl( `/role/show/${ roleCreated.id }` )
-        } );
+        .subscribe(
+          {
+            next: roleCreated => {
+              this.router.navigateByUrl( `/role/show/${ roleCreated.id }` );
+              Swal.fire( {
+                title: 'Creado',
+                icon: 'success',
+              } );
+            },
+            error: err => {
+              Swal.fire( {
+                title: 'Error',
+                text: err.error.message,
+                icon: 'error',
+              } );
+              this.disableSubmitBtn = false;
+            }
+          } );
     }
-    //this.disableSubmitBtn = true;
+    this.disableSubmitBtn = true;
   }
 
 }

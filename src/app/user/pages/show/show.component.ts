@@ -68,13 +68,24 @@ export class ShowComponent {
       }
     } ).then( ( result ) => {
       if ( result.isConfirmed ) {
-        this.userService.destroy( this.user?.id ).subscribe( resp => {
-          Swal.fire(
-            'Deleted!',
-            resp.toString(),
-            'success'
-          );
-        } );
+        this.userService.destroy( this.user?.id )
+          .subscribe( {
+            next: resp => {
+              this.router.navigateByUrl( 'user/index' );
+              Swal.fire( {
+                title: 'Creado',
+                icon: 'success'
+              } );
+
+            },
+            error: err => {
+              Swal.fire( {
+                title: 'Error al borrar registro',
+                text: err,
+                icon: 'error'
+              } );
+            }
+          } );
       };
     } );
   }

@@ -107,25 +107,46 @@ export class CreateComponent {
 
     if ( this.benefitDetail.id ) {
       this.benefitDetailService.update( this.benefitDetail.id, this.createForm.value )
-        .subscribe( resp => {
-          Swal.fire( {
-            title: 'Actualizado',
-            icon: 'success',
-            showClass: {
-              popup: 'animate__animated animate__fadeIn'
+        .subscribe(
+          {
+            next: () => {
+              Swal.fire( {
+                title: 'Actualizado',
+                icon: 'success',
+              } );
+              this.router.navigateByUrl( `/benefit-detail/show/${ this.benefitDetail.id }` )
             },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp'
+            error: err => {
+              Swal.fire( {
+                title: 'Error',
+                text: err.error.message,
+                icon: 'error'
+              } );
+              this.disableSubmitBtn = false;
             }
-          } )
-          this.router.navigateByUrl( `/benefit-detail/show/${ this.benefitDetail.id }` )
-        } );
+          }
+        );
 
     } else {
 
       this.benefitDetailService.create( this.createForm.value )
-        .subscribe( benefitDetailCreated => {
-          this.router.navigateByUrl( `/benefit-detail/show/${ benefitDetailCreated.id }` )
+        .subscribe( {
+          next: benefitDetailCreated => {
+            this.router.navigateByUrl( `/benefit-detail/show/${ benefitDetailCreated.id }` );
+            Swal.fire( {
+              title: 'Creado',
+              icon: 'success'
+            } );
+          },
+          error: err => {
+            this.disableSubmitBtn = false;
+            Swal.fire( {
+              title: 'Error',
+              text: err.error.message,
+              icon: 'error'
+            } );
+            this.disableSubmitBtn = false;
+          }
         } );
     }
     this.disableSubmitBtn = true;
