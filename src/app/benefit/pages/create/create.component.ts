@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap, Observable, of } from 'rxjs';
+
+import { switchMap } from 'rxjs';
 import Swal from 'sweetalert2';
+
+import { BenefitDetail } from 'src/app/benefit-detail/interfaces/benefit-detail.interface';
+import { BenefitDetailService } from 'src/app/benefit-detail/services/benefit-detail.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
-import { BenefitDetailService } from 'src/app/benefit-detail/services/benefit-detail.service';
-import { BenefitDetail } from 'src/app/benefit-detail/interfaces/benefit-detail.interface';
-import { ValidatorService } from 'src/app/shared/services/validator.service';
 
 @Component( {
   selector: 'benefit-create',
@@ -24,22 +27,34 @@ export class CreateComponent {
     benefit_detail: []
   };
   benefitDetails: BenefitDetail[] = [];
-  disableSubmitBtn: boolean = false;
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ]
   } );
+  disableSubmitBtn: boolean = false;
   loaded: boolean = false;
 
   get benefitDetailFormGroup (): FormGroup | any {
     return this.createForm.controls[ 'benefitDetailFormGroup' ];
   }
 
+  get benefitNameErrors (): string {
+    const errors = this.createForm.get( 'name' )?.errors;
+    if ( errors![ 'minlength' ] ) {
+      return 'El nombre no cumple con el largo mínimo de 5 caracteres';
+    }
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
+    }
+    return '';
+  }
+
   constructor (
-    private fb: FormBuilder,
-    private benefitService: BenefitService,
-    private benefitDetailService: BenefitDetailService,
-    private router: Router,
     private activatedRoute: ActivatedRoute,
+    private as: AlertService,
+    private benefitDetailService: BenefitDetailService,
+    private benefitService: BenefitService,
+    private fb: FormBuilder,
+    private router: Router,
     private validatorService: ValidatorService
   ) { }
 
@@ -76,20 +91,35 @@ export class CreateComponent {
       .pipe(
         switchMap( ( { id } ) => this.benefitService.show( id ) )
       )
-      .subscribe( benefit => {
-        const extractBenefit = Object.values( benefit )[ 0 ];
-        this.benefit = extractBenefit;
-        this.createForm.get( 'name' )?.setValue( extractBenefit.name );
-        Object.keys( this.benefitDetailFormGroup.controls ).forEach( ( key: string ) => {
-          Object.values<Benefit>( extractBenefit.benefit_detail ).forEach( benefitDetail => {
-            if ( key === benefitDetail.id!.toString() ) {
-              this.benefitDetailFormGroup.get( key ).setValue( true );
-            }
-          } );
-
+      .subscribe(
+        {
+          next: benefit => {
+            const extractBenefit = Object.values( benefit )[ 0 ];
+            this.benefit = extractBenefit;
+            this.createForm.get( 'name' )?.setValue( extractBenefit.name );
+            Object.keys( this.benefitDetailFormGroup.controls ).forEach( ( key: string ) => {
+              Object.values<Benefit>( extractBenefit.benefit_detail ).forEach( benefitDetail => {
+                if ( key === benefitDetail.id!.toString() ) {
+                  this.benefitDetailFormGroup.get( key ).setValue( true );
+                }
+              } );
+            } );
+          },
+          error: ( { error } ) => {
+            this.router.navigateByUrl( 'benefit-employee' );
+            Swal.fire( {
+              title: 'Error',
+              icon: 'error',
+              html: error.error.msg,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: ( toast ) => {
+                toast.addEventListener( 'mouseenter', Swal.stopTimer )
+                toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+              }
+            } );
+          }
         } );
-      } );
-
   }
 
   campoEsValido ( campo: string ) {
@@ -117,19 +147,12 @@ export class CreateComponent {
         .subscribe(
           {
             next: () => {
-              Swal.fire( {
-                title: 'Actualizado',
-                icon: 'success'
-              } )
               this.router.navigateByUrl( `/benefit/show/${ this.benefit.id }` )
+              this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS )
             },
-            error: err => {
-              Swal.fire( {
-                title: 'Error',
-                text: err.error.message,
-                icon: 'error'
-              } )
+            error: ( { error } ) => {
               this.disableSubmitBtn = false;
+              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
             }
           } );
 
@@ -138,20 +161,13 @@ export class CreateComponent {
       this.benefitService.create( this.createForm.value )
         .subscribe(
           {
-            next: benefitCreated => {
-              this.router.navigateByUrl( `/benefit/show/${ benefitCreated.id }` )
-              Swal.fire( {
-                title: 'Creado',
-                icon: 'success'
-              } );
+            next: ( { id } ) => {
+              this.router.navigateByUrl( `/benefit/show/${ id }` )
+              this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS );
             },
-            error: err => {
-              Swal.fire( {
-                title: 'Error',
-                text: err.error.message,
-                icon: 'error'
-              } )
+            error: ( { error } ) => {
               this.disableSubmitBtn = false;
+              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
             }
           } );
     }

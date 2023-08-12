@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
+import Swal from 'sweetalert2';
+
+import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
 import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
-import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 
 @Component( {
   selector: 'benefitdetail-index',

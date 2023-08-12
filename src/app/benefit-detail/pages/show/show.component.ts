@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { BenefitDetailService } from '../../services/benefit-detail.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
 import { switchMap } from 'rxjs';
+
 import Swal from 'sweetalert2';
+
+import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
+import { BenefitDetailService } from '../../services/benefit-detail.service';
 
 @Component( {
   selector: 'benefitdetail-show',

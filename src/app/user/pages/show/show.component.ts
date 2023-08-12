@@ -73,7 +73,7 @@ export class ShowComponent {
             next: resp => {
               this.router.navigateByUrl( 'user/index' );
               Swal.fire( {
-                title: 'Creado',
+                title: 'Eliminado',
                 icon: 'success'
               } );
 

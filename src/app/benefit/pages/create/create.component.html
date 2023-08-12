@@ -1,41 +1,33 @@
 <div class="row">
   <div class="col">
     <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
-
       <div class="mb-3">
         <label class="form-label" for="name">Nombre del Beneficio</label>
         <input [ngClass]="{'invalid': campoEsValido('name')}" class="form-control" type="text" formControlName="name"
           id="name" placeholder="Nombre Completo">
-        <span class="form-text text-danger" *ngIf="campoEsValido('name')">Obligatorio</span>
+        <small *ngIf="campoEsValido('name')" class="text-danger">{{ benefitNameErrors }}</small>
       </div>
-
       <div class="mb-3">
         <label class="form-label">Detalles de Beneficio Disponibles</label>
-
         <div class="row">
-
           <div *ngIf="!loaded">
             <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
           </div>
-
           <div class="col-3 mb-2" *ngFor="let benefitDetail of benefitDetails; let i = index">
-
-            <input type="checkbox" class="form-check-input"
-              [ngClass]="{'invalid': !benefitDetailFormGroup.valid && benefitDetailFormGroup.touched}"
-              [formControl]="benefitDetailFormGroup.get(benefitDetail.id?.toString())" />
-            <label class="form-check-label ms-2" for="{{benefitDetail.id}}">{{benefitDetail.name}}</label>
+            <label class="form-check-label ms-2">
+              <input type="checkbox" class="form-check-input"
+                [ngClass]="{'invalid': !benefitDetailFormGroup.valid && benefitDetailFormGroup.touched}"
+                [formControl]="benefitDetailFormGroup.get(benefitDetail.id?.toString())" />
+              {{benefitDetail.name}}
+            </label>
           </div>
-
         </div>
-
       </div>
-
       <div class="mb-3">
         <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
           {{ ( benefit.id ) ? 'Actualizar' : 'Crear' }}
         </button>
       </div>
-
     </form>
   </div>
 </div>

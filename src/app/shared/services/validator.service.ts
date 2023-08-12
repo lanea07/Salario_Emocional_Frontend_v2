@@ -15,16 +15,29 @@ export class ValidatorService {
     }
   }
 
+  /**
+   * Field value which this validator is applied must be greater than input
+   * 
+   * @param {number} min 
+   * @returns {ValidatorFn}
+   */
   minIfFilled ( min: number ): ValidatorFn {
     return ( c: AbstractControl ): ValidationErrors | null => {
       return ( !c.value && c.value !== 0 )
         ? null
         : ( c && c.value < min )
-          ? { min: 'Value must be greater than zero' }
+          ? { minIfFilled: `El valor debe ser mayor o igual que ${ min }` }
           : null;
     }
   };
 
+  /**
+   * Compares two inputs (ideally passwords) to see if both inputs are equal
+   * 
+   * @param {string} campo1 
+   * @param {string} campo2 
+   * @returns {ValidationErrors | null}
+   */
   camposIguales ( campo1: string, campo2: string ) {
     return ( formGroup: AbstractControl ): ValidationErrors | null => {
       const pass1 = formGroup.get( campo1 )?.value;

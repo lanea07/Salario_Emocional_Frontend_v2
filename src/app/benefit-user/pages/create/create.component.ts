@@ -1,21 +1,23 @@
-import { Component, OnInit, Injectable, ChangeDetectorRef, Pipe, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { BenefitService } from '../../../benefit/services/benefit.service';
-import { Benefit } from '../../../benefit/interfaces/benefit.interface';
-import { BenefitDetail } from '../../../benefit-detail/interfaces/benefit-detail.interface';
-import { tap, switchMap } from 'rxjs/operators';
-import { NgbCalendar, NgbDate, NgbDatepicker, NgbTimeAdapter, NgbTimeStruct, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
-import { addHours, monthsInYear } from 'date-fns';
 import { formatDate } from '@angular/common';
+import { ChangeDetectorRef, Component, Injectable, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+
+import { NgbCalendar, NgbDate, NgbDatepicker, NgbTimeAdapter, NgbTimeStruct, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
+import { addHours } from 'date-fns';
 import Swal from 'sweetalert2';
-import { UserService } from '../../../user/services/user.service';
-import { User } from '../../../user/interfaces/user.interface';
+
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { AuthService } from '../../../auth/services/auth.service';
-import { BenefitUserService } from '../../services/benefit-user.service';
+import { BenefitDetail } from '../../../benefit-detail/interfaces/benefit-detail.interface';
+import { Benefit } from '../../../benefit/interfaces/benefit.interface';
+import { BenefitService } from '../../../benefit/services/benefit.service';
+import { User } from '../../../user/interfaces/user.interface';
+import { UserService } from '../../../user/services/user.service';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
-import { forkJoin, of } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { BenefitUserService } from '../../services/benefit-user.service';
 
 const pad = ( i: number ): string => ( i < 10 ? `0${ i }` : `${ i }` );
 
@@ -46,46 +48,86 @@ export class NgbTimeStringAdapter extends NgbTimeAdapter<string> {
 } )
 export class CreateComponent implements OnInit {
 
-
-  disableSubmitBtn: boolean = false;
-  benefits!: Benefit[];
-  benefit_details?: BenefitDetail[];
-  createForm: FormGroup = this.fb.group( {
-    benefit_id: [ { value: '', disabled: true }, Validators.required ],
-    benefit_detail_id: [ { value: '', disabled: true }, Validators.required ],
-    time: [ '', Validators.required ],
-    model: [ '', Validators.required ],
-    benefit_begin_time: [ '' ],
-    benefit_end_time: [ '' ],
-    user_id: [ { value: '', disabled: true } ]
-  } );
-  date!: { year: number, month: number };
-  time!: { hour: number, minute: number };
-  selectedBenefitDetail?: BenefitDetail;
-  benefit_begin_time!: string;
-  users!: User[];
-  meridian: boolean = true;
-  userAndBenefitSpinner: boolean = true;
-  benefitDetailSpinner: boolean = true;
-  currentUserBenefits?: BenefitUser;
-
   @ViewChild( NgbDatepicker ) dp?: NgbDatepicker;
   @ViewChild( NgbTimepicker ) tp?: NgbTimepicker;
+
+  benefit_begin_time!: string;
+  benefits!: Benefit[];
+  benefit_details?: BenefitDetail[];
+  benefitDetailSpinner: boolean = true;
+  createForm: FormGroup = this.fb.group( {
+    benefit_begin_time: [ '' ],
+    benefit_detail_id: [ { value: '', disabled: true }, Validators.required ],
+    benefit_end_time: [ '' ],
+    benefit_id: [ { value: '', disabled: true }, Validators.required ],
+    model: [ '', Validators.required ],
+    time: [ '', Validators.required ],
+    user_id: [ { value: '', disabled: true }, Validators.required ]
+  } );
+  currentUserBenefits?: BenefitUser;
+  date!: { year: number, month: number };
+  disableSubmitBtn: boolean = false;
+  meridian: boolean = true;
+  time!: { hour: number, minute: number };
+  selectedBenefitDetail?: BenefitDetail;
+  users!: User[];
+  userAndBenefitSpinner: boolean = true;
 
   public isDayDisabled = ( date: NgbDate ) =>
     this.ngbCalendar.getWeekday( date ) === 6 || this.ngbCalendar.getWeekday( date ) === 7;
 
+  get userIdErrors (): string {
+    const errors = this.createForm.get( 'user_id' )?.errors;
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
+    }
+    return '';
+  }
+
+  get benefitIdErrors (): string {
+    const errors = this.createForm.get( 'benefit_id' )?.errors;
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
+    }
+    return '';
+  }
+
+  get benefitDetailIdErrors (): string {
+    const errors = this.createForm.get( 'benefit_detail_id' )?.errors;
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
+    }
+    return '';
+  }
+
+  get datePickerErrors (): string {
+    const errors = this.createForm.get( 'model' )?.errors;
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
+    }
+    return '';
+  }
+
+  get timePickerErrors (): string {
+    const errors = this.createForm.get( 'time' )?.errors;
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
+    }
+    return '';
+  }
+
 
   constructor (
-    private fb: FormBuilder,
+    private activatedRoute: ActivatedRoute,
+    private as: AlertService,
     private authService: AuthService,
     private benefitService: BenefitService,
     private benefitUserService: BenefitUserService,
-    private userService: UserService,
-    private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private activatedRoute: ActivatedRoute,
-    private ngbCalendar: NgbCalendar
+    private fb: FormBuilder,
+    private ngbCalendar: NgbCalendar,
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit (): void {
@@ -180,52 +222,32 @@ export class CreateComponent implements OnInit {
 
     if ( this.currentUserBenefits?.id ) {
       this.benefitUserService.update( this.currentUserBenefits!.benefit_user[ 0 ].id, this.createForm.value )
-        .subscribe( resp => {
-          Swal.fire( {
-            title: 'Actualizado',
-            icon: 'success',
-            showClass: {
-              popup: 'animate__animated animate__fadeIn'
+        .subscribe(
+          {
+            next: () => {
+              this.disableSubmitBtn = false;
+              this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
             },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp'
+            error: ( { error } ) => {
+              this.disableSubmitBtn = false;
+              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
             }
-          } )
-        } );
+          } );
     } else {
       this.benefitUserService.create( this.createForm.value )
         .subscribe( {
-          next: ( resp ) => {
-            Swal.fire( {
-              title: 'Creado',
-              text: 'Beneficio registrado',
-              icon: 'success',
-              showClass: {
-                popup: 'animate__animated animate__fadeIn'
-              },
-              hideClass: {
-                popup: 'animate__animated animate__fadeOutUp'
-              }
-            } );
-            if ( environment.production ) {
-              this.createForm.reset();
-            }
+          next: () => {
+            this.disableSubmitBtn = false;
+            this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS );
+            this.createForm.reset();
           },
-          error: ( err ) => {
-            Swal.fire( {
-              title: 'Error al crear beneficio',
-              text: err.error.message,
-              icon: 'error',
-              showClass: {
-                popup: 'animate__animated animate__fadeIn'
-              },
-              hideClass: {
-                popup: 'animate__animated animate__fadeOutUp'
-              }
-            } );
+          error: ( { error } ) => {
+            this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+            this.disableSubmitBtn = false;
           }
         } );
     }
+    this.disableSubmitBtn = true;
   }
 
   fillBenefitDetail ( event: any ) {

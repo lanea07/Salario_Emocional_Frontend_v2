@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import Swal from 'sweetalert2';
+
 import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 
 @Component( {
   selector: 'benefit-index',
