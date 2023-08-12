@@ -1,4 +1,4 @@
-<div class="row mt-5">
+<div class="row">
   <div class="col">
     <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
 
@@ -6,7 +6,7 @@
         <label class="form-label" for="name">Nombre del Cargo</label>
         <input [ngClass]="{'invalid': campoEsValido('name')}" class="form-control" type="text" formControlName="name"
           id="name" placeholder="Nombre Completo">
-        <span class="form-text text-danger" *ngIf="campoEsValido('name')">Obligatorio</span>
+        <small *ngIf="campoEsValido('name')" class="text-danger">{{ positionNameErrors }}</small>
       </div>
 
       <div class="mb-3">

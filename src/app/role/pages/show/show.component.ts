@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { RoleService } from '../../services/role.service';
-import { Role } from 'src/app/role/interfaces/role.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
+
 import Swal from 'sweetalert2';
+
+import { Role } from 'src/app/role/interfaces/role.interface';
+import { RoleService } from '../../services/role.service';
 
 @Component( {
   selector: 'role-show',
@@ -17,8 +19,8 @@ export class ShowComponent {
   loaded: boolean = false;
 
   constructor (
-    private roleService: RoleService,
     private activatedRoute: ActivatedRoute,
+    private roleService: RoleService,
     private router: Router
   ) { }
 

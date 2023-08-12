@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BenefitDetailService } from '../../services/benefit-detail.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ValidatorService } from 'src/app/shared/services/validator.service';
+
 import { switchMap } from 'rxjs';
-import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
 import Swal from 'sweetalert2';
+
+import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import { ValidatorService } from 'src/app/shared/services/validator.service';
+import { BenefitDetailService } from '../../services/benefit-detail.service';
 
 @Component( {
   selector: 'benefitdetail-create',
@@ -21,22 +24,38 @@ export class CreateComponent {
     updated_at: new Date,
     benefit_detail: []
   };
-  disableSubmitBtn: boolean = false;
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
     time_hours: [ '', [ this.validatorService.minIfFilled( 0 ) ] ]
   } );
+  disableSubmitBtn: boolean = false;
 
 
   get benefitFormGroup (): FormGroup | any {
     return this.createForm.controls[ 'benefitFormGroup' ];
   }
 
+  get benefitDetailNameErrors (): string {
+    const errors = this.createForm.get( 'name' )?.errors;
+    if ( errors![ 'minlength' ] ) {
+      return 'El nombre no cumple con el largo mínimo de 5 caracteres';
+    }
+    return '';
+  }
+  get timeHoursErrors (): string {
+    const errors = this.createForm.get( 'time_hours' )?.errors;
+    if ( errors![ 'minIfFilled' ] ) {
+      return errors![ 'minIfFilled' ];
+    }
+    return '';
+  }
+
   constructor (
-    private fb: FormBuilder,
-    private benefitDetailService: BenefitDetailService,
-    private router: Router,
     private activatedRoute: ActivatedRoute,
+    private as: AlertService,
+    private benefitDetailService: BenefitDetailService,
+    private fb: FormBuilder,
+    private router: Router,
     private validatorService: ValidatorService
   ) { }
 
@@ -76,19 +95,19 @@ export class CreateComponent {
           this.createForm.get( 'name' )?.setValue( extractBenefitDetail.name );
           this.createForm.get( 'time_hours' )?.setValue( extractBenefitDetail.time_hours );
         },
-        error: ( error ) => {
+        error: ( { error } ) => {
           this.router.navigateByUrl( 'benefit-employee' );
           Swal.fire( {
             title: 'Error',
             icon: 'error',
-            html: error.error.msg,
+            html: error.msg,
             timer: 3000,
             timerProgressBar: true,
             didOpen: ( toast ) => {
               toast.addEventListener( 'mouseenter', Swal.stopTimer )
               toast.addEventListener( 'mouseleave', Swal.resumeTimer )
             }
-          } )
+          } );
         }
       } );
 
@@ -107,25 +126,31 @@ export class CreateComponent {
 
     if ( this.benefitDetail.id ) {
       this.benefitDetailService.update( this.benefitDetail.id, this.createForm.value )
-        .subscribe( resp => {
-          Swal.fire( {
-            title: 'Actualizado',
-            icon: 'success',
-            showClass: {
-              popup: 'animate__animated animate__fadeIn'
+        .subscribe(
+          {
+            next: () => {
+              this.router.navigateByUrl( `/benefit-detail/show/${ this.benefitDetail.id }` )
+              this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
             },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp'
+            error: ( { error } ) => {
+              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+              this.disableSubmitBtn = false;
             }
-          } )
-          this.router.navigateByUrl( `/benefit-detail/show/${ this.benefitDetail.id }` )
-        } );
+          }
+        );
 
     } else {
 
       this.benefitDetailService.create( this.createForm.value )
-        .subscribe( benefitDetailCreated => {
-          this.router.navigateByUrl( `/benefit-detail/show/${ benefitDetailCreated.id }` )
+        .subscribe( {
+          next: ( { id } ) => {
+            this.router.navigateByUrl( `/benefit-detail/show/${ id }` );
+            this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS );
+          },
+          error: ( { error } ) => {
+            this.disableSubmitBtn = false;
+            this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+          }
         } );
     }
     this.disableSubmitBtn = true;

@@ -1,17 +1,18 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { BenefitUserService } from '../../services/benefit-user.service';
-import { BenefitUser, BenefitUserElement } from '../../interfaces/benefit-user.interface';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import Swal from 'sweetalert2';
+
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { TotalBancoHorasPipe } from 'src/app/shared/pipes/TotalBancoHoras.pipe';
+import { User } from 'src/app/user/interfaces/user.interface';
+import { UserService } from 'src/app/user/services/user.service';
 import { Benefit } from '../../../benefit/interfaces/benefit.interface';
 import { BenefitService } from '../../../benefit/services/benefit.service';
-import { UserService } from 'src/app/user/services/user.service';
-import { User } from 'src/app/user/interfaces/user.interface';
-import { DatePipe } from '@angular/common';
-import { TotalBancoHorasPipe } from 'src/app/shared/pipes/TotalBancoHoras.pipe';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { AuthService } from 'src/app/auth/services/auth.service';
-import { switchMap } from 'rxjs/operators';
+import { BenefitUser } from '../../interfaces/benefit-user.interface';
+import { BenefitUserService } from '../../services/benefit-user.service';
 
 @Component( {
   selector: 'benefitemployee-index',
@@ -21,23 +22,21 @@ import { switchMap } from 'rxjs/operators';
 } )
 export class IndexComponent implements OnInit {
 
-  onClickString: string = '';
-
-  years: number[] = [];
+  allUsersBenefits?: BenefitUser[];
+  bancosHoras: number[] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+  benefits!: Benefit[];
+  calendarData: any;
+  currentUserBenefits?: BenefitUser;
+  isAdmin: boolean = false;
+  totalBancoHoras: number = 0;
   user?: User;
   users?: User[];
-  benefits!: Benefit[];
-  allUsersBenefits?: BenefitUser[];
-  currentUserBenefits?: BenefitUser;
-  totalBancoHoras: number = 0;
-  calendarData: any;
-  bancosHoras: number[] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
-  isAdmin: boolean = false;
-
   viewBenefitUser: FormGroup = this.fb.group( {
     years: [ new Date().getFullYear().toString(), Validators.required ],
     users: [ '', Validators.required ]
   } );
+  years: number[] = [];
+
 
   constructor (
     private fb: FormBuilder,
@@ -182,6 +181,10 @@ export class IndexComponent implements OnInit {
     }
     this.totalBancoHoras = 0;
     return '<li class="list-group-item">No se encontraron beneficios registrados</li>';
+  }
+
+  closePanel () {
+    this.viewBenefitUser.controls[ 'users' ].setValue( "" );
   }
 
 }

@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
+import Swal from 'sweetalert2';
+
 import { Role } from 'src/app/role/interfaces/role.interface';
 import { RoleService } from '../../services/role.service';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 
 @Component( {
   selector: 'role-index',

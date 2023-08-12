@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { PositionService } from '../../services/position.service';
-import { Position } from '../../interfaces/position.interface';
 import { Router } from '@angular/router';
+
 import Swal from 'sweetalert2';
+
+import { Position } from '../../interfaces/position.interface';
+import { PositionService } from '../../services/position.service';
 
 @Component( {
   selector: 'position-index',

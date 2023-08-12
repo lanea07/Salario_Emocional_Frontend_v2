@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import { Position } from '../../interfaces/position.interface';
-import { PositionService } from '../../services/position.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
+
 import Swal from 'sweetalert2';
-import { HttpErrorResponse } from '@angular/common/http';
+
+import { Position } from '../../interfaces/position.interface';
+import { PositionService } from '../../services/position.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'position-show',
@@ -14,13 +16,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 } )
 export class ShowComponent {
 
-  position?: Position;
   loaded: boolean = false;
+  position?: Position;
 
   constructor (
+    private activatedRoute: ActivatedRoute,
+    private as: AlertService,
     private positionService: PositionService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
+    private router: Router
   ) { }
 
   ngOnInit () {
@@ -67,13 +70,17 @@ export class ShowComponent {
       }
     } ).then( ( result ) => {
       if ( result.isConfirmed ) {
-        this.positionService.destroy( this.position?.id ).subscribe( resp => {
-          Swal.fire(
-            'Deleted!',
-            'success'
-          );
-          this.router.navigateByUrl( '/positions' );
-        } );
+        this.positionService.destroy( this.position?.id )
+          .subscribe(
+            {
+              next: () => {
+                this.router.navigateByUrl( '/positions' );
+                this.as.subscriptionAlert( subscriptionMessageTitle.ELIMINADO, subscriptionMessageIcon.SUCCESS );
+              },
+              error: ( { error } ) => {
+                this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+              }
+            } );
       };
     } );
   }

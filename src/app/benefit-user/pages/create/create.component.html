@@ -1,60 +1,74 @@
-<div class="row mt-5 p-5">
+<div class="row mt-5">
   <h1>{{ currentUserBenefits?.id ? 'Actualizar' : 'Nuevo' }} beneficio para {{ currentUserBenefits?.name }}</h1>
   <hr>
 
   <div class="col">
 
-    <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
+    <form [formGroup]="createForm" (ngSubmit)="save()">
 
       <div class="row mb-3">
         <div class="col-xl-9 px-2 d-flex flex-column justify-content-evenly">
 
-          <label for="benefit">Selecciona un colaborador</label>
-          <div class="input-group">
-            <select class="form-select" formControlName="user_id" id="user_id" required
-              [ngClass]="{'invalid': campoEsValido('user_id')}">
-              <option value="">-- Seleccione Colaborador --</option>
-              <option *ngFor="let user of users" value="{{ user.id }}">{{ user.name }}</option>
-            </select>
-            <span *ngIf="userAndBenefitSpinner" class="input-group-text" id="basic-addon1">
-              <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-            </span>
-
+          <div class="row">
+            <label for="user_id">Selecciona un colaborador</label>
+            <div class="input-group">
+              <select class="form-select" formControlName="user_id" id="user_id"
+                [ngClass]="{'invalid': campoEsValido('user_id')}">
+                <option value="">-- Seleccione Colaborador --</option>
+                <option *ngFor="let user of users" value="{{ user.id }}">{{ user.name }}</option>
+              </select>
+              <span *ngIf="userAndBenefitSpinner" class="input-group-text" id="basic-addon1">
+                <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+              </span>
+            </div>
+            <small *ngIf="campoEsValido('user_id')" class="text-danger">{{ userIdErrors }}</small>
           </div>
 
-          <label for="benefit">Selecciona un beneficio</label>
-          <div class="input-group">
-            <select class="form-select" formControlName="benefit_id" id="benefit_id" required
-              [ngClass]="{'invalid': campoEsValido('benefit_id')}" (change)="fillBenefitDetail($event)">
-              <option value="">-- Seleccione Beneficio --</option>
-              <option *ngFor="let benefit of benefits" value="{{ benefit.id }}">{{ benefit.name }}</option>
-            </select>
-            <span *ngIf="userAndBenefitSpinner" class="input-group-text" id="basic-addon1">
-              <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-            </span>
+          <div class="row">
+            <label for="benefit_id">Selecciona un beneficio</label>
+            <div class="input-group">
+              <select class="form-select" formControlName="benefit_id" id="benefit_id"
+                [ngClass]="{'invalid': campoEsValido('benefit_id')}" (change)="fillBenefitDetail($event)">
+                <option value="">-- Seleccione Beneficio --</option>
+                <option *ngFor="let benefit of benefits" value="{{ benefit.id }}">{{ benefit.name }}</option>
+              </select>
+              <span *ngIf="userAndBenefitSpinner" class="input-group-text" id="basic-addon1">
+                <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+              </span>
+            </div>
+            <small *ngIf="campoEsValido('benefit_id')" class="text-danger">{{ benefitIdErrors }}</small>
           </div>
 
-          <label for="benefit_detail">Selecciona un Detalle</label>
-          <div class="input-group">
-            <select class="form-select" formControlName="benefit_detail_id" id="benefit_detail_id" required
-              [ngClass]="{'invalid': campoEsValido('benefit_detail_id')}">
-              <option value="">-- Seleccione Detalle --</option>
-              <option *ngFor="let benefit_detail of benefit_details" value="{{ benefit_detail.id }}">
-                {{ benefit_detail.name }}</option>
-            </select>
-            <span *ngIf="!benefitDetailSpinner" class="input-group-text" id="basic-addon1">
-              <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-            </span>
+          <div class="row">
+            <label for="benefit_detail_id">Selecciona un Detalle</label>
+            <div class="input-group">
+              <select class="form-select" formControlName="benefit_detail_id" id="benefit_detail_id"
+                [ngClass]="{'invalid': campoEsValido('benefit_detail_id')}">
+                <option value="">-- Seleccione Detalle --</option>
+                <option *ngFor="let benefit_detail of benefit_details" value="{{ benefit_detail.id }}">
+                  {{ benefit_detail.name }}</option>
+              </select>
+              <span *ngIf="!benefitDetailSpinner" class="input-group-text" id="basic-addon1">
+                <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+              </span>
+            </div>
+            <small *ngIf="campoEsValido('benefit_detail_id')" class="text-danger">{{ benefitDetailIdErrors }}</small>
           </div>
 
         </div>
 
         <div class="col-xl-3 px-2 d-flex flex-column">
 
-          <ngb-datepicker #dp class=" m-2" formControlName="model" (navigate)="date = $event.next" required
-            [ngClass]="{'invalid': campoEsValido('model')}"></ngb-datepicker>
-          <ngb-timepicker #tp class="m-2 d-flex justify-content-around" formControlName="time" required
-            [ngClass]="{'invalid': campoEsValido('time')}" [meridian]="meridian"></ngb-timepicker>
+          <div class="row">
+            <ngb-datepicker #dp class=" m-2" formControlName="model" (navigate)="date = $event.next"
+              [ngClass]="{'invalid': campoEsValido('model')}" [markDisabled]="isDayDisabled"></ngb-datepicker>
+            <small *ngIf="campoEsValido('model')" class="text-danger">{{ datePickerErrors }}</small>
+          </div>
+          <div class="row">
+            <ngb-timepicker #tp class="m-2 d-flex justify-content-around" formControlName="time"
+              [ngClass]="{'invalid': campoEsValido('time')}" [meridian]="meridian"></ngb-timepicker>
+            <small *ngIf="campoEsValido('time')" class="text-danger">{{ timePickerErrors }}</small>
+          </div>
 
         </div>
       </div>

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { Benefit } from '../../interfaces/benefit.interface';
-import { BenefitService } from '../../services/benefit.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
-import { BenefitDetail } from 'src/app/benefit-detail/interfaces/benefit-detail.interface';
+
 import Swal from 'sweetalert2';
+
+import { Benefit } from '../../interfaces/benefit.interface';
+import { BenefitService } from '../../services/benefit.service';
 
 @Component( {
   selector: 'benefit-show',
