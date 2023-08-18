@@ -46,7 +46,8 @@
             Beneficios - Empleados
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" routerLink="/benefit-employee/create" routerLinkActive="active">Nuevo</a></li>
+            <li *ngIf="isAdmin"><a class="dropdown-item" routerLink="/benefit-employee/create" routerLinkActive="active">Nuevo</a>
+            </li>
             <li><a class="dropdown-item" routerLink="/benefit-employee/index" routerLinkActive="active">Listado</a></li>
           </ul>
         </li>

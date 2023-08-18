@@ -13,6 +13,8 @@ import { Benefit } from '../../../benefit/interfaces/benefit.interface';
 import { BenefitService } from '../../../benefit/services/benefit.service';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import { sub } from 'date-fns';
 
 @Component( {
   selector: 'benefitemployee-index',
@@ -39,12 +41,13 @@ export class IndexComponent implements OnInit {
 
 
   constructor (
-    private fb: FormBuilder,
-    private benefitUserService: BenefitUserService,
+    private as: AlertService,
+    private authService: AuthService,
     private benefitService: BenefitService,
+    private benefitUserService: BenefitUserService,
+    private fb: FormBuilder,
     private userService: UserService,
-    private router: Router,
-    private authService: AuthService
+    private router: Router
   ) {
     const currentYear = new Date().getFullYear();
     for ( let i = currentYear; i > currentYear - 5; i-- ) {
@@ -143,6 +146,7 @@ export class IndexComponent implements OnInit {
           return filteredBenefit
             ? `<li class="list-group-item">
               Fecha de redención: ${ new DatePipe( 'en-US' ).transform( filteredBenefit[ 0 ].benefit_begin_time, 'dd/MM/yyyy, hh:mm a' ) }
+              <a class="text-link link-primary" href="/benefit-employee/show/${filteredBenefit[ 0 ].id}">Ampliar</a>
             </li>`
             : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
 
@@ -151,21 +155,25 @@ export class IndexComponent implements OnInit {
           filteredBenefit.forEach( benefit_detail => {
             html += `<li class="list-group-item">
               ${ new DatePipe( 'en-US' ).transform( benefit_detail.benefit_begin_time, 'dd/MM/yyyy, hh:mm a' ) }: ${ benefit_detail.benefit_detail.time_hours } horas
+              <a class="text-link link-primary" href="/benefit-employee/show/${benefit_detail.id}">Ampliar</a>
             </li>`
           } )
           return filteredBenefit ? html : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
 
         case 'Mi Horario Flexible':
-          return filteredBenefit
-            ? `<li class="list-group-item">
-                ${ filteredBenefit![ 0 ].benefit_detail.name }
-              </li>`
-            : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
+          filteredBenefit.forEach( benefit_detail => {
+            html += `<li class="list-group-item">
+              ${ new DatePipe( 'en-US' ).transform( benefit_detail.benefit_begin_time, 'dd/MM/yyyy, hh:mm a' ) }
+              <a class="text-link link-primary" href="/benefit-employee/show/${ benefit_detail.id }">Ampliar</a>
+            </li>`
+          } );
+          return filteredBenefit ? html : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
 
         case 'Mi Viernes':
           filteredBenefit.forEach( benefit_detail => {
             html += `<li class="list-group-item">
               ${ new DatePipe( 'en-US' ).transform( benefit_detail.benefit_begin_time, 'dd/MM/yyyy, hh:mm a' ) }: ${ benefit_detail.benefit_detail.time_hours } horas
+              <a class="text-link link-primary" href="/benefit-employee/show/${benefit_detail.id}">Ampliar</a>
             </li>`
           } )
           return filteredBenefit ? html : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
@@ -174,6 +182,7 @@ export class IndexComponent implements OnInit {
           return filteredBenefit
             ? `<li class="list-group-item">
                 ${ filteredBenefit![ 0 ].benefit_detail.name }
+                <a class="text-link link-primary" href="/benefit-employee/show/${filteredBenefit[ 0 ].id}">Ampliar</a>
               </li>`
             : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
       }
@@ -185,6 +194,16 @@ export class IndexComponent implements OnInit {
 
   closePanel () {
     this.viewBenefitUser.controls[ 'users' ].setValue( "" );
+  }
+
+  downloadReport () {
+    this.benefitUserService.downloadReport( this.viewBenefitUser.value )
+      .subscribe(
+        {
+          next: resp => this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.INFO, 'El reporte fue programado y será enviado a tu correo. Revisa tu bandeja de correo no deseado si es necesario.' ),
+          error: err => err
+        }
+      )
   }
 
 }

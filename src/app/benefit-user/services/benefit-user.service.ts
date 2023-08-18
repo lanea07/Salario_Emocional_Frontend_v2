@@ -54,4 +54,12 @@ export class BenefitUserService {
     return this.http.delete( `${ this.apiBaseUrl }/benefituser/${ id }`, { headers, withCredentials: true } );
   }
 
+  downloadReport ( formValues: any ) {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.post( `${ this.apiBaseUrl }/exportbenefits`, formValues, { headers, withCredentials: true } );
+  }
+
 }

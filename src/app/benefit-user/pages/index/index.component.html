@@ -1,7 +1,7 @@
 <div class="row mt-5">
   <div class="col">
 
-    <form [formGroup]="viewBenefitUser">
+    <form [formGroup]="viewBenefitUser" (ngSubmit)="downloadReport()">
       <div class="row p-3">
 
         <div class="col-sm-4 my-1 my-sm-0">
@@ -38,6 +38,7 @@
               </ng-container>
 
             </select>
+            <button type="submit" class="btn btn-outline-primary" [disabled]="!viewBenefitUser.valid">Descargar</button>
           </div>
         </div>
       </div>

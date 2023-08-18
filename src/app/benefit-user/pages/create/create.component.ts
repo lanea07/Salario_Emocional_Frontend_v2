@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, Injectable, OnInit, ViewChild } from '@an
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 
 import { NgbCalendar, NgbDate, NgbDatepicker, NgbTimeAdapter, NgbTimeStruct, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 import { addHours } from 'date-fns';
@@ -160,24 +160,34 @@ export class CreateComponent implements OnInit {
               .pipe(
                 switchMap( ( { id } ) => this.benefitUserService.show( id ) )
               )
-              .subscribe( user => {
-                this.currentUserBenefits = Object.values( user )[ 0 ];
-                this.createForm.get( 'benefit_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
-                this.dp?.navigateTo( {
-                  year: new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getFullYear(),
-                  month: new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMonth() + 1
-                } )
-                this.createForm.get( 'model' )?.setValue( {
-                  'year': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getFullYear(),
-                  'month': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMonth() + 1,
-                  'day': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getDate()
-                } );
-                this.tp?.updateHour( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getHours().toString() );
-                this.tp?.updateMinute( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMinutes().toString() );
-                this.createForm.get( 'user_id' )?.setValue( this.currentUserBenefits!.id );
-                this.fillBenefitDetail( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
-              } );
+              .subscribe(
+                {
+                  next: user => {
+                    this.currentUserBenefits = Object.values( user )[ 0 ];
+                    this.createForm.get( 'user_id' )?.disable();
+                    this.createForm.get( 'benefit_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
+                    this.dp?.navigateTo( {
+                      year: new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getFullYear(),
+                      month: new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMonth() + 1
+                    } )
+                    this.createForm.get( 'model' )?.setValue( {
+                      'year': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getFullYear(),
+                      'month': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMonth() + 1,
+                      'day': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getDate()
+                    } );
+                    this.tp?.updateHour( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getHours().toString() );
+                    this.tp?.updateMinute( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMinutes().toString() );
+                    this.createForm.get( 'user_id' )?.setValue( this.currentUserBenefits!.id );
+                    this.fillBenefitDetail( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
+                  },
+                  error: err => {
+                    this.router.navigateByUrl( 'benefit-employee' );
+                    this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.statusText );
+                  }
+                }
+              );
           }
+
         },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );

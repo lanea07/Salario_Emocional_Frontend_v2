@@ -1,6 +1,1 @@
-BUG: Non-existing BenefitUser doesn't redirect neither shows error
-BUG: On Benefit Detail index, related benefit is not showing
-FIXME: Mi Horario Flexible shows only one even if there are several
-FIXME: When editing existing BenefitUser, colaborador should not be enabled.
-TODO: Create show view for BenefitUser
-TODO: Add posibility to modify Tiempo para el Viajero, Horario Flexible and Mi Cumpleaños, since they're not displayed in calendar therefore there's no link to edit them
+TODO: Remove Angular Material and NG Bootstrap styles and replace with NG Zorro
