@@ -12,14 +12,12 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { PageNotFoundComponent } from './shared/error-pages/page-not-found/page-not-found.component';
 
 @NgModule( {
   declarations: [
     AppComponent,
     MainContainerComponent,
-    NavbarComponent,
-    PageNotFoundComponent
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
