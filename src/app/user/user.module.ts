@@ -5,16 +5,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
 
 import { AngularMaterialModule } from '../angular-material/angular-material.module';
-import { BackButtonDirective } from '../shared/directives/back-button-directive.directive';
 import { CreateComponent } from './pages/create/create.component';
 import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
 import { UserRoutingModule } from './user-routing.module';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule( {
   declarations: [
-    BackButtonDirective,
     CreateComponent,
     IndexComponent,
     ShowComponent,
@@ -24,7 +23,8 @@ import { UserRoutingModule } from './user-routing.module';
     CommonModule,
     DataTablesModule,
     ReactiveFormsModule,
-    UserRoutingModule
+    UserRoutingModule,
+    SharedModule
   ]
 } )
 export class UserModule { }

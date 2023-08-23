@@ -8,13 +8,11 @@ import { BenefitDetailRoutingModule } from './benefit-detail-routing.module';
 import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
 import { CreateComponent } from './pages/create/create.component';
-import { BackButtonDirective } from '../shared/directives/back-button-directive.directive';
-
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule( {
   declarations: [
     CreateComponent,
-    BackButtonDirective,
     IndexComponent,
     ShowComponent,
   ],
@@ -22,7 +20,8 @@ import { BackButtonDirective } from '../shared/directives/back-button-directive.
     BenefitDetailRoutingModule,
     CommonModule,
     DataTablesModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ]
 } )
 export class BenefitDetailModule { }

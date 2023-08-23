@@ -4,16 +4,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { DataTablesModule } from 'angular-datatables';
 
-import { BackButtonDirective } from '../shared/directives/back-button-directive.directive';
 import { CreateComponent } from './pages/create/create.component';
 import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
 import { PositionRoutingModule } from './position-routing.module';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule( {
   declarations: [
-    BackButtonDirective,
     CreateComponent,
     IndexComponent,
     ShowComponent,
@@ -22,7 +21,8 @@ import { PositionRoutingModule } from './position-routing.module';
     CommonModule,
     DataTablesModule,
     PositionRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ]
 } )
 export class PositionModule { }
