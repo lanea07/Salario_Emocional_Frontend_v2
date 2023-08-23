@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 
-import Swal from 'sweetalert2';
-
-import { Position } from '../../interfaces/position.interface';
 import { PositionService } from '../../services/position.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 
 @Component( {
   selector: 'position-index',
@@ -12,33 +11,48 @@ import { PositionService } from '../../services/position.service';
   styles: [
   ]
 } )
-export class IndexComponent {
+export class IndexComponent implements OnInit, AfterViewInit {
 
-  positions: Position[] = [];
+  columns = [
+    { title: 'Nombre', data: 'name' },
+    {
+      title: 'Opciones',
+      data: function ( data: any, type: any, full: any ) {
+        return `<span style="cursor: pointer;" position_id="${ data.id }" class="badge rounded-pill text-bg-warning">Detalles</span>`;
+      }
+    } ];
+  dtOptions: any;
 
   constructor (
+    private as: AlertService,
     private positionService: PositionService,
+    private renderer: Renderer2,
     private router: Router
   ) { }
 
-  ngOnInit () {
-    this.positionService.index().subscribe( {
-      next: ( positions ) => {
-        this.positions = positions
-      },
-      error: ( error ) => {
-        this.router.navigateByUrl( 'benefit-employee' );
-        Swal.fire( {
-          title: 'Error',
-          icon: 'error',
-          html: error.error.msg,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: ( toast ) => {
-            toast.addEventListener( 'mouseenter', Swal.stopTimer )
-            toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+  ngOnInit (): void {
+    this.dtOptions = {
+      ajax: ( dataTablesParameters: any, callback: any ) => {
+        this.positionService.index().subscribe( {
+          next: ( positions ) => {
+            callback( { data: positions } );
+          },
+          error: ( err ) => {
+            this.router.navigateByUrl( 'benefit-employee' );
+            this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
           }
-        } )
+        } );
+      },
+      columns: this.columns,
+      responsive: true,
+      language: es_CO
+    }
+  }
+
+  ngAfterViewInit (): void {
+    this.renderer.listen( 'document', 'click', ( event ) => {
+      if ( event.target.hasAttribute( "position_id" ) ) {
+        this.router.navigate( [ "/position/show/" + event.target.getAttribute( "position_id" ) ] );
       }
     } );
   }

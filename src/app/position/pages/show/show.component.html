@@ -14,6 +14,7 @@
     </div>
 
     <div class="btn-group float-end mt-5 mb-5">
+      <button backButton class="btn">Volver</button>
       <a routerLink="/position/edit/{{position?.id}}" class="btn btn-warning" aria-current="page"
         [ngClass]="{'disabled': !loaded}">Editar</a>
       <a class="btn btn-outline-danger" (click)="destroy()" [ngClass]="{'disabled': !loaded}">Eliminar</a>

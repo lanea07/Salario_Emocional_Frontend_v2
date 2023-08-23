@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 
-import Swal from 'sweetalert2';
-
-import { Role } from 'src/app/role/interfaces/role.interface';
 import { RoleService } from '../../services/role.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 
 @Component( {
   selector: 'role-index',
@@ -12,36 +11,51 @@ import { RoleService } from '../../services/role.service';
   styles: [
   ]
 } )
-export class IndexComponent {
+export class IndexComponent implements OnInit, AfterViewInit {
 
-  roles: Role[] = [];
+  columns = [
+    { title: 'Nombre', data: 'name' },
+    {
+      title: 'Opciones',
+      data: function ( data: any, type: any, full: any ) {
+        return `<span style="cursor: pointer;" role_id="${ data.id }" class="badge rounded-pill text-bg-warning">Detalles</span>`;
+      }
+    } ];
+  dtOptions: any;
 
   constructor (
+    private as: AlertService,
+    private renderer: Renderer2,
     private roleService: RoleService,
     private router: Router
   ) { }
 
   ngOnInit (): void {
-    this.roleService.index()
-      .subscribe( {
-        next: ( roles ) => {
-          this.roles = roles
-        },
-        error: ( error ) => {
-          this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+    this.dtOptions = {
+      ajax: ( dataTablesParameters: any, callback: any ) => {
+        this.roleService.index()
+          .subscribe( {
+            next: ( roles ) => {
+              callback( { data: roles } );
+            },
+            error: ( err ) => {
+              this.router.navigateByUrl( 'benefit-employee' );
+              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
             }
-          } )
-        }
-      } );
+          } );
+      },
+      columns: this.columns,
+      responsive: true,
+      language: es_CO
+    }
+  }
+
+  ngAfterViewInit (): void {
+    this.renderer.listen( 'document', 'click', ( event ) => {
+      if ( event.target.hasAttribute( "role_id" ) ) {
+        this.router.navigate( [ "/role/show/" + event.target.getAttribute( "role_id" ) ] );
+      }
+    } );
   }
 
 }

@@ -1,23 +1,8 @@
 <div class="row mt-5">
   <div class="col">
-    <table class="table table-hover table-sm">
-      <thead class="bg-dark text-light">
-        <tr>
-          <th>Nombre</th>
-          <th>Opciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let position of positions">
-          <td>{{ position.name }}</td>
-          <td>
-            <a routerLink="/position/show/{{ position.id }}">
-              Detalle
-              <i class="fa-solid fa-circle-info fa-xs"></i>
-            </a>
-          </td>
-        </tr>
-      </tbody>
+    <table datatable [dtOptions]="dtOptions" class="table table-hover table-sm">
+      <thead class="bg-dark text-light"></thead>
+      <tbody></tbody>
     </table>
   </div>
 </div>
