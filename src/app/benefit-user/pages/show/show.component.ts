@@ -5,6 +5,7 @@ import { BenefitUserService } from '../../services/benefit-user.service';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import Swal from 'sweetalert2';
+import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'benefitemployee-show',
@@ -21,8 +22,11 @@ export class ShowComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private as: AlertService,
     private benefitUserService: BenefitUserService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle( 'Detalle' );
+  }
 
   ngOnInit (): void {
     this.activatedRoute.params

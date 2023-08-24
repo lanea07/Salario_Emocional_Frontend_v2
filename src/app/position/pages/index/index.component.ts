@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { PositionService } from '../../services/position.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
+import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'position-index',
@@ -18,7 +19,11 @@ export class IndexComponent implements OnInit, AfterViewInit {
     {
       title: 'Opciones',
       data: function ( data: any, type: any, full: any ) {
-        return `<span style="cursor: pointer;" position_id="${ data.id }" class="badge rounded-pill text-bg-warning">Detalles</span>`;
+        return `
+          <span style="cursor: pointer;" position_id="${ data.id }" class="badge rounded-pill text-bg-warning">
+            Detalles
+            <i class="fa-solid fa-circle-info fa-fade" style="color: #000000;"></i>
+          </span>`;
       }
     } ];
   dtOptions: any;
@@ -27,8 +32,11 @@ export class IndexComponent implements OnInit, AfterViewInit {
     private as: AlertService,
     private positionService: PositionService,
     private renderer: Renderer2,
-    private router: Router
-  ) { }
+    private router: Router,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle( 'Cargos' );
+  }
 
   ngOnInit (): void {
     this.dtOptions = {

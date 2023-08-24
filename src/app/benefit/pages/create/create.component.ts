@@ -11,6 +11,8 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
+import { Title } from '@angular/platform-browser';
+import { environment } from 'src/environments/environment';
 
 @Component( {
   selector: 'benefit-create',
@@ -28,10 +30,13 @@ export class CreateComponent {
   };
   benefitDetails: BenefitDetail[] = [];
   createForm: FormGroup = this.fb.group( {
-    name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ]
+    name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
+    filePoliticas: [],
   } );
   disableSubmitBtn: boolean = false;
+  filePoliticas: string = "";
   loaded: boolean = false;
+  politicsInput: boolean = true;
 
   get benefitDetailFormGroup (): FormGroup | any {
     return this.createForm.controls[ 'benefitDetailFormGroup' ];
@@ -55,8 +60,11 @@ export class CreateComponent {
     private benefitService: BenefitService,
     private fb: FormBuilder,
     private router: Router,
+    private titleService: Title,
     private validatorService: ValidatorService
-  ) { }
+  ) {
+    this.titleService.setTitle( 'Nuevo Beneficio' );
+  }
 
 
   ngOnInit () {
@@ -94,6 +102,7 @@ export class CreateComponent {
       .subscribe(
         {
           next: benefit => {
+            console.log( benefit );
             const extractBenefit = Object.values( benefit )[ 0 ];
             this.benefit = extractBenefit;
             this.createForm.get( 'name' )?.setValue( extractBenefit.name );
@@ -104,6 +113,12 @@ export class CreateComponent {
                 }
               } );
             } );
+            if ( this.benefit.politicas_path ) {
+              this.filePoliticas = `${ environment.baseUrl }/${ this.benefit.politicas_path }`;
+              this.politicsInput = false;
+            } else {
+              this.politicsInput = true;
+            }
           },
           error: ( { error } ) => {
             this.router.navigateByUrl( 'benefit-employee' );
@@ -142,8 +157,14 @@ export class CreateComponent {
       return;
     }
 
+    const formData = new FormData();
+    formData.append( 'benefitDetailFormGroup', JSON.stringify( this.createForm.get( 'benefitDetailFormGroup' )!.value ) );
+    formData.append( 'name', this.createForm.get( 'name' )!.value );
+    formData.append( 'filePoliticas', this.createForm.get( 'filePoliticas' )!.value );
+
     if ( this.benefit.id ) {
-      this.benefitService.update( this.benefit.id, this.createForm.value )
+      formData.append( '_method', 'PUT' );
+      this.benefitService.update( this.benefit.id, formData )
         .subscribe(
           {
             next: () => {
@@ -158,7 +179,7 @@ export class CreateComponent {
 
     } else {
 
-      this.benefitService.create( this.createForm.value )
+      this.benefitService.create( formData )
         .subscribe(
           {
             next: ( { id } ) => {
@@ -204,6 +225,19 @@ export class CreateComponent {
 
       return null;
     };
+  }
+
+  onFileChange ( event: any ) {
+    if ( event.target.files.length > 0 ) {
+      const file = event.target.files[ 0 ];
+      this.createForm.patchValue( {
+        filePoliticas: file
+      } );
+    }
+  }
+
+  showInput () {
+    this.politicsInput = true;
   }
 
 }

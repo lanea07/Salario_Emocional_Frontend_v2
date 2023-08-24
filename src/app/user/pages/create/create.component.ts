@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, FormArray, ValidatorFn, ValidationErrors, AbstractControl, AsyncValidator } from '@angular/forms';
-import { RoleService } from 'src/app/role/services/role.service';
-import { Role } from 'src/app/role/interfaces/role.interface';
-import { Observable, of, switchMap, timer } from 'rxjs';
-import { UserService } from '../../services/user.service';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '../../interfaces/user.interface';
+import { switchMap } from 'rxjs';
+
 import Swal from 'sweetalert2';
+
+import { Role } from 'src/app/role/interfaces/role.interface';
+import { RoleService } from 'src/app/role/services/role.service';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { Position } from '../../../position/interfaces/position.interface';
 import { PositionService } from '../../../position/services/position.service';
+import { User } from '../../interfaces/user.interface';
+import { UserService } from '../../services/user.service';
 
 @Component( {
   selector: 'user-create',
@@ -25,6 +28,22 @@ import { PositionService } from '../../../position/services/position.service';
 export class CreateComponent implements OnInit {
 
   emailPattern: string = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
+  createForm: FormGroup = this.fb.group( {
+    name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
+    email: [ '', [ Validators.required, Validators.pattern( this.emailPattern ) ] ],
+    password: [ '', [ this.passwordRequiredIfNotNull() ] ],
+    leader: [ '' ],
+    subordinates: [ '' ],
+    position_id: [ '', Validators.required ],
+    requirePassChange: [ false ]
+  } );
+  disableSubmitBtn: boolean = false;
+  filteredSubordinates!: User[];
+  loaded: boolean = false;
+  posibleLeader!: User[];
+  posibleSubordinates!: User[];
+  positions: Position[] = [];
+  roles: Role[] = [];
   user: User = {
     name: '',
     email: '',
@@ -38,23 +57,6 @@ export class CreateComponent implements OnInit {
     roles: [],
     requirePassChange: false
   };
-  roles: Role[] = [];
-  positions: Position[] = [];
-  posibleLeader!: User[];
-  posibleSubordinates!: User[];
-  disableSubmitBtn: boolean = false;
-  createForm: FormGroup = this.fb.group( {
-    name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
-    email: [ '', [ Validators.required, Validators.pattern( this.emailPattern ) ] ],
-    password: [ '', [ this.passwordRequiredIfNotNull() ] ],
-    leader: [ '' ],
-    subordinates: [ '' ],
-    position_id: [ '', Validators.required ],
-    requirePassChange: [ false ]
-
-  } );
-  loaded: boolean = false;
-  filteredSubordinates!: User[];
 
 
   get rolesFormGroup (): FormGroup | any {
@@ -74,14 +76,17 @@ export class CreateComponent implements OnInit {
   }
 
   constructor (
-    private fb: FormBuilder,
-    private userService: UserService,
-    private roleService: RoleService,
-    private positionService: PositionService,
-    private router: Router,
     private activatedRoute: ActivatedRoute,
+    private fb: FormBuilder,
+    private positionService: PositionService,
+    private roleService: RoleService,
+    private router: Router,
+    private titleService: Title,
+    private userService: UserService,
     private validatorService: ValidatorService
-  ) { }
+  ) {
+    this.titleService.setTitle( 'Nuevo Usuario' );
+  }
 
 
   ngOnInit () {

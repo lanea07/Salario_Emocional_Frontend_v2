@@ -6,4 +6,5 @@ export interface Benefit {
   created_at: Date;
   updated_at: Date;
   benefit_detail?: BenefitDetail[];
+  politicas_path?: string;
 }

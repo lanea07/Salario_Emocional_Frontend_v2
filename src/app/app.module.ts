@@ -12,7 +12,6 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { SharedModule } from './shared/shared.module';
 
 @NgModule( {
   declarations: [

@@ -27,6 +27,7 @@ export class BenefitService {
   show ( id: number ): Observable<Benefit> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
+      .set( 'Content-type', 'multipart/form-data' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.get<Benefit>( `${ this.apiBaseUrl }/benefit/${ id }`, { headers, withCredentials: true } )
@@ -45,7 +46,7 @@ export class BenefitService {
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.put<Benefit>( `${ this.apiBaseUrl }/benefit/${ id }`, formValues, { headers, withCredentials: true } );
+    return this.http.post<Benefit>( `${ this.apiBaseUrl }/benefit/${ id }`, formValues, { headers, withCredentials: true } );
   }
 
   destroy ( id: number | undefined ) {

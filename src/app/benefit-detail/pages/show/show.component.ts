@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
+import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'benefitdetail-show',
@@ -27,8 +28,11 @@ export class ShowComponent {
   constructor (
     private benefitDetailService: BenefitDetailService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
-  ) { }
+    private router: Router,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle( 'Detalle' );
+  }
 
   ngOnInit () {
     this.activatedRoute.params

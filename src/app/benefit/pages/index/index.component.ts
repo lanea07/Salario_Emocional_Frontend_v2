@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitService } from '../../services/benefit.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
+import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'benefit-index',
@@ -18,7 +19,11 @@ export class IndexComponent implements OnInit, AfterViewInit {
     {
       title: 'Opciones',
       data: function ( data: any, type: any, full: any ) {
-        return `<span style="cursor: pointer;" benefit_id="${ data.id }" class="badge rounded-pill text-bg-warning">Detalles</span>`;
+        return `
+          <span style="cursor: pointer;" benefit_id="${ data.id }" class="badge rounded-pill text-bg-warning">
+            Detalles
+            <i class="fa-solid fa-circle-info fa-fade" style="color: #000000;"></i>
+          </span>`;
       }
     }
   ];
@@ -28,8 +33,11 @@ export class IndexComponent implements OnInit, AfterViewInit {
     private as: AlertService,
     private benefitService: BenefitService,
     private renderer: Renderer2,
-    private router: Router
-  ) { }
+    private router: Router,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle( 'Beneficios' );
+  }
 
   ngOnInit () {
     this.dtOptions = {

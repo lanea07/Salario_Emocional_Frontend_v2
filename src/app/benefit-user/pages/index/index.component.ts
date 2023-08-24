@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -7,14 +7,14 @@ import Swal from 'sweetalert2';
 
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { TotalBancoHorasPipe } from 'src/app/shared/pipes/TotalBancoHoras.pipe';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { User } from 'src/app/user/interfaces/user.interface';
 import { UserService } from 'src/app/user/services/user.service';
 import { Benefit } from '../../../benefit/interfaces/benefit.interface';
 import { BenefitService } from '../../../benefit/services/benefit.service';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { sub } from 'date-fns';
+import { DomSanitizer, Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'benefitemployee-index',
@@ -22,7 +22,7 @@ import { sub } from 'date-fns';
   styles: [
   ]
 } )
-export class IndexComponent implements OnInit {
+export class IndexComponent implements OnInit, AfterViewInit {
 
   allUsersBenefits?: BenefitUser[];
   bancosHoras: number[] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
@@ -46,17 +46,22 @@ export class IndexComponent implements OnInit {
     private benefitService: BenefitService,
     private benefitUserService: BenefitUserService,
     private fb: FormBuilder,
-    private userService: UserService,
-    private router: Router
+    private renderer: Renderer2,
+    private router: Router,
+    private sanitizer: DomSanitizer,
+    private titleService: Title,
+    private userService: UserService
   ) {
     const currentYear = new Date().getFullYear();
     for ( let i = currentYear; i > currentYear - 5; i-- ) {
       this.years.push( i );
     };
-
+    this.titleService.setTitle( 'Detalle de Beneficios de los colaboradores' );
   }
 
-  ngOnInit () {
+  ngOnInit (): void {
+
+    this.viewBenefitUser.get( 'users' )!.disable();
 
     this.authService.validarAdmin()
       .subscribe( {
@@ -67,6 +72,7 @@ export class IndexComponent implements OnInit {
               .subscribe( {
                 next: ( user ) => {
                   this.users = user;
+                  this.viewBenefitUser.get( 'users' )!.enable();
                 },
                 error: ( error ) => {
                   this.router.navigateByUrl( 'benefit-employee' );
@@ -88,6 +94,7 @@ export class IndexComponent implements OnInit {
               .subscribe( {
                 next: ( user ) => {
                   this.user = Object.values( user )[ 0 ];
+                  this.viewBenefitUser.get( 'users' )!.enable();
                 },
                 error: ( error ) => {
                   this.router.navigateByUrl( 'benefit-employee' );
@@ -109,12 +116,23 @@ export class IndexComponent implements OnInit {
       } );
 
     this.benefitService.index()
-      .subscribe( benefits => this.benefits = benefits );
+      .subscribe( benefits => {
+        this.benefits = benefits;
+      } );
     this.benefitUserService.index( Number.parseInt( localStorage.getItem( 'uid' )! ), this.viewBenefitUser.get( 'years' )?.value )
       .subscribe( currentUserBenefits => {
         this.allUsersBenefits = currentUserBenefits;
         this.calendarData = this.allUsersBenefits
+
       } );
+  }
+
+  ngAfterViewInit (): void {
+    this.renderer.listen( 'document', 'click', ( event ) => {
+      if ( event.target.hasAttribute( "benefit_employee_id" ) ) {
+        this.router.navigate( [ "/benefit-employee/show/" + event.target.getAttribute( "benefit_employee_id" ) ] );
+      }
+    } );
   }
 
   getBenefitDetail ( event: any ) {
@@ -141,50 +159,53 @@ export class IndexComponent implements OnInit {
     let filteredBenefit = this.currentUserBenefits?.benefit_user.filter( benefit => benefit.benefit_id === benefitId );
     if ( filteredBenefit?.length ) {
       let html: string = '';
+      let response = '';
       switch ( filteredBenefit[ 0 ].benefits.name ) {
         case 'Mi Cumpleaños':
-          return filteredBenefit
+          response = filteredBenefit
             ? `<li class="list-group-item">
               Fecha de redención: ${ new DatePipe( 'en-US' ).transform( filteredBenefit[ 0 ].benefit_begin_time, 'dd/MM/yyyy, hh:mm a' ) }
-              <a class="text-link link-primary" href="/benefit-employee/show/${filteredBenefit[ 0 ].id}">Ampliar</a>
+              <small><span style="cursor: pointer;" class="text-link link-primary" benefit_employee_id="${filteredBenefit[ 0 ].id}">Ampliar</span></small>
             </li>`
             : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
+          return this.sanitizer.bypassSecurityTrustHtml( response );
 
         case 'Mi Banco de Horas':
           this.totalBancoHoras = new TotalBancoHorasPipe().transform( filteredBenefit );
           filteredBenefit.forEach( benefit_detail => {
             html += `<li class="list-group-item">
               ${ new DatePipe( 'en-US' ).transform( benefit_detail.benefit_begin_time, 'dd/MM/yyyy, hh:mm a' ) }: ${ benefit_detail.benefit_detail.time_hours } horas
-              <a class="text-link link-primary" href="/benefit-employee/show/${benefit_detail.id}">Ampliar</a>
+              <small><span style="cursor: pointer;" class="text-link link-primary" benefit_employee_id="${benefit_detail.id}">Ampliar</span></small>
             </li>`
           } )
-          return filteredBenefit ? html : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
+          return filteredBenefit ? this.sanitizer.bypassSecurityTrustHtml( html ) : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
 
         case 'Mi Horario Flexible':
           filteredBenefit.forEach( benefit_detail => {
             html += `<li class="list-group-item">
               ${ new DatePipe( 'en-US' ).transform( benefit_detail.benefit_begin_time, 'dd/MM/yyyy, hh:mm a' ) }
-              <a class="text-link link-primary" href="/benefit-employee/show/${ benefit_detail.id }">Ampliar</a>
+              <small><span style="cursor: pointer;" class="text-link link-primary" benefit_employee_id="${ benefit_detail.id }">Ampliar</span></small>
             </li>`
           } );
-          return filteredBenefit ? html : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
+          return filteredBenefit ? this.sanitizer.bypassSecurityTrustHtml( html ) : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
 
         case 'Mi Viernes':
           filteredBenefit.forEach( benefit_detail => {
             html += `<li class="list-group-item">
               ${ new DatePipe( 'en-US' ).transform( benefit_detail.benefit_begin_time, 'dd/MM/yyyy, hh:mm a' ) }: ${ benefit_detail.benefit_detail.time_hours } horas
-              <a class="text-link link-primary" href="/benefit-employee/show/${benefit_detail.id}">Ampliar</a>
+              <small><span style="cursor: pointer;" class="text-link link-primary" benefit_employee_id="${benefit_detail.id}">Ampliar</span></small>
             </li>`
           } )
-          return filteredBenefit ? html : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
+          return filteredBenefit ? this.sanitizer.bypassSecurityTrustHtml( html ) : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
 
         case 'Tiempo para el Viajero':
-          return filteredBenefit
+          response = filteredBenefit
             ? `<li class="list-group-item">
                 ${ filteredBenefit![ 0 ].benefit_detail.name }
-                <a class="text-link link-primary" href="/benefit-employee/show/${filteredBenefit[ 0 ].id}">Ampliar</a>
+                <small><span style="cursor: pointer;" class="text-link link-primary" benefit_employee_id="${filteredBenefit[ 0 ].id}">Ampliar</span></small>
               </li>`
             : '<li class="list-group-item">No se encontraron beneficios registrados</li>';
+          return this.sanitizer.bypassSecurityTrustHtml( response );
       }
 
     }

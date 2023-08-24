@@ -47,7 +47,7 @@
   </div>
 </div>
 
-<div *ngIf="viewBenefitUser.valid; then newBenefitDetailTemplate"></div>
+<div *ngIf="viewBenefitUser.valid && viewBenefitUser.get('users')!.enabled; then newBenefitDetailTemplate"></div>
 <hr>
 
 <div class="row p-3 bg-light rounded shadow">
@@ -68,6 +68,7 @@
       <h2>Detalle de beneficios de {{ currentUserBenefits?.name }}</h2>
       <button (click)="closePanel()" type="button" class="btn-close" aria-label="Close"></button>
     </div>
+
     <div *ngFor="let benefit of benefits">
 
       <div class="input-group mt-3">
@@ -95,10 +96,9 @@
           <bar-chart-component [input]="bancosHoras"></bar-chart-component>
         </div>
       </div>
-
+    </div>
     </div>
 
-  </div>
 
 
 </ng-template>

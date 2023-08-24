@@ -4,6 +4,7 @@ import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import Swal from 'sweetalert2';
+import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'user-show',
@@ -20,8 +21,11 @@ export class ShowComponent {
   constructor (
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
-  ) { }
+    private router: Router,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle( 'Detalle' );
+  }
 
   ngOnInit () {
     this.activatedRoute.params

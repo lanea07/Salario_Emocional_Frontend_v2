@@ -1,12 +1,17 @@
 <div class="row">
   <div class="col">
     <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
-      <div class="mb-3">
-        <label class="form-label" for="name">Nombre del Beneficio</label>
-        <input [ngClass]="{'invalid': campoEsValido('name')}" class="form-control" type="text" formControlName="name"
-          id="name" placeholder="Nombre Completo">
-        <small *ngIf="campoEsValido('name')" class="text-danger">{{ benefitNameErrors }}</small>
+      <div class="mb-3 form-floating">
+        <input [ngClass]="{ invalid: campoEsValido('name') }" class="form-control" type="text" formControlName="name"
+          id="name" placeholder="Nombre Completo" />
+        <label class="form-label" for="name"><i class="fa-solid fa-box me-1"></i>Nombre del Beneficio</label>
+        <small *ngIf="campoEsValido('name')" class="text-danger">{{benefitNameErrors}}</small>
       </div>
+      <div *ngIf="politicsInput; else politicLinks" class="mb-3 input-group">
+        <input class="form-control" type="file" id="filePoliticas" formControlName="filePoliticas"
+          (change)="onFileChange($event)">
+      </div>
+
       <div class="mb-3">
         <label class="form-label">Detalles de Beneficio Disponibles</label>
         <div class="row">
@@ -16,18 +21,29 @@
           <div class="col-3 mb-2" *ngFor="let benefitDetail of benefitDetails; let i = index">
             <label class="form-check-label ms-2">
               <input type="checkbox" class="form-check-input"
-                [ngClass]="{'invalid': !benefitDetailFormGroup.valid && benefitDetailFormGroup.touched}"
+                [ngClass]="{invalid: !benefitDetailFormGroup.valid && benefitDetailFormGroup.touched}"
                 [formControl]="benefitDetailFormGroup.get(benefitDetail.id?.toString())" />
-              {{benefitDetail.name}}
+              {{ benefitDetail.name }}
             </label>
           </div>
         </div>
       </div>
+
       <div class="mb-3">
         <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
-          {{ ( benefit.id ) ? 'Actualizar' : 'Crear' }}
+          {{ benefit.id ? "Actualizar" : "Crear" }}
         </button>
       </div>
     </form>
   </div>
 </div>
+<ng-template #politicLinks>
+  <div class="mb-3">
+    <a class="me-3 link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+      href="{{filePoliticas}}" target="_blank" rel="noopener noreferrer"><i
+        class="fa-solid fa-arrow-up-right-from-square me-1"></i>Ver política</a>
+    <a (click)="showInput()" style="cursor: pointer;"
+      class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"><i
+        class="fa-solid fa-pen-to-square me-1"></i>Editar adjunto</a>
+  </div>
+</ng-template>

@@ -1,9 +1,9 @@
-<nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary sticky-top" data-bs-theme="dark">
+<nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary sticky-top bg-gradient" data-bs-theme="dark">
   <div class="container-fluid">
 
     <a class="navbar-brand">
       <img src="./assets/images/pajaro_transparencia.png" height="40px;">
-      Salario Emocional
+      <span class="navbar-brand ms-3">Salario Emocional</span>
     </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -16,13 +16,14 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
         <!-- Beneficios -->
-        <li class="nav-item dropdown" *ngIf="isAdmin">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
             [class.active]="router.isActive('/benefit', false)">
+            <i class="fa-solid fa-box me-1"></i>
             Beneficios
           </a>
           <ul class=" dropdown-menu">
-            <li><a class="dropdown-item" routerLink="/benefit/create">Nuevo</a></li>
+            <li *ngIf="isAdmin"><a class="dropdown-item" routerLink="/benefit/create">Nuevo</a></li>
             <li><a class="dropdown-item" routerLink="/benefit/index">Listado</a></li>
           </ul>
         </li>
@@ -30,7 +31,8 @@
         <!-- Beneficios Detalles -->
         <li class="nav-item dropdown" *ngIf="isAdmin">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
-            [class.active]="router.isActive('/benefit-detail', false)">
+          [class.active]="router.isActive('/benefit-detail', false)">
+            <i class="fa-solid fa-boxes-stacked me-1"></i>
             Beneficios - Detalles
           </a>
           <ul class="dropdown-menu">
@@ -43,7 +45,8 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
             [class.active]="router.isActive('/benefit-employee', false)">
-            Beneficios - Empleados
+            <i class="fa-solid fa-person-dots-from-line me-1"></i>
+            {{ isAdmin ? 'Beneficios - Empleados' : 'Mis Beneficios' }}
           </a>
           <ul class="dropdown-menu">
             <li *ngIf="isAdmin"><a class="dropdown-item" routerLink="/benefit-employee/create" routerLinkActive="active">Nuevo</a>
@@ -56,6 +59,7 @@
         <li class="nav-item dropdown" *ngIf="isAdmin">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
             [class.active]="router.isActive('/position', false)">
+            <i class="fa-solid fa-briefcase me-1"></i>
             Cargos
           </a>
           <ul class="dropdown-menu">
@@ -68,6 +72,7 @@
         <li class="nav-item dropdown" *ngIf="isAdmin">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
             [class.active]="router.isActive('/user', false)">
+            <i class="fa-solid fa-users me-1"></i>
             Usuarios
           </a>
           <ul class="dropdown-menu">
@@ -80,6 +85,7 @@
         <li class="nav-item dropdown" *ngIf="isAdmin">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
             [class.active]="router.isActive('/role', false)">
+            <i class="fa-solid fa-toolbox me-1"></i>
             Roles
           </a>
           <ul class="dropdown-menu">

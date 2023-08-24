@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { BackButtonDirective } from './directives/back-button-directive.directive';
 
+import { BackButtonDirective } from './directives/back-button-directive.directive';
 
 
 @NgModule( {

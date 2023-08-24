@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { Position } from '../../interfaces/position.interface';
 import { PositionService } from '../../services/position.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'position-create',
@@ -43,8 +44,11 @@ export class CreateComponent {
     private as: AlertService,
     private fb: FormBuilder,
     private positionService: PositionService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle( 'Nuevo Cargo' );
+  }
 
 
   ngOnInit () {

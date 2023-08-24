@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 
 export enum subscriptionMessageTitle {
   ACTUALIZADO = 'Actualizado',
+  PASSCHANGED = 'Contraseña Cambiada',
   CREADO = 'Creado',
   ELIMINADO = 'Eliminado',
   ERROR = 'Error'

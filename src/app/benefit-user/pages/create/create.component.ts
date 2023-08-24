@@ -18,6 +18,7 @@ import { User } from '../../../user/interfaces/user.interface';
 import { UserService } from '../../../user/services/user.service';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
+import { Title } from '@angular/platform-browser';
 
 const pad = ( i: number ): string => ( i < 10 ? `0${ i }` : `${ i }` );
 
@@ -127,8 +128,11 @@ export class CreateComponent implements OnInit {
     private fb: FormBuilder,
     private ngbCalendar: NgbCalendar,
     private userService: UserService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle( 'Nuevo beneficio para el colaborador' );
+  }
 
   ngOnInit (): void {
 
