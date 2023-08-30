@@ -101,7 +101,6 @@ export class CreateComponent {
       .subscribe(
         {
           next: benefit => {
-            console.log( benefit );
             const extractBenefit = Object.values( benefit )[ 0 ];
             this.benefit = extractBenefit;
             this.createForm.get( 'name' )?.setValue( extractBenefit.name );

@@ -250,7 +250,7 @@ export class CalendarComponent implements OnChanges {
               this.modal.dismissAll();
               this.activeDayIsOpen = false;
             },
-            error: ( err ) => console.log( err )
+            error: ( err ) => { }
           } )
       }
     } );

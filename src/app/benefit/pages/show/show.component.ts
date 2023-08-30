@@ -45,7 +45,6 @@ export class ShowComponent {
       )
       .subscribe( {
         next: ( benefit ) => {
-          console.log( benefit );
           this.benefit = Object.values( benefit )[ 0 ];
           this.details = this.benefit.benefit_detail;
           this.filePoliticas = this.benefit.politicas_path ? this.benefit.politicas_path : '';
