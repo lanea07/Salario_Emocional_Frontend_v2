@@ -104,13 +104,15 @@ export class CreateComponent {
             const extractBenefit = Object.values( benefit )[ 0 ];
             this.benefit = extractBenefit;
             this.createForm.get( 'name' )?.setValue( extractBenefit.name );
-            Object.keys( this.benefitDetailFormGroup.controls ).forEach( ( key: string ) => {
-              Object.values<Benefit>( extractBenefit.benefit_detail ).forEach( benefitDetail => {
-                if ( key === benefitDetail.id!.toString() ) {
-                  this.benefitDetailFormGroup.get( key ).setValue( true );
-                }
+            if ( this.benefitDetailFormGroup.controls ) {
+              Object.keys( this.benefitDetailFormGroup.controls ).forEach( ( key: string ) => {
+                Object.values<Benefit>( extractBenefit.benefit_detail ).forEach( benefitDetail => {
+                  if ( key === benefitDetail.id!.toString() ) {
+                    this.benefitDetailFormGroup.get( key ).setValue( true );
+                  }
+                } );
               } );
-            } );
+            }
             if ( this.benefit.politicas_path ) {
               this.filePoliticas = this.benefit.politicas_path;
               this.politicsInput = false;
