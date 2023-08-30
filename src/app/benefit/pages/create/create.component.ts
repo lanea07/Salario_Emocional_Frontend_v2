@@ -72,7 +72,6 @@ export class CreateComponent {
       next: ( benefitDetails ) => {
         this.benefitDetails = benefitDetails;
         this.loaded = true;
-        this.createForm.addControl( "benefitDetailFormGroup", this.buildBenefitDetailFormGroup( benefitDetails ) );
       },
       error: ( error ) => {
         this.router.navigateByUrl( 'benefit-employee' );
@@ -101,10 +100,11 @@ export class CreateComponent {
       .subscribe(
         {
           next: benefit => {
+            this.createForm.addControl( "benefitDetailFormGroup", this.buildBenefitDetailFormGroup( this.benefitDetails ) );
             const extractBenefit = Object.values( benefit )[ 0 ];
             this.benefit = extractBenefit;
             this.createForm.get( 'name' )?.setValue( extractBenefit.name );
-            if ( this.benefitDetailFormGroup.controls ) {
+            if ( this.benefitDetailFormGroup ) {
               Object.keys( this.benefitDetailFormGroup.controls ).forEach( ( key: string ) => {
                 Object.values<Benefit>( extractBenefit.benefit_detail ).forEach( benefitDetail => {
                   if ( key === benefitDetail.id!.toString() ) {

@@ -21,8 +21,8 @@
           <div class="col-3 mb-2" *ngFor="let benefitDetail of benefitDetails; let i = index">
             <label class="form-check-label ms-2">
               <input type="checkbox" class="form-check-input"
-                [ngClass]="{invalid: !benefitDetailFormGroup.valid && benefitDetailFormGroup.touched}"
-                [formControl]="benefitDetailFormGroup.get(benefitDetail.id?.toString())" />
+                [ngClass]="{invalid: !benefitDetailFormGroup?.valid && benefitDetailFormGroup?.touched}"
+                [formControl]="benefitDetailFormGroup?.get(benefitDetail.id?.toString())" />
               {{ benefitDetail.name }}
             </label>
           </div>
