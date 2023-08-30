@@ -1,3 +1,8 @@
+<!-- div for login -->
+<div *ngIf="loging" class="loginAnimation d-flex align-items-center justify-content-center" [@fadeInOut]>
+  <span class="loader"></span>
+</div>
+
 <form autocomplete="off" [formGroup]="miFormulario" (ngSubmit)="login()" *ngIf="showScreen">
   <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">

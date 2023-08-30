@@ -5,10 +5,9 @@ import { switchMap } from 'rxjs';
 
 import Swal from 'sweetalert2';
 
+import { AuthService } from 'src/app/auth/services/auth.service';
 import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
-import { environment } from 'src/environments/environment';
-import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component( {
   selector: 'benefit-show',
@@ -49,7 +48,7 @@ export class ShowComponent {
           console.log( benefit );
           this.benefit = Object.values( benefit )[ 0 ];
           this.details = this.benefit.benefit_detail;
-          this.filePoliticas = this.benefit.politicas_path ? `${ environment.baseUrl }/${ this.benefit.politicas_path }` : '';
+          this.filePoliticas = this.benefit.politicas_path ? this.benefit.politicas_path : '';
           this.loaded = true;
         },
         error: ( error ) => {

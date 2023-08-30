@@ -5,14 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import Swal from 'sweetalert2';
 
+import { Title } from '@angular/platform-browser';
 import { BenefitDetail } from 'src/app/benefit-detail/interfaces/benefit-detail.interface';
 import { BenefitDetailService } from 'src/app/benefit-detail/services/benefit-detail.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
-import { Title } from '@angular/platform-browser';
-import { environment } from 'src/environments/environment';
 
 @Component( {
   selector: 'benefit-create',
@@ -114,7 +113,7 @@ export class CreateComponent {
               } );
             } );
             if ( this.benefit.politicas_path ) {
-              this.filePoliticas = `${ environment.baseUrl }/${ this.benefit.politicas_path }`;
+              this.filePoliticas = this.benefit.politicas_path;
               this.politicsInput = false;
             } else {
               this.politicsInput = true;
