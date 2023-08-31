@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { switchMap } from 'rxjs';
+import { EMPTY, switchMap } from 'rxjs';
 import Swal from 'sweetalert2';
 
-import { Title } from '@angular/platform-browser';
 import { BenefitDetail } from 'src/app/benefit-detail/interfaces/benefit-detail.interface';
 import { BenefitDetailService } from 'src/app/benefit-detail/services/benefit-detail.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
@@ -68,73 +68,54 @@ export class CreateComponent {
 
   ngOnInit () {
 
-    this.benefitDetailService.index().subscribe( {
-      next: ( benefitDetails ) => {
-        this.benefitDetails = benefitDetails;
-        this.loaded = true;
-      },
-      error: ( error ) => {
-        this.router.navigateByUrl( 'benefit-employee' );
-        Swal.fire( {
-          title: 'Error',
-          icon: 'error',
-          html: error.error.msg,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: ( toast ) => {
-            toast.addEventListener( 'mouseenter', Swal.stopTimer )
-            toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-          }
-        } );
-      }
-    } );
-
-    if ( !this.router.url.includes( 'edit' ) ) {
-      return;
-    }
-
-    this.activatedRoute.params
+    this.benefitDetailService.index()
       .pipe(
-        switchMap( ( { id } ) => this.benefitService.show( id ) )
+        switchMap( ( benefitDetails: BenefitDetail[] ) => {
+          this.benefitDetails = benefitDetails;
+          this.createForm.addControl( "benefitDetailFormGroup", this.buildBenefitDetailFormGroup( this.benefitDetails ) );
+          this.loaded = true;
+          return this.activatedRoute.params;
+        } ),
+        switchMap( ( { id } ) => {
+          return id ? this.benefitService.show( id ) : EMPTY;
+        } ),
       )
-      .subscribe(
-        {
-          next: benefit => {
-            this.createForm.addControl( "benefitDetailFormGroup", this.buildBenefitDetailFormGroup( this.benefitDetails ) );
-            const extractBenefit = Object.values( benefit )[ 0 ];
-            this.benefit = extractBenefit;
-            this.createForm.get( 'name' )?.setValue( extractBenefit.name );
-            if ( this.benefitDetailFormGroup ) {
-              Object.keys( this.benefitDetailFormGroup.controls ).forEach( ( key: string ) => {
-                Object.values<Benefit>( extractBenefit.benefit_detail ).forEach( benefitDetail => {
-                  if ( key === benefitDetail.id!.toString() ) {
-                    this.benefitDetailFormGroup.get( key ).setValue( true );
-                  }
-                } );
+      .subscribe( {
+        next: benefit => {
+          const extractBenefit = Object.values( benefit )[ 0 ];
+          this.benefit = extractBenefit;
+          this.createForm.get( 'name' )?.setValue( extractBenefit.name );
+          if ( this.benefitDetailFormGroup ) {
+            Object.keys( this.benefitDetailFormGroup.controls ).forEach( ( key: string ) => {
+              Object.values<Benefit>( extractBenefit.benefit_detail ).forEach( benefitDetail => {
+                if ( key === benefitDetail.id!.toString() ) {
+                  this.benefitDetailFormGroup.get( key ).setValue( true );
+                }
               } );
-            }
-            if ( this.benefit.politicas_path ) {
-              this.filePoliticas = this.benefit.politicas_path;
-              this.politicsInput = false;
-            } else {
-              this.politicsInput = true;
-            }
-          },
-          error: ( { error } ) => {
-            this.router.navigateByUrl( 'benefit-employee' );
-            Swal.fire( {
-              title: 'Error',
-              icon: 'error',
-              html: error.error.msg,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: ( toast ) => {
-                toast.addEventListener( 'mouseenter', Swal.stopTimer )
-                toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-              }
             } );
           }
-        } );
+          if ( this.benefit.politicas_path ) {
+            this.filePoliticas = this.benefit.politicas_path;
+            this.politicsInput = false;
+          } else {
+            this.politicsInput = true;
+          }
+        },
+        error: ( { error } ) => {
+          this.router.navigateByUrl( 'benefit-employee' );
+          Swal.fire( {
+            title: 'Error',
+            icon: 'error',
+            html: error.error.msg,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: ( toast ) => {
+              toast.addEventListener( 'mouseenter', Swal.stopTimer )
+              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+            }
+          } );
+        }
+      } );
   }
 
   campoEsValido ( campo: string ) {
