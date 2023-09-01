@@ -71,7 +71,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
             this.userService.index()
               .subscribe( {
                 next: ( user ) => {
-                  this.users = user;
+                  this.users = user.filter( each => each.valid_id );
                   this.viewBenefitUser.get( 'users' )!.enable();
                 },
                 error: ( error ) => {
@@ -122,7 +122,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
     this.benefitUserService.index( Number.parseInt( localStorage.getItem( 'uid' )! ), this.viewBenefitUser.get( 'years' )?.value )
       .subscribe( currentUserBenefits => {
         this.allUsersBenefits = currentUserBenefits;
-        this.calendarData = this.allUsersBenefits
+        this.calendarData = this.allUsersBenefits.filter( each => each.valid_id );
 
       } );
   }

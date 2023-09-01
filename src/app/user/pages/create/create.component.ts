@@ -35,7 +35,8 @@ export class CreateComponent implements OnInit {
     leader: [ '' ],
     subordinates: [ '' ],
     position_id: [ '', Validators.required ],
-    requirePassChange: [ false ]
+    requirePassChange: [ false ],
+    valid_id: [ '', Validators.required ]
   } );
   disableSubmitBtn: boolean = false;
   filteredSubordinates!: User[];
@@ -55,7 +56,8 @@ export class CreateComponent implements OnInit {
     subordinates: [],
     positions: undefined,
     roles: [],
-    requirePassChange: false
+    requirePassChange: false,
+    valid_id: false
   };
 
 
@@ -151,6 +153,7 @@ export class CreateComponent implements OnInit {
         if ( extractUser.subordinates ) this.createForm.get( 'subordinates' )?.setValue( extractUser.subordinates?.map( subordinate => subordinate.id ) );
         this.createForm.get( 'position_id' )?.setValue( extractUser.positions?.id?.toString() )
         this.createForm.get( 'requirePassChange' )?.setValue( extractUser.requirePassChange )
+        this.createForm.get( 'valid_id' )?.setValue( extractUser.valid_id )
       } );
 
   }

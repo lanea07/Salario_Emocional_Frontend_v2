@@ -8,6 +8,7 @@ export interface BenefitUser {
   created_at: Date;
   updated_at: Date;
   benefit_user: BenefitUserElement[];
+  valid_id: boolean;
 }
 
 export interface BenefitUserElement {

@@ -156,7 +156,7 @@ export class CreateComponent implements OnInit {
     } )
       .subscribe( {
         next: ( { validarAdmin, loadBenefits } ) => {
-          this.users = Object.values( validarAdmin );
+          this.users = Object.values( validarAdmin ).filter( each => each.valid_id );
           this.createForm.get( 'user_id' )?.enable();
 
           if ( this.router.url.includes( 'edit' ) ) {

@@ -20,13 +20,19 @@ export class IndexComponent implements OnInit, AfterViewInit {
     { title: 'Cargo', data: 'positions.name' },
     { title: 'Jefe Directo', data: 'leader.name' },
     { title: 'Empleados a cargo', data: 'subordinates.length' },
+    { 
+      title: 'Válido',
+      data: function ( data: any, type: any, full: any ) {
+        return data.valid_id ? 'Válido' : 'No Válido';
+      }
+    },
     {
       title: 'Opciones',
       data: function ( data: any, type: any, full: any ) {
         return `
           <span style="cursor: pointer;" user_id="${ data.id }" class="badge rounded-pill text-bg-warning">
             Detalles
-            <i class="fa-solid fa-circle-info fa-fade" style="color: #000000;"></i>
+            <i class="fa-solid fa-circle-info fa-fade"  user_id="${ data.id }" style="color: #000000;"></i>
           </span>`;
       }
     } ];
@@ -58,7 +64,12 @@ export class IndexComponent implements OnInit, AfterViewInit {
       },
       columns: this.columns,
       responsive: true,
-      language: es_CO
+      language: es_CO,
+      createdRow: function ( row: any, data: any, dataIndex: any ) {
+        if ( !data[ 'valid_id' ] ) {
+          $( row ).addClass( 'invalid-user' );
+        }
+      }
     }
   }
 

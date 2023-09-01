@@ -14,4 +14,5 @@ export interface User {
   positions?: Position;
   roles: Role[];
   requirePassChange: boolean;
+  valid_id: Boolean;
 }
