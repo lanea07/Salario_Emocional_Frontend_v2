@@ -30,6 +30,7 @@ export class CreateComponent implements OnInit {
   emailPattern: string = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
+    birthdate: [ '', Validators.required ],
     email: [ '', [ Validators.required, Validators.pattern( this.emailPattern ) ] ],
     password: [ '', [ this.passwordRequiredIfNotNull() ] ],
     leader: [ '' ],
@@ -57,7 +58,8 @@ export class CreateComponent implements OnInit {
     positions: undefined,
     roles: [],
     requirePassChange: false,
-    valid_id: false
+    valid_id: false,
+    birthdate: new Date
   };
 
 
@@ -154,6 +156,7 @@ export class CreateComponent implements OnInit {
         this.createForm.get( 'position_id' )?.setValue( extractUser.positions?.id?.toString() )
         this.createForm.get( 'requirePassChange' )?.setValue( extractUser.requirePassChange )
         this.createForm.get( 'valid_id' )?.setValue( extractUser.valid_id )
+        this.createForm.get( 'birthdate' )?.setValue( extractUser.birthdate )
       } );
 
   }

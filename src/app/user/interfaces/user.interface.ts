@@ -15,4 +15,5 @@ export interface User {
   roles: Role[];
   requirePassChange: boolean;
   valid_id: Boolean;
+  birthdate: Date;
 }
