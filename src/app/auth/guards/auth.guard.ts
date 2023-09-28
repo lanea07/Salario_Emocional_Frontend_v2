@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { map, forkJoin } from 'rxjs';
+import { map, forkJoin, catchError, of } from 'rxjs';
 
 export const authGuard: CanMatchFn = ( route, segments ) => {
 
@@ -20,6 +20,9 @@ export const authGuard: CanMatchFn = ( route, segments ) => {
           return router.createUrlTree( [ 'login', 'password-change' ] )
         }
         return false;
+      } ),
+      catchError( err => {
+        return of( false )
       } )
     )
 

@@ -67,7 +67,7 @@ export class AuthService {
     return this.http.post<ValidToken>( url, [], { headers, withCredentials: true } )
       .pipe(
         map( resp => resp.valid ),
-        catchError( err => of( false ) )
+        catchError( err => { return of( false ) } )
       );
 
   }
@@ -81,7 +81,7 @@ export class AuthService {
     return this.http.post( url, [], { headers, withCredentials: true } )
       .pipe(
         map( resp => resp ),
-        catchError( err => of( false ) )
+        catchError( err => { return of( false ) } )
       );
   }
 
