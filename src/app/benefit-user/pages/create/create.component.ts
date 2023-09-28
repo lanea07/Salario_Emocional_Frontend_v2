@@ -235,7 +235,7 @@ export class CreateComponent implements OnInit {
     this.createForm.get( 'benefit_end_time' )?.setValue( formatDate( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ).toString(), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
 
     if ( this.currentUserBenefits?.id ) {
-      this.benefitUserService.update( this.currentUserBenefits!.benefit_user[ 0 ].id, this.createForm.value )
+      this.benefitUserService.update( this.currentUserBenefits!.benefit_user[ 0 ].id, this.createForm.getRawValue() )
         .subscribe(
           {
             next: () => {
@@ -265,7 +265,6 @@ export class CreateComponent implements OnInit {
   }
 
   fillBenefitDetail ( event: any ) {
-
     this.createForm.get( 'benefit_detail_id' )!.reset( '' );
     this.benefitDetailSpinner = false;
     this.benefitService.show( event.target?.value || event )
@@ -279,7 +278,7 @@ export class CreateComponent implements OnInit {
           this.createForm.get( 'benefit_detail_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefit_detail.id );
         }
       } );
-    if ( event.target.options[ event.target.options.selectedIndex ].text == "Mi Viernes" ) {
+    if ( event.target && event.target.options[ event.target.options.selectedIndex ].text == "Mi Viernes" ) {
       this.isDayDisabled = ( date: NgbDate ) =>
         this.ngbCalendar.getWeekday( date ) !== 5;
     } else {
