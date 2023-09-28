@@ -18,7 +18,7 @@ const colors: Record<string, EventColor> = {
     primary: '#888888',
     secondary: '#bbbbbb',
   }
-};
+}
 
 @Component( {
   selector: 'calendar-component',
