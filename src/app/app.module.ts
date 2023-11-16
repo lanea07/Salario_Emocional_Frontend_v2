@@ -4,37 +4,44 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AngularMaterialModule } from './angular-material/angular-material.module';
+// import { AngularMaterialModule } from './angular-material/angular-material.module';
 import { NgChartsConfiguration } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { MainContainerComponent } from './shared/main-container/main-container.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+// import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { OffcanvasComponent } from './shared/offcanvas/offcanvas.component';
+import { NZ_I18N } from 'ng-zorro-antd/i18n';
+import { es_ES } from 'ng-zorro-antd/i18n';
+import { registerLocaleData } from '@angular/common';
+import es from '@angular/common/locales/es';
+import { FormsModule } from '@angular/forms';
+
+registerLocaleData( es );
 
 @NgModule( {
   declarations: [
     AppComponent,
     MainContainerComponent,
-    NavbarComponent
+    NavbarComponent,
+    OffcanvasComponent
   ],
   imports: [
-    AngularMaterialModule,
+    // AngularMaterialModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
     CalendarModule.forRoot( { provide: DateAdapter, useFactory: adapterFactory } ),
     HttpClientModule,
-    NgbModule
+    FormsModule,
+    // NgbModule
   ],
   providers: [
-    { provide: NgChartsConfiguration, useValue: { generateColors: false } }
+    { provide: NgChartsConfiguration, useValue: { generateColors: false } },
+    { provide: NZ_I18N, useValue: es_ES }
   ],
   bootstrap: [ AppComponent ],
-  exports: [
-    MainContainerComponent,
-    NavbarComponent
-  ]
 } )
 export class AppModule { }

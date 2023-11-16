@@ -58,8 +58,9 @@
         </div>
 
         <div class="col-xl-3 px-2 d-flex flex-column">
+          <ng-zorro-date-time-picker>loading</ng-zorro-date-time-picker>
 
-          <div class="row">
+          <!-- <div class="row">
             <ngb-datepicker #dp class=" m-2" formControlName="model" (navigate)="date = $event.next"
               [ngClass]="{'invalid': campoEsValido('model')}" [markDisabled]="isDayDisabled"></ngb-datepicker>
             <small *ngIf="campoEsValido('model')" class="text-danger">{{ datePickerErrors }}</small>
@@ -68,7 +69,7 @@
             <ngb-timepicker #tp class="m-2 d-flex justify-content-around" formControlName="time"
               [ngClass]="{'invalid': campoEsValido('time')}" [meridian]="meridian"></ngb-timepicker>
             <small *ngIf="campoEsValido('time')" class="text-danger">{{ timePickerErrors }}</small>
-          </div>
+          </div> -->
 
         </div>
       </div>
@@ -85,3 +86,7 @@
     </form>
   </div>
 </div>
+<span>
+  <button (click)="print()">Print</button>
+  {{ createForm.value | json }}
+</span>

@@ -1,14 +1,13 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { DataTablesModule } from 'angular-datatables';
 
-// import { AngularMaterialModule } from '../angular-material/angular-material.module';
+import { DependencyRoutingModule } from './dependency-routing.module';
 import { CreateComponent } from './pages/create/create.component';
 import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
-import { UserRoutingModule } from './user-routing.module';
+import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from '../shared/shared.module';
 
 
@@ -19,12 +18,11 @@ import { SharedModule } from '../shared/shared.module';
     ShowComponent,
   ],
   imports: [
-    // AngularMaterialModule,
     CommonModule,
     DataTablesModule,
+    DependencyRoutingModule,
     ReactiveFormsModule,
-    UserRoutingModule,
     SharedModule
   ]
 } )
-export class UserModule { }
+export class DependencyModule { }

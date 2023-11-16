@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'benefit', loadChildren: () => import( './benefit/benefit.module' ).then( m => m.BenefitModule ), canMatch: [ authGuard ] },
   { path: 'benefit-detail', loadChildren: () => import( './benefit-detail/benefit-detail.module' ).then( m => m.BenefitDetailModule ), canMatch: [ authGuard ] },
   { path: 'benefit-employee', loadChildren: () => import( './benefit-user/benefit-user.module' ).then( m => m.BenefitEmployeeModule ), canMatch: [ authGuard ] },
+  { path: 'dependency', loadChildren: () => import( './dependency/dependency.module' ).then( m => m.DependencyModule ), canMatch: [ authGuard ] },
   { path: 'position', loadChildren: () => import( './position/position.module' ).then( m => m.PositionModule ), canMatch: [ authGuard ] },
   { path: 'role', loadChildren: () => import( './role/role.module' ).then( m => m.RoleModule ), canMatch: [ authGuard ] },
   { path: 'user', loadChildren: () => import( './user/user.module' ).then( m => m.UserModule ), canMatch: [ authGuard ] },

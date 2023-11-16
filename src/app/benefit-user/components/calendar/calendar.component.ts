@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
 import { Subject } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+// import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
@@ -101,7 +101,7 @@ export class CalendarComponent implements OnChanges {
   activeDayIsOpen: boolean = false;
 
   constructor (
-    private modal: NgbModal,
+    // private modal: NgbModal,
     private benefitUserService: BenefitUserService,
     private authService: AuthService
   ) { }
@@ -168,7 +168,7 @@ export class CalendarComponent implements OnChanges {
 
   handleEvent ( action: string, event: CalendarEvent ): void {
     this.modalData = { event, action };
-    this.modal.open( this.modalContent, { size: 'lg' } );
+    // this.modal.open( this.modalContent, { size: 'lg' } );
   }
 
   // addEvent (): void {
@@ -247,7 +247,7 @@ export class CalendarComponent implements OnChanges {
             next: () => {
               this.events = this.events.filter( event => event.meta.id !== eventID );
               this.refresh.next();
-              this.modal.dismissAll();
+              // this.modal.dismissAll();
               this.activeDayIsOpen = false;
             },
             error: ( err ) => { }

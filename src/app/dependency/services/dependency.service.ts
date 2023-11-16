@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User } from '../interfaces/user.interface';
+import { Dependency } from '../interfaces/dependency.interface';
 
 @Injectable( {
   providedIn: 'root'
 } )
-export class UserService {
+export class DependencyService {
 
   apiBaseUrl = environment.apiBaseUrl;
   token = localStorage.getItem( 'token' );
@@ -16,28 +16,28 @@ export class UserService {
 
   }
 
-  index (): Observable<User[]> {
+  index (): Observable<Dependency[]> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.get<User[]>( `${ this.apiBaseUrl }/user`, { headers, withCredentials: true } )
+    return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependencies`, { headers, withCredentials: true } )
   }
 
-  show ( id: number ): Observable<User> {
+  show ( id: number ): Observable<Dependency> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.get<User>( `${ this.apiBaseUrl }/user/${ id }`, { headers, withCredentials: true } )
+    return this.http.get<Dependency>( `${ this.apiBaseUrl }/dependencies/${ id }`, { headers, withCredentials: true } )
   }
 
-  create ( formValues: any ): Observable<User> {
+  create ( formValues: any ): Observable<Dependency> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.post<User>( `${ this.apiBaseUrl }/user`, formValues, { headers, withCredentials: true } );
+    return this.http.post<Dependency>( `${ this.apiBaseUrl }/dependencies`, formValues, { headers, withCredentials: true } );
   }
 
   update ( id: number | undefined, formValues: any ) {
@@ -45,7 +45,7 @@ export class UserService {
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.put<User>( `${ this.apiBaseUrl }/user/${ id }`, formValues, { headers, withCredentials: true } );
+    return this.http.put<Dependency>( `${ this.apiBaseUrl }/dependencies/${ id }`, formValues, { headers, withCredentials: true } );
   }
 
   destroy ( id: number | undefined ) {
@@ -53,7 +53,7 @@ export class UserService {
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.delete( `${ this.apiBaseUrl }/user/${ id }`, { headers, withCredentials: true } );
+    return this.http.delete( `${ this.apiBaseUrl }/dependencies/${ id }`, { headers, withCredentials: true } );
   }
 
 }

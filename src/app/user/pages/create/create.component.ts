@@ -17,13 +17,7 @@ import { UserService } from '../../services/user.service';
 @Component( {
   selector: 'user-create',
   templateUrl: './create.component.html',
-  styles: [
-    `
-      mat-form-field {
-        width: 100%;
-      }
-  `
-  ]
+  styles: []
 } )
 export class CreateComponent implements OnInit {
 

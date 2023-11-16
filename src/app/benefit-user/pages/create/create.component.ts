@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 
-import { NgbCalendar, NgbDate, NgbDatepicker, NgbTimeAdapter, NgbTimeStruct, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
+// import { NgbCalendar, NgbDate, NgbDatepicker, NgbTimeAdapter, NgbTimeStruct, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 import { addHours } from 'date-fns';
 import Swal from 'sweetalert2';
 
@@ -19,28 +19,29 @@ import { UserService } from '../../../user/services/user.service';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
 import { Title } from '@angular/platform-browser';
+import { DatePickerComponent } from '../../components/date-time-picker/date-time-picker.component';
 
 const pad = ( i: number ): string => ( i < 10 ? `0${ i }` : `${ i }` );
 
 
-@Injectable()
-export class NgbTimeStringAdapter extends NgbTimeAdapter<string> {
-  fromModel ( value: string | null ): NgbTimeStruct | null {
-    if ( !value ) {
-      return null;
-    }
-    const split = value.split( ':' );
-    return {
-      hour: parseInt( split[ 0 ], 10 ),
-      minute: parseInt( split[ 1 ], 10 ),
-      second: parseInt( split[ 2 ], 10 ),
-    };
-  }
+// @Injectable()
+// export class NgbTimeStringAdapter extends NgbTimeAdapter<string> {
+//   fromModel ( value: string | null ): NgbTimeStruct | null {
+//     if ( !value ) {
+//       return null;
+//     }
+//     const split = value.split( ':' );
+//     return {
+//       hour: parseInt( split[ 0 ], 10 ),
+//       minute: parseInt( split[ 1 ], 10 ),
+//       second: parseInt( split[ 2 ], 10 ),
+//     };
+//   }
 
-  toModel ( time: NgbTimeStruct | null ): string | null {
-    return time != null ? `${ pad( time.hour ) }:${ pad( time.minute ) }:${ pad( time.second ) }` : null;
-  }
-}
+//   toModel ( time: NgbTimeStruct | null ): string | null {
+//     return time != null ? `${ pad( time.hour ) }:${ pad( time.minute ) }:${ pad( time.second ) }` : null;
+//   }
+// }
 @Component( {
   selector: 'benefitemployee-create',
   templateUrl: './create.component.html',
@@ -49,8 +50,9 @@ export class NgbTimeStringAdapter extends NgbTimeAdapter<string> {
 } )
 export class CreateComponent implements OnInit {
 
-  @ViewChild( NgbDatepicker ) dp?: NgbDatepicker;
-  @ViewChild( NgbTimepicker ) tp?: NgbTimepicker;
+  // @ViewChild( NgbDatepicker ) dp?: NgbDatepicker;
+  // @ViewChild( NgbTimepicker ) tp?: NgbTimepicker;
+  @ViewChild( DatePickerComponent ) datepicker?: DatePickerComponent;
 
   benefit_begin_time!: string;
   benefits!: Benefit[];
@@ -63,7 +65,7 @@ export class CreateComponent implements OnInit {
     benefit_id: [ { value: '', disabled: true }, Validators.required ],
     model: [ '', Validators.required ],
     time: [ '', Validators.required ],
-    user_id: [ { value: '', disabled: true }, Validators.required ]
+    user_id: [ { value: '', disabled: true }, Validators.required ],
   } );
   currentUserBenefits?: BenefitUser;
   date!: { year: number, month: number };
@@ -74,8 +76,8 @@ export class CreateComponent implements OnInit {
   users!: User[];
   userAndBenefitSpinner: boolean = true;
 
-  public isDayDisabled = ( date: NgbDate ) =>
-    this.ngbCalendar.getWeekday( date ) === 6 || this.ngbCalendar.getWeekday( date ) === 7;
+  // public isDayDisabled = ( date: NgbDate ) =>
+  //   this.ngbCalendar.getWeekday( date ) === 6 || this.ngbCalendar.getWeekday( date ) === 7;
 
   get userIdErrors (): string {
     const errors = this.createForm.get( 'user_id' )?.errors;
@@ -126,7 +128,7 @@ export class CreateComponent implements OnInit {
     private benefitUserService: BenefitUserService,
     private changeDetectorRef: ChangeDetectorRef,
     private fb: FormBuilder,
-    private ngbCalendar: NgbCalendar,
+    // private ngbCalendar: NgbCalendar,
     private userService: UserService,
     private router: Router,
     private titleService: Title
@@ -170,17 +172,17 @@ export class CreateComponent implements OnInit {
                     this.currentUserBenefits = Object.values( user )[ 0 ];
                     this.createForm.get( 'user_id' )?.disable();
                     this.createForm.get( 'benefit_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
-                    this.dp?.navigateTo( {
-                      year: new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getFullYear(),
-                      month: new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMonth() + 1
-                    } )
+                    // this.dp?.navigateTo( {
+                    //   year: new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getFullYear(),
+                    //   month: new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMonth() + 1
+                    // } )
                     this.createForm.get( 'model' )?.setValue( {
                       'year': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getFullYear(),
                       'month': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMonth() + 1,
                       'day': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getDate()
                     } );
-                    this.tp?.updateHour( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getHours().toString() );
-                    this.tp?.updateMinute( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMinutes().toString() );
+                    // this.tp?.updateHour( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getHours().toString() );
+                    // this.tp?.updateMinute( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMinutes().toString() );
                     this.createForm.get( 'user_id' )?.setValue( this.currentUserBenefits!.id );
                     this.fillBenefitDetail( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
                   },
@@ -278,13 +280,17 @@ export class CreateComponent implements OnInit {
           this.createForm.get( 'benefit_detail_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefit_detail.id );
         }
       } );
-    if ( event.target && event.target.options[ event.target.options.selectedIndex ].text == "Mi Viernes" ) {
-      this.isDayDisabled = ( date: NgbDate ) =>
-        this.ngbCalendar.getWeekday( date ) !== 5;
-    } else {
-      this.isDayDisabled = ( date: NgbDate ) =>
-        this.ngbCalendar.getWeekday( date ) === 6 || this.ngbCalendar.getWeekday( date ) === 7;
-    }
+    // if ( event.target && event.target.options[ event.target.options.selectedIndex ].text == "Mi Viernes" ) {
+    //   this.isDayDisabled = ( date: NgbDate ) =>
+    //     this.ngbCalendar.getWeekday( date ) !== 5;
+    // } else {
+    //   this.isDayDisabled = ( date: NgbDate ) =>
+    //     this.ngbCalendar.getWeekday( date ) === 6 || this.ngbCalendar.getWeekday( date ) === 7;
+    // }
 
+  }
+
+  print () {
+    console.log( this.datepicker?.date );
   }
 }

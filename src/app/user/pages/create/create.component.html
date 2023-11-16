@@ -39,7 +39,8 @@
         <div class="input-group-text">
           <div class="form-check form-switch">
             <small><label class="form-check-label" for="requirePassChange">¿Requiere cambiar password?</label></small>
-            <input class="form-check-input" type="checkbox" role="switch" formControlName="requirePassChange">
+            <input class="form-check-input" type="checkbox" role="switch" formControlName="requirePassChange"
+              id="requirePassChange">
           </div>
         </div>
         </div>
@@ -49,22 +50,22 @@
 
       <!-- Posible leader -->
       <div class="mb-3">
-        <mat-form-field>
+        <!-- <mat-form-field>
           <mat-label>Jefe (Opcional)</mat-label>
           <mat-select formControlName="leader" (selectionChange)="filterSubordinates( $event )">
             <mat-option *ngFor="let lead of posibleLeader" [value]="lead.id">{{lead.name}}</mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
 
       <!-- Posible Subordinates -->
       <div class="mb-3">
-        <mat-form-field>
+        <!-- <mat-form-field>
           <mat-label>Subordinados (Opcional)</mat-label>
           <mat-select formControlName="subordinates" multiple>
             <mat-option *ngFor="let sub of filteredSubordinates" [value]="sub.id">{{sub.name}}</mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
 
 
