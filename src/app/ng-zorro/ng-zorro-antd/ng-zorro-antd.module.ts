@@ -1,15 +1,21 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzTreeViewModule } from 'ng-zorro-antd/tree-view';
+import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
+
 
 
 @NgModule( {
   imports: [
-    NzDatePickerModule
+    NzDatePickerModule,
+    NzTreeSelectModule,
+    NzTreeViewModule
   ],
   exports: [
-    NzDatePickerModule
+    NzDatePickerModule,
+    NzTreeSelectModule,
+    NzTreeViewModule,
   ]
 } )
 export class NgZorroAntdModule {

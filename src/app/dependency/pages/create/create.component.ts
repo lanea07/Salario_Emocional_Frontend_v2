@@ -21,16 +21,7 @@ export class CreateComponent implements OnInit {
   } );
   disableSubmitBtn: boolean = false;
   loaded: boolean = false;
-  dependency: Dependency = {
-    name: '',
-    parent_id: null,
-    created_at: new Date,
-    updated_at: new Date,
-    depth: 0,
-    path: '',
-    users: [],
-    children: [],
-  };
+  dependency!: Dependency[];
 
   get nameErrorMsg (): string {
     const errors = this.createForm.get( 'name' )?.errors;
@@ -59,7 +50,7 @@ export class CreateComponent implements OnInit {
 
     this.dependencyService.index().subscribe( {
       next: ( dependency ) => {
-        // this.dependency = dependency;
+        this.dependency = this.dependencyService.flattenDependency( Object.values( dependency )[ 0 ] );
         this.loaded = true;
       },
       error: ( error ) => {
@@ -98,55 +89,55 @@ export class CreateComponent implements OnInit {
   }
 
   save () {
-    if ( this.createForm.invalid ) {
-      this.createForm.markAllAsTouched();
-      return;
-    }
+    // if ( this.createForm.invalid ) {
+    //   this.createForm.markAllAsTouched();
+    //   return;
+    // }
 
-    if ( this.dependency.id ) {
-      this.dependencyService.update( this.dependency.id, this.createForm.value )
-        .subscribe(
-          {
-            next: () => {
-              this.router.navigateByUrl( `/dependency/show/${ this.dependency.id }` )
-              Swal.fire( {
-                title: 'Actualizado',
-                icon: 'success',
-              } );
-            },
-            error: err => {
-              Swal.fire( {
-                title: 'Error',
-                text: err.error.message,
-                icon: 'error',
-              } );
-              this.disableSubmitBtn = false;
-            }
-          } );
+    // if ( this.dependency.id ) {
+    //   this.dependencyService.update( this.dependency.id, this.createForm.value )
+    //     .subscribe(
+    //       {
+    //         next: () => {
+    //           this.router.navigateByUrl( `/dependency/show/${ this.dependency.id }` )
+    //           Swal.fire( {
+    //             title: 'Actualizado',
+    //             icon: 'success',
+    //           } );
+    //         },
+    //         error: err => {
+    //           Swal.fire( {
+    //             title: 'Error',
+    //             text: err.error.message,
+    //             icon: 'error',
+    //           } );
+    //           this.disableSubmitBtn = false;
+    //         }
+    //       } );
 
-    } else {
+    // } else {
 
-      this.dependencyService.create( this.createForm.value )
-        .subscribe(
-          {
-            next: dependencyCreated => {
-              this.router.navigateByUrl( `/dependency/show/${ dependencyCreated.id }` )
-              Swal.fire( {
-                title: 'Creado',
-                icon: 'success',
-              } );
-            },
-            error: err => {
-              Swal.fire( {
-                title: 'Error',
-                text: err.error.message,
-                icon: 'error',
-              } );
-              this.disableSubmitBtn = false;
-            }
-          } );
-    }
-    this.disableSubmitBtn = true;
+    //   this.dependencyService.create( this.createForm.value )
+    //     .subscribe(
+    //       {
+    //         next: dependencyCreated => {
+    //           this.router.navigateByUrl( `/dependency/show/${ dependencyCreated.id }` )
+    //           Swal.fire( {
+    //             title: 'Creado',
+    //             icon: 'success',
+    //           } );
+    //         },
+    //         error: err => {
+    //           Swal.fire( {
+    //             title: 'Error',
+    //             text: err.error.message,
+    //             icon: 'error',
+    //           } );
+    //           this.disableSubmitBtn = false;
+    //         }
+    //       } );
+    // }
+    // this.disableSubmitBtn = true;
   }
 
 }

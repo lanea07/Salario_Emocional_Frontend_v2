@@ -116,40 +116,38 @@
 
       <div *ngIf="isAdmin" class="accordion-item">
         <h2 class="accordion-header">
-          <button [ngClass]="{'collapsed': !router.isActive('/user', false)}" class="accordion-button" type="button"
-            data-bs-toggle="collapse" data-bs-target="#collapseUsers" aria-expanded="false"
-            aria-controls="collapseUsers">
-            Usuarios
-          </button>
-        </h2>
-        <div id="collapseUsers" class="accordion-collapse collapse"
-          [ngClass]="{'show': router.isActive('/user', false)}" data-bs-parent="#accordion">
-          <div class="accordion-body">
-            <div class="list-group">
-              <a class="list-group-item list-group-item-action" routerLink="/user/create"
-                routerLinkActive="active">Nuevo</a>
-              <a class="list-group-item list-group-item-action" routerLink="/user/index"
-                routerLinkActive="active">Listado</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="isAdmin" class="accordion-item">
-        <h2 class="accordion-header">
           <button [ngClass]="{'collapsed': !router.isActive('/role', false)}" class="accordion-button" type="button"
-            data-bs-toggle="collapse" data-bs-target="#collapseRoles" aria-expanded="false"
-            aria-controls="collapseRoles">
+            data-bs-toggle="collapse" data-bs-target="#collapseRoles" aria-expanded="false" aria-controls="collapseRoles">
             Roles
           </button>
         </h2>
-        <div id="collapseRoles" class="accordion-collapse collapse"
-          [ngClass]="{'show': router.isActive('/role', false)}" data-bs-parent="#accordion">
+        <div id="collapseRoles" class="accordion-collapse collapse" [ngClass]="{'show': router.isActive('/role', false)}"
+          data-bs-parent="#accordion">
           <div class="accordion-body">
             <div class="list-group">
               <a class="list-group-item list-group-item-action" routerLink="/role/create"
                 routerLinkActive="active">Nuevo</a>
               <a class="list-group-item list-group-item-action" routerLink="/role/index"
+                routerLinkActive="active">Listado</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="isAdmin" class="accordion-item">
+        <h2 class="accordion-header">
+          <button [ngClass]="{'collapsed': !router.isActive('/user', false)}" class="accordion-button" type="button"
+            data-bs-toggle="collapse" data-bs-target="#collapseUsers" aria-expanded="false" aria-controls="collapseUsers">
+            Usuarios
+          </button>
+        </h2>
+        <div id="collapseUsers" class="accordion-collapse collapse" [ngClass]="{'show': router.isActive('/user', false)}"
+          data-bs-parent="#accordion">
+          <div class="accordion-body">
+            <div class="list-group">
+              <a class="list-group-item list-group-item-action" routerLink="/user/create"
+                routerLinkActive="active">Nuevo</a>
+              <a class="list-group-item list-group-item-action" routerLink="/user/index"
                 routerLinkActive="active">Listado</a>
             </div>
           </div>

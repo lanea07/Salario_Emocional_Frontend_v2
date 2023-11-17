@@ -9,5 +9,5 @@ export interface Dependency {
     depth: number;
     path: string;
     users: User[];
-    children: Dependency[];
+    children?: Dependency[];
 }

@@ -29,12 +29,12 @@ export class IndexComponent implements OnInit, AfterViewInit {
 
   constructor (
     private as: AlertService,
+    private dependencyService: DependencyService,
     private renderer: Renderer2,
     private router: Router,
     private titleService: Title,
-    private dependencyService: DependencyService,
   ) {
-    this.titleService.setTitle( 'Usuarios' );
+    this.titleService.setTitle( 'Dependencias' );
   }
 
   ngOnInit (): void {
@@ -44,7 +44,8 @@ export class IndexComponent implements OnInit, AfterViewInit {
           .subscribe(
             {
               next: dependency => {
-                callback( { data: dependency } );
+                let data = this.dependencyService.flattenDependency( Object.values( dependency )[ 0 ] );
+                callback( { data: data } );
               },
               error: err => {
                 this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
@@ -54,11 +55,6 @@ export class IndexComponent implements OnInit, AfterViewInit {
       columns: this.columns,
       responsive: true,
       language: es_CO,
-      createdRow: function ( row: any, data: any, dataIndex: any ) {
-        if ( !data[ 'valid_id' ] ) {
-          $( row ).addClass( 'invalid-user' );
-        }
-      }
     }
   }
 

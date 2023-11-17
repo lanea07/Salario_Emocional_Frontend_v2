@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 
 import { Dependency } from '../../interfaces/dependency.interface';
 import { DependencyService } from '../../services/dependency.service';
+import { TreeNode } from '../../interfaces/TreeNode';
 
 @Component( {
   selector: 'dependency-show',
@@ -17,8 +18,9 @@ import { DependencyService } from '../../services/dependency.service';
 export class ShowComponent {
 
   dependency?: Dependency;
-  roles: string[] = [];
   loaded: boolean = false;
+  roles: string[] = [];
+  treedata!: TreeNode[];
 
   constructor (
     private dependencyService: DependencyService,
@@ -38,6 +40,7 @@ export class ShowComponent {
         next: ( dependency ) => {
           this.dependency = Object.values( dependency )[ 0 ];
           this.loaded = true;
+          this.treedata = [ ...[ this.dependencyService.simplifyDependency( this.dependency! ) ] ];
         },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );
@@ -125,6 +128,5 @@ export class ShowComponent {
 
     return null;
   };
-
 
 }
