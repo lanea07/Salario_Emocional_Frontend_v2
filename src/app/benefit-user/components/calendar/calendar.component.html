@@ -47,36 +47,33 @@
 
 
 <!-- Modal -->
-<ng-template #modalContent let-close="close">
-  <div class="modal-header">
-    <h5 class="modal-title">Detalle del Beneficio</h5>
-    <button type="button" class="close" (click)="close()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <h2>Colaborador: {{ modalData.event.title }}</h2>
-  </div>
-  <div class="container">
-    <div class="row">
-      <div class="col-6">
-        <small>Beneficio</small>
-        <p>{{ modalData.event.meta.benefits.name }}</p>
+<div class="card flex justify-content-center">
+  <p-dialog header="Header" [(visible)]="visible" [style]="{ width: '50vw' }">
+    <ng-template pTemplate="header">
+      <h5 class="modal-title">Detalle del Beneficio</h5>
+    </ng-template>
+    <div class="container">
+      <h2>Colaborador: {{ modalData?.event?.title }}</h2>
+      <div class="row">
+        <div class="col-6">
+          <small>Beneficio</small>
+          <p>{{ modalData?.event?.meta.benefits.name }}</p>
+          </div>
+          <div class="col-6">
+            <small>Detalle</small>
+          <p>{{ modalData?.event?.meta.benefit_detail.name }}</p>
+          </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <small>Fecha de redención</small>
+          <p>{{ modalData?.event?.meta.benefit_begin_time | date:'medium' }}</p>
+          </div>
+          </div>
       </div>
-      <div class="col-6">
-        <small>Detalle</small>
-        <p>{{ modalData.event.meta.benefit_detail.name }}</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <small>Fecha de redención</small>
-        <p>{{ modalData.event.meta.benefit_begin_time | date:'medium' }}</p>
-      </div>
-    </div>
+    <ng-template pTemplate="footer">
+      <a class="btn btn-warning" href="./benefit-employee/edit/{{ modalData?.event?.meta.id }}" *ngIf="isAdmin">Editar</a>
+      <a class="btn btn-outline-danger" (click)="deleteBenefit( modalData?.event?.meta.id )" *ngIf="isAdmin">Eliminar</a>
+    </ng-template>
+  </p-dialog>
   </div>
-  <div class="modal-footer">
-    <a class="btn btn-warning" href="./benefit-employee/edit/{{ modalData.event.meta.id }}" *ngIf="isAdmin">Editar</a>
-    <a class="btn btn-outline-danger" (click)="deleteBenefit( modalData.event.meta.id )" *ngIf="isAdmin">Eliminar</a>
-  </div>
-</ng-template>

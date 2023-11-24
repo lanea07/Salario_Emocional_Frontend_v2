@@ -21,13 +21,8 @@ import { BenefitService } from '../../services/benefit.service';
 } )
 export class CreateComponent {
 
-  benefit: Benefit = {
-    name: '',
-    created_at: new Date,
-    updated_at: new Date,
-    benefit_detail: []
-  };
-  benefitDetails: BenefitDetail[] = [];
+  benefit?: Benefit;
+  benefitDetails?: BenefitDetail[];
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
     filePoliticas: [],
@@ -94,7 +89,7 @@ export class CreateComponent {
               } );
             } );
           }
-          if ( this.benefit.politicas_path ) {
+          if ( this.benefit?.politicas_path ) {
             this.filePoliticas = this.benefit.politicas_path;
             this.politicsInput = false;
           } else {
@@ -143,13 +138,13 @@ export class CreateComponent {
     formData.append( 'name', this.createForm.get( 'name' )!.value );
     formData.append( 'filePoliticas', this.createForm.get( 'filePoliticas' )!.value );
 
-    if ( this.benefit.id ) {
+    if ( this.benefit?.id ) {
       formData.append( '_method', 'PUT' );
       this.benefitService.update( this.benefit.id, formData )
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/benefit/show/${ this.benefit.id }` )
+              this.router.navigateByUrl( `/benefit/show/${ this.benefit?.id }` )
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS )
             },
             error: ( { error } ) => {
@@ -176,7 +171,7 @@ export class CreateComponent {
     this.disableSubmitBtn = true;
   }
 
-  buildBenefitDetailFormGroup ( benefitDetails: Benefit[], selectedbenefitDetailsIds: number[] = [] ): FormGroup {
+  buildBenefitDetailFormGroup ( benefitDetails: any[], selectedbenefitDetailsIds: number[] = [] ): FormGroup {
     let group = this.fb.group( {}, {
       validators: [ this.atLeastOneCheckboxCheckedValidator() ]
     } );

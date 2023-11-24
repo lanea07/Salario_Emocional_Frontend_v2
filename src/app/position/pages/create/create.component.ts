@@ -22,11 +22,7 @@ export class CreateComponent {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ]
   } );
   disableSubmitBtn: boolean = false;
-  position: Position = {
-    name: '',
-    created_at: new Date,
-    updated_at: new Date
-  };
+  position?: Position;
 
   get positionNameErrors (): string {
     const errors = this.createForm.get( 'name' )?.errors;
@@ -114,12 +110,12 @@ export class CreateComponent {
       return;
     }
 
-    if ( this.position.id ) {
-      this.positionService.update( this.position.id, this.createForm.value )
+    if ( this.position?.id ) {
+      this.positionService.update( this.position?.id, this.createForm.value )
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/position/show/${ this.position.id }` );
+              this.router.navigateByUrl( `/position/show/${ this.position?.id }` );
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
             },
             error: ( { error } ) => {

@@ -1,54 +1,60 @@
 <div class="row mt-5">
-  <h1>{{ currentUserBenefits?.id ? 'Actualizar' : 'Nuevo' }} beneficio para {{ currentUserBenefits?.name }}</h1>
-  <hr>
+  <h1>
+    {{ currentUserBenefits?.id ? "Actualizar" : "Nuevo" }} beneficio para {{ currentUserBenefits?.name }}
+  </h1>
+  <hr />
 
   <div class="col">
-
     <form [formGroup]="createForm" (ngSubmit)="save()">
-
       <div class="row mb-3">
-        <div class="col-xl-9 px-2 d-flex flex-column justify-content-evenly">
+        <div class="col-xl-7 px-2 d-flex flex-column justify-content-evenly">
 
-          <div class="row">
+          <!-- Dependencias -->
+          <div class="row mb-3" *ngIf="!currentUserBenefits">
+            <label for="user_id">Selecciona una dependencia</label>
+            <div class="p-inputgroup">
+              <p-treeSelect class="md:w-20rem w-100" containerStyleClass="w-100" [options]="nodes"
+                placeholder="-- Seleccione Dependencia --" [filter]="true" (onNodeSelect)="fillColaboradores($event)"
+                (onNodeUnselect)="emptyColaboradores()"></p-treeSelect>
+              <span *ngIf="userAndBenefitSpinner" class="p-inputgroup-addon">
+                <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+              </span>
+            </div>
+          </div>
+          
+          <!-- Colaboradores -->
+          <div class="row mb-3">
             <label for="user_id">Selecciona un colaborador</label>
-            <div class="input-group">
-              <select class="form-select" formControlName="user_id" id="user_id"
-                [ngClass]="{'invalid': campoEsValido('user_id')}">
-                <option value="">-- Seleccione Colaborador --</option>
-                <option *ngFor="let user of users" value="{{ user.id }}">{{ user.name }}</option>
-              </select>
-              <span *ngIf="userAndBenefitSpinner" class="input-group-text" id="basic-addon1">
+            <div class="p-inputgroup">
+              <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="user_id"
+                [options]="users" placeholder="-- Seleccione Colaborador --"></p-dropdown>
+              <span *ngIf="userAndBenefitSpinner" class="p-inputgroup-addon">
                 <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
               </span>
             </div>
             <small *ngIf="campoEsValido('user_id')" class="text-danger">{{ userIdErrors }}</small>
           </div>
 
-          <div class="row">
+          <!-- Beneficios -->
+          <div class="row mb-3">
             <label for="benefit_id">Selecciona un beneficio</label>
-            <div class="input-group">
-              <select class="form-select" formControlName="benefit_id" id="benefit_id"
-                [ngClass]="{'invalid': campoEsValido('benefit_id')}" (change)="fillBenefitDetail($event)">
-                <option value="">-- Seleccione Beneficio --</option>
-                <option *ngFor="let benefit of benefits" value="{{ benefit.id }}">{{ benefit.name }}</option>
-              </select>
-              <span *ngIf="userAndBenefitSpinner" class="input-group-text" id="basic-addon1">
+            <div class="p-inputgroup">
+              <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="benefit_id"
+                [options]="benefits" placeholder="-- Seleccione Beneficio --" (onChange)="fillBenefitDetail($event)"></p-dropdown>
+              <span *ngIf="userAndBenefitSpinner" class="p-inputgroup-addon">
                 <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
               </span>
             </div>
             <small *ngIf="campoEsValido('benefit_id')" class="text-danger">{{ benefitIdErrors }}</small>
           </div>
 
-          <div class="row">
+          <!-- Detalles - Beneficios -->
+          <div class="row mb-3">
             <label for="benefit_detail_id">Selecciona un Detalle</label>
-            <div class="input-group">
-              <select class="form-select" formControlName="benefit_detail_id" id="benefit_detail_id"
-                [ngClass]="{'invalid': campoEsValido('benefit_detail_id')}">
-                <option value="">-- Seleccione Detalle --</option>
-                <option *ngFor="let benefit_detail of benefit_details" value="{{ benefit_detail.id }}">
-                  {{ benefit_detail.name }}</option>
-              </select>
-              <span *ngIf="!benefitDetailSpinner" class="input-group-text" id="basic-addon1">
+            <div class="p-inputgroup">
+              <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="benefit_detail_id"
+                [options]="benefit_details" placeholder="-- Seleccione Detalle --"></p-dropdown>
+              <span *ngIf="!benefitDetailSpinner" class="p-inputgroup-addon">
                 <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
               </span>
             </div>
@@ -57,36 +63,20 @@
 
         </div>
 
-        <div class="col-xl-3 px-2 d-flex flex-column">
-          <ng-zorro-date-time-picker>loading</ng-zorro-date-time-picker>
-
-          <!-- <div class="row">
-            <ngb-datepicker #dp class=" m-2" formControlName="model" (navigate)="date = $event.next"
-              [ngClass]="{'invalid': campoEsValido('model')}" [markDisabled]="isDayDisabled"></ngb-datepicker>
-            <small *ngIf="campoEsValido('model')" class="text-danger">{{ datePickerErrors }}</small>
-          </div>
-          <div class="row">
-            <ngb-timepicker #tp class="m-2 d-flex justify-content-around" formControlName="time"
-              [ngClass]="{'invalid': campoEsValido('time')}" [meridian]="meridian"></ngb-timepicker>
-            <small *ngIf="campoEsValido('time')" class="text-danger">{{ timePickerErrors }}</small>
-          </div> -->
-
+        <div class="col-xl-5 px-2 d-flex flex-column">
+          <p-calendar #calendar [inline]="true" [showTime]="true" formControlName="rangeDates" selectionMode="single"
+            [readonlyInput]="true" [disabledDays]="disabledDays"></p-calendar>
         </div>
       </div>
 
-      <input type="hidden" formControlName="benefit_begin_time" value="{{ benefit_begin_time }}">
-      <input type="hidden" formControlName="benefit_end_time">
+      <input type="hidden" formControlName="benefit_begin_time" />
+      <input type="hidden" formControlName="benefit_end_time" />
 
       <div class="mb-3">
         <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
-          {{ ( currentUserBenefits?.id ) ? 'Actualizar' : 'Crear' }}
+          {{ currentUserBenefits?.id ? "Actualizar" : "Crear" }}
         </button>
       </div>
-
     </form>
   </div>
 </div>
-<span>
-  <button (click)="print()">Print</button>
-  {{ createForm.value | json }}
-</span>

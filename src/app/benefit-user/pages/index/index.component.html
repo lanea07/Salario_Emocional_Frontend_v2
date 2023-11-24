@@ -7,7 +7,7 @@
         <div class="col-sm-4 my-1 my-sm-0">
           <div class=" input-group">
             <label class="input-group-text" for="years">Año</label>
-            <select class="form-select" formControlName="years" (change)="getBenefitDetail($event)">
+            <select title="years" class="form-select" formControlName="years" (change)="getBenefitDetail($event)">
               <option *ngFor="let year of years" value="{{ year }}">{{ year }}
               </option>
             </select>
@@ -17,7 +17,7 @@
         <div class="col-sm-8 my-1 my-sm-0">
           <div class=" input-group">
             <label class="input-group-text" for="user">Colaborador</label>
-            <select class="form-select" formControlName="users" (change)="getBenefitDetail($event)">
+            <select title="users" class="form-select" formControlName="users" (change)="getBenefitDetail($event)">
 
               <option value="">
                 -- Seleccione un colaborador --
@@ -30,13 +30,13 @@
               </ng-container>
 
               <ng-container *ngIf="!isAdmin">
-                <option value=" {{ user?.id }}">
+                <!-- <option value=" {{ user?.id }}">
                   {{user?.name}}
                 </option>
 
                 <option *ngFor="let user of user?.subordinates" value=" {{ user.id }}">
                   {{user.name}}
-                </option>
+                </option> -->
               </ng-container>
 
             </select>

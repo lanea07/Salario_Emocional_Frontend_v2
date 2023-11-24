@@ -29,7 +29,6 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
               "node_modules/angular-calendar/css/angular-calendar.css",
               "src/styles.scss",
               "node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css",
@@ -107,7 +106,6 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
               "node_modules/angular-calendar/css/angular-calendar.css",
               "node_modules/angular-calendar/css/angular-calendar.css",
               "src/styles.scss"

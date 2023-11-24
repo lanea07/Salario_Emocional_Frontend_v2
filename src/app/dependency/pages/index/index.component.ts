@@ -44,8 +44,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
           .subscribe(
             {
               next: dependency => {
-                let data = this.dependencyService.flattenDependency( Object.values( dependency )[ 0 ] );
-                callback( { data: data } );
+                callback( { data: dependency } );
               },
               error: err => {
                 this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );

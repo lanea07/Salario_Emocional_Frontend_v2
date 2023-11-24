@@ -19,12 +19,7 @@ import { Title } from '@angular/platform-browser';
 } )
 export class CreateComponent {
 
-  benefitDetail: Benefit = {
-    name: '',
-    created_at: new Date,
-    updated_at: new Date,
-    benefit_detail: []
-  };
+  benefitDetail?: Benefit;
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
     time_hours: [ '', [ this.validatorService.minIfFilled( 0 ) ] ]
@@ -129,12 +124,12 @@ export class CreateComponent {
       return;
     }
 
-    if ( this.benefitDetail.id ) {
+    if ( this.benefitDetail?.id ) {
       this.benefitDetailService.update( this.benefitDetail.id, this.createForm.value )
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/benefit-detail/show/${ this.benefitDetail.id }` )
+              this.router.navigateByUrl( `/benefit-detail/show/${ this.benefitDetail?.id }` )
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
             },
             error: ( { error } ) => {

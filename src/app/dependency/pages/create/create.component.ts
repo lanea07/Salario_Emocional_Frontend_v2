@@ -21,7 +21,7 @@ export class CreateComponent implements OnInit {
   } );
   disableSubmitBtn: boolean = false;
   loaded: boolean = false;
-  dependency!: Dependency[];
+  dependency?: Dependency[];
 
   get nameErrorMsg (): string {
     const errors = this.createForm.get( 'name' )?.errors;
@@ -50,7 +50,6 @@ export class CreateComponent implements OnInit {
 
     this.dependencyService.index().subscribe( {
       next: ( dependency ) => {
-        this.dependency = this.dependencyService.flattenDependency( Object.values( dependency )[ 0 ] );
         this.loaded = true;
       },
       error: ( error ) => {

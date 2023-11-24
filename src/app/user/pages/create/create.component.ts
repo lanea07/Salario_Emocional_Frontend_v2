@@ -2,17 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { forkJoin, switchMap } from 'rxjs';
 
 import Swal from 'sweetalert2';
 
-import { Role } from 'src/app/role/interfaces/role.interface';
-import { RoleService } from 'src/app/role/services/role.service';
-import { ValidatorService } from 'src/app/shared/services/validator.service';
+import { DependencyService } from '../../../dependency/services/dependency.service';
 import { Position } from '../../../position/interfaces/position.interface';
 import { PositionService } from '../../../position/services/position.service';
+import { Role } from '../../../role/interfaces/role.interface';
+import { RoleService } from '../../../role/services/role.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from '../../../shared/services/alert-service.service';
+import { ValidatorService } from '../../../shared/services/validator.service';
 import { User } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user.service';
+import { Dependency } from '../../../dependency/interfaces/dependency.interface';
 
 @Component( {
   selector: 'user-create',
@@ -26,36 +29,25 @@ export class CreateComponent implements OnInit {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
     birthdate: [ '', Validators.required ],
     email: [ '', [ Validators.required, Validators.pattern( this.emailPattern ) ] ],
-    password: [ '', [ this.passwordRequiredIfNotNull() ] ],
     leader: [ '' ],
-    subordinates: [ '' ],
+    password: [ '', [ this.passwordRequiredIfNotNull() ] ],
+    parent: [ '' ],
     position_id: [ '', Validators.required ],
     requirePassChange: [ false ],
-    valid_id: [ '', Validators.required ]
+    valid_id: [ '', Validators.required ],
+    dependency_id: [ '', Validators.required ]
   } );
+  dependencies!: Dependency[];
   disableSubmitBtn: boolean = false;
   filteredSubordinates!: User[];
   loaded: boolean = false;
+  nodes!: any[];
   posibleLeader!: User[];
   posibleSubordinates!: User[];
   positions: Position[] = [];
   roles: Role[] = [];
-  user: User = {
-    name: '',
-    email: '',
-    email_verified_at: null,
-    position_id: 0,
-    leader: null,
-    created_at: new Date,
-    updated_at: new Date,
-    subordinates: [],
-    positions: undefined,
-    roles: [],
-    requirePassChange: false,
-    valid_id: false,
-    birthdate: new Date
-  };
-
+  user?: User;
+  users!: User[];
 
   get rolesFormGroup (): FormGroup | any {
     return this.createForm.controls[ 'rolesFormGroup' ];
@@ -75,6 +67,8 @@ export class CreateComponent implements OnInit {
 
   constructor (
     private activatedRoute: ActivatedRoute,
+    private as: AlertService,
+    private dependencyService: DependencyService,
     private fb: FormBuilder,
     private positionService: PositionService,
     private roleService: RoleService,
@@ -89,40 +83,24 @@ export class CreateComponent implements OnInit {
 
   ngOnInit () {
 
-    this.roleService.index().subscribe( {
-      next: ( roles ) => {
-        this.roles = roles;
-        this.loaded = true;
-        this.createForm.addControl( "rolesFormGroup", this.buildChecksFormGroup( roles ) );
-      },
-      error: ( error ) => {
-        this.router.navigateByUrl( 'benefit-employee' );
-        Swal.fire( {
-          title: 'Error',
-          icon: 'error',
-          html: error.error.msg,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: ( toast ) => {
-            toast.addEventListener( 'mouseenter', Swal.stopTimer )
-            toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-          }
-        } )
-      }
-    } );
-
-    this.positionService.index().subscribe(
-      positions => {
-        this.positions = positions;
-        this.loaded = true;
-      } )
-
-    this.userService.index()
-      .subscribe( user => {
-        this.posibleLeader = user;
-        this.posibleSubordinates = user;
-        this.filteredSubordinates = user;
-      } )
+    forkJoin( {
+      dependencies: this.dependencyService.index(),
+      positions: this.positionService.index(),
+      roles: this.roleService.index(),
+    } )
+      .subscribe( {
+        next: ( { dependencies, positions, roles } ) => {
+          this.dependencies = dependencies;
+          this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependencies[ 0 ] ) ];
+          this.positions = positions;
+          this.roles = roles;
+          this.loaded = true;
+          this.createForm.addControl( "rolesFormGroup", this.buildChecksFormGroup( roles ) );
+        },
+        error: ( error ) => {
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.statusText );
+        }
+      } );
 
     if ( !this.router.url.includes( 'edit' ) ) {
       return;
@@ -145,8 +123,7 @@ export class CreateComponent implements OnInit {
           } );
         } );
 
-        if ( extractUser.leader ) this.createForm.get( 'leader' )?.setValue( extractUser.leader.id );
-        if ( extractUser.subordinates ) this.createForm.get( 'subordinates' )?.setValue( extractUser.subordinates?.map( subordinate => subordinate.id ) );
+        if ( extractUser.parent ) this.createForm.get( 'parent' )?.setValue( extractUser.parent.id );
         this.createForm.get( 'position_id' )?.setValue( extractUser.positions?.id?.toString() )
         this.createForm.get( 'requirePassChange' )?.setValue( extractUser.requirePassChange )
         this.createForm.get( 'valid_id' )?.setValue( extractUser.valid_id )
@@ -166,13 +143,13 @@ export class CreateComponent implements OnInit {
       return;
     }
 
-    if ( this.user.id ) {
-      console.log( this.user.id );
-      this.userService.update( this.user.id, this.createForm.value )
+    if ( this.user?.id ) {
+      console.log( this.user?.id );
+      this.userService.update( this.user?.id, this.createForm.value )
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/user/show/${ this.user.id }` )
+              this.router.navigateByUrl( `/user/show/${ this.user?.id }` )
               Swal.fire( {
                 title: 'Actualizado',
                 icon: 'success',
@@ -190,7 +167,9 @@ export class CreateComponent implements OnInit {
 
     } else {
 
-      this.userService.create( this.createForm.value )
+      let dependency_id = this.dependencyService.flattenDependency( { ...this.dependencies[ 0 ] } ).find( ( dependency: any ) => this.createForm.get( 'dependency_id' )?.value[ 'label' ] === dependency.name );
+      this.createForm.get( 'dependency_id' )?.setValue( dependency_id?.id );
+      this.userService.create( this.createForm.value ) 
         .subscribe(
           {
             next: userCreated => {
@@ -263,6 +242,25 @@ export class CreateComponent implements OnInit {
 
       return null;
     };
+  }
+
+  fillColaboradores ( event: any ) {
+    if ( !event.node.parent ) {
+      this.emptyColaboradores();
+      return;
+    }
+    let dependencies = this.dependencyService.flattenDependency( { ...this.dependencies[ 0 ] } )
+    let dependency = dependencies.find( ( dependency: Dependency ) => {
+      return dependency.name === event.node.parent.label;
+    } );
+    this.createForm.get( 'parent' )?.reset( '' );
+    this.createForm.get( 'parent' )?.enable();
+    this.users = dependency!.users;
+  }
+
+  emptyColaboradores () {
+    this.users = [];
+    this.createForm.get( 'parent' )?.disable();
   }
 
 }

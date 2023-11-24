@@ -38,12 +38,12 @@ export class ShowComponent {
           this.loaded = true;
           this.user?.roles?.forEach( role => this.roles.push( role.name ) );
         },
-        error: ( error ) => {
+        error: ( { error } ) => {
           this.router.navigateByUrl( 'benefit-employee' );
           Swal.fire( {
             title: 'Error',
             icon: 'error',
-            html: error.error.msg,
+            html: error.message,
             timer: 3000,
             timerProgressBar: true,
             didOpen: ( toast ) => {

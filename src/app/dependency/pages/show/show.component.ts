@@ -40,7 +40,6 @@ export class ShowComponent {
         next: ( dependency ) => {
           this.dependency = Object.values( dependency )[ 0 ];
           this.loaded = true;
-          this.treedata = [ ...[ this.dependencyService.simplifyDependency( this.dependency! ) ] ];
         },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );
@@ -97,36 +96,5 @@ export class ShowComponent {
       };
     } );
   }
-
-
-
-
-  isObject = ( value: any ) => {
-    return !!( value && typeof value === "object" );
-  };
-
-  findNestedObject = ( object: any = {}, keyToMatch: any = "", valueToMatch: any = "" ) => {
-    if ( this.isObject( object ) ) {
-      const entries = Object.entries( object );
-
-      for ( let i = 0; i < entries.length; i += 1 ) {
-        const [ objectKey, objectValue ] = entries[ i ];
-
-        if ( objectKey === keyToMatch && objectValue === valueToMatch ) {
-          return object;
-        }
-
-        if ( this.isObject( objectValue ) ) {
-          const child: any = this.findNestedObject( objectValue, keyToMatch, valueToMatch );
-
-          if ( child !== null ) {
-            return child;
-          }
-        }
-      }
-    }
-
-    return null;
-  };
 
 }

@@ -1,47 +1,26 @@
 import { formatDate } from '@angular/common';
-import { ChangeDetectorRef, Component, Injectable, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 
-// import { NgbCalendar, NgbDate, NgbDatepicker, NgbTimeAdapter, NgbTimeStruct, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 import { addHours } from 'date-fns';
+import { TreeNode } from 'primeng/api';
 import Swal from 'sweetalert2';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { AuthService } from '../../../auth/services/auth.service';
 import { BenefitDetail } from '../../../benefit-detail/interfaces/benefit-detail.interface';
 import { Benefit } from '../../../benefit/interfaces/benefit.interface';
 import { BenefitService } from '../../../benefit/services/benefit.service';
+import { Dependency } from '../../../dependency/interfaces/dependency.interface';
+import { DependencyService } from '../../../dependency/services/dependency.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from '../../../shared/services/alert-service.service';
 import { User } from '../../../user/interfaces/user.interface';
-import { UserService } from '../../../user/services/user.service';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
-import { Title } from '@angular/platform-browser';
-import { DatePickerComponent } from '../../components/date-time-picker/date-time-picker.component';
+import { TreeSelect } from 'primeng/treeselect';
 
-const pad = ( i: number ): string => ( i < 10 ? `0${ i }` : `${ i }` );
-
-
-// @Injectable()
-// export class NgbTimeStringAdapter extends NgbTimeAdapter<string> {
-//   fromModel ( value: string | null ): NgbTimeStruct | null {
-//     if ( !value ) {
-//       return null;
-//     }
-//     const split = value.split( ':' );
-//     return {
-//       hour: parseInt( split[ 0 ], 10 ),
-//       minute: parseInt( split[ 1 ], 10 ),
-//       second: parseInt( split[ 2 ], 10 ),
-//     };
-//   }
-
-//   toModel ( time: NgbTimeStruct | null ): string | null {
-//     return time != null ? `${ pad( time.hour ) }:${ pad( time.minute ) }:${ pad( time.second ) }` : null;
-//   }
-// }
 @Component( {
   selector: 'benefitemployee-create',
   templateUrl: './create.component.html',
@@ -50,12 +29,7 @@ const pad = ( i: number ): string => ( i < 10 ? `0${ i }` : `${ i }` );
 } )
 export class CreateComponent implements OnInit {
 
-  // @ViewChild( NgbDatepicker ) dp?: NgbDatepicker;
-  // @ViewChild( NgbTimepicker ) tp?: NgbTimepicker;
-  @ViewChild( DatePickerComponent ) datepicker?: DatePickerComponent;
-
-  benefit_begin_time!: string;
-  benefits!: Benefit[];
+  benefits?: Benefit[];
   benefit_details?: BenefitDetail[];
   benefitDetailSpinner: boolean = true;
   createForm: FormGroup = this.fb.group( {
@@ -63,21 +37,18 @@ export class CreateComponent implements OnInit {
     benefit_detail_id: [ { value: '', disabled: true }, Validators.required ],
     benefit_end_time: [ '' ],
     benefit_id: [ { value: '', disabled: true }, Validators.required ],
-    model: [ '', Validators.required ],
-    time: [ '', Validators.required ],
     user_id: [ { value: '', disabled: true }, Validators.required ],
+    rangeDates: [ '' ],
   } );
   currentUserBenefits?: BenefitUser;
   date!: { year: number, month: number };
+  dependencies!: Dependency[];
+  disabledDays: number[] = [];
   disableSubmitBtn: boolean = false;
-  meridian: boolean = true;
-  time!: { hour: number, minute: number };
+  nodes!: any[];
   selectedBenefitDetail?: BenefitDetail;
-  users!: User[];
+  users?: User[];
   userAndBenefitSpinner: boolean = true;
-
-  // public isDayDisabled = ( date: NgbDate ) =>
-  //   this.ngbCalendar.getWeekday( date ) === 6 || this.ngbCalendar.getWeekday( date ) === 7;
 
   get userIdErrors (): string {
     const errors = this.createForm.get( 'user_id' )?.errors;
@@ -103,33 +74,14 @@ export class CreateComponent implements OnInit {
     return '';
   }
 
-  get datePickerErrors (): string {
-    const errors = this.createForm.get( 'model' )?.errors;
-    if ( errors![ 'required' ] ) {
-      return 'El campo es obligatorio';
-    }
-    return '';
-  }
-
-  get timePickerErrors (): string {
-    const errors = this.createForm.get( 'time' )?.errors;
-    if ( errors![ 'required' ] ) {
-      return 'El campo es obligatorio';
-    }
-    return '';
-  }
-
-
   constructor (
     private activatedRoute: ActivatedRoute,
     private as: AlertService,
-    private authService: AuthService,
     private benefitService: BenefitService,
     private benefitUserService: BenefitUserService,
     private changeDetectorRef: ChangeDetectorRef,
+    private dependencyService: DependencyService,
     private fb: FormBuilder,
-    // private ngbCalendar: NgbCalendar,
-    private userService: UserService,
     private router: Router,
     private titleService: Title
   ) {
@@ -139,14 +91,6 @@ export class CreateComponent implements OnInit {
   ngOnInit (): void {
 
     forkJoin( {
-      validarAdmin: this.authService.validarAdmin()
-        .pipe(
-          switchMap( response => {
-            return response
-              ? this.userService.index()
-              : this.userService.show( Number.parseInt( localStorage.getItem( 'uid' )! ) );
-          } )
-        ),
       loadBenefits: this.benefitService.index()
         .pipe(
           tap( ( benefits ) => {
@@ -154,12 +98,18 @@ export class CreateComponent implements OnInit {
             this.createForm.get( 'benefit_id' )?.enable();
             this.userAndBenefitSpinner = false;
           } )
+      ),
+      loadDependencies: this.dependencyService.index()
+        .pipe(
+          tap( ( dependencies ) => {
+            this.dependencies = dependencies;
+            this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependencies[ 0 ] ) ];
+          } )
         )
     } )
       .subscribe( {
-        next: ( { validarAdmin, loadBenefits } ) => {
-          this.users = Object.values( validarAdmin ).filter( each => each.valid_id );
-          this.createForm.get( 'user_id' )?.enable();
+        next: ( { loadBenefits } ) => {
+          this.createForm.get( 'selectedNodes' )?.enable();
 
           if ( this.router.url.includes( 'edit' ) ) {
             this.activatedRoute.params
@@ -170,20 +120,13 @@ export class CreateComponent implements OnInit {
                 {
                   next: user => {
                     this.currentUserBenefits = Object.values( user )[ 0 ];
-                    this.createForm.get( 'user_id' )?.disable();
+                    let dep = this.dependencyService.flattenDependency( this.dependencies[ 0 ] ).find( ( dependency: any ) => this.currentUserBenefits?.benefit_user[ 0 ].user.dependency.name === dependency.name );
                     this.createForm.get( 'benefit_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
-                    // this.dp?.navigateTo( {
-                    //   year: new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getFullYear(),
-                    //   month: new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMonth() + 1
-                    // } )
-                    this.createForm.get( 'model' )?.setValue( {
-                      'year': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getFullYear(),
-                      'month': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMonth() + 1,
-                      'day': new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getDate()
-                    } );
-                    // this.tp?.updateHour( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getHours().toString() );
-                    // this.tp?.updateMinute( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ).getMinutes().toString() );
+                    this.createForm.get( 'rangeDates' )?.setValue( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ) );
+                    this.fillColaboradores( { node: { label: this.currentUserBenefits!.benefit_user[ 0 ].user.dependency.name } } );
                     this.createForm.get( 'user_id' )?.setValue( this.currentUserBenefits!.id );
+                    this.createForm.get( 'user_id' )?.disable();
+                    this.createForm.get( 'selectedNodes' )?.disable();
                     this.fillBenefitDetail( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
                   },
                   error: err => {
@@ -232,7 +175,7 @@ export class CreateComponent implements OnInit {
       this.createForm.markAllAsTouched();
       return;
     }
-    let date = `${ this.createForm.get( 'model' )?.value[ 'year' ] }-${ this.createForm.get( 'model' )?.value[ 'month' ] }-${ this.createForm.get( 'model' )?.value[ 'day' ] } ${ this.createForm.get( 'time' )?.value }`;
+    let date = this.createForm.get( 'rangeDates' )?.value;
     this.createForm.get( 'benefit_begin_time' )?.setValue( formatDate( new Date( date ), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
     this.createForm.get( 'benefit_end_time' )?.setValue( formatDate( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ).toString(), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
 
@@ -250,7 +193,7 @@ export class CreateComponent implements OnInit {
             }
           } );
     } else {
-      this.benefitUserService.create( this.createForm.value )
+      this.benefitUserService.create( this.createForm.value ) 
         .subscribe( {
           next: () => {
             this.disableSubmitBtn = false;
@@ -266,31 +209,48 @@ export class CreateComponent implements OnInit {
     this.disableSubmitBtn = true;
   }
 
+  fillColaboradores ( event: any ) {
+    let dependencies = this.dependencyService.flattenDependency( { ...this.dependencies[ 0 ] } )
+    let dependency = dependencies.find( ( dependency: Dependency ) => {
+      return dependency.name === event.node.label;
+    } );
+    this.createForm.get( 'user_id' )?.reset( '' );
+    this.users = dependency!.users;
+    this.users.length > 0 ? this.createForm.get( 'user_id' )?.enable() : this.createForm.get( 'user_id' )?.disable();
+  }
+
+  emptyColaboradores () {
+    this.users = [];
+    this.createForm.get( 'user_id' )?.disable();
+  }
+
   fillBenefitDetail ( event: any ) {
     this.createForm.get( 'benefit_detail_id' )!.reset( '' );
+    this.createForm.get( 'benefit_detail_id' )!.disable();
     this.benefitDetailSpinner = false;
-    this.benefitService.show( event.target?.value || event )
-      .subscribe( benefit_details => {
-        this.benefit_details = Object.values( benefit_details )[ 0 ].benefit_detail;
-        if ( this.createForm.get( 'benefit_id' )!.valid ) {
-          this.benefitDetailSpinner = true;
-          this.createForm.get( 'benefit_detail_id' )!.enable();
+    this.benefitService.show( event.value || event )
+      .subscribe(
+        {
+          next: ( benefit_details ) => {
+            this.benefit_details = Object.values( benefit_details )[ 0 ].benefit_detail;
+            if ( this.createForm.get( 'benefit_id' )!.valid ) {
+              this.benefitDetailSpinner = true;
+              this.createForm.get( 'benefit_detail_id' )!.enable();
+            }
+            if ( this.router.url.includes( 'edit' ) ) {
+              this.createForm.get( 'benefit_detail_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefit_detail.id );
+            }
+          },
+          error: ( { error } ) => {
+            this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+          }
         }
-        if ( this.router.url.includes( 'edit' ) ) {
-          this.createForm.get( 'benefit_detail_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefit_detail.id );
-        }
-      } );
-    // if ( event.target && event.target.options[ event.target.options.selectedIndex ].text == "Mi Viernes" ) {
-    //   this.isDayDisabled = ( date: NgbDate ) =>
-    //     this.ngbCalendar.getWeekday( date ) !== 5;
-    // } else {
-    //   this.isDayDisabled = ( date: NgbDate ) =>
-    //     this.ngbCalendar.getWeekday( date ) === 6 || this.ngbCalendar.getWeekday( date ) === 7;
-    // }
-
+      );
+    if ( event.target && event.target.options[ event.target.options.selectedIndex ].text == "Mi Viernes" ) {
+      this.disabledDays = [ 0, 1, 2, 3, 4, 6 ];
+    } else {
+      this.disabledDays = [];
+    }
   }
 
-  print () {
-    console.log( this.datepicker?.date );
-  }
 }

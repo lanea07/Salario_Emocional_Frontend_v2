@@ -2,7 +2,7 @@
   <div class="col">
     <div class="btn-group float-end mt-5 mb-5">
       <button backButton class="btn btn-outline-secondary">Volver</button>
-      <a routerLink="/benefit-detail/edit/{{benefitDetail.id}}" class="btn btn-warning" aria-current="page"
+      <a routerLink="/benefit-detail/edit/{{benefitDetail?.id}}" class="btn btn-warning" aria-current="page"
         [ngClass]="{'disabled': !loaded}">Editar</a>
     </div>
   </div>
@@ -17,7 +17,7 @@
         <div *ngIf="!loaded">
           <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
         </div>
-        {{ benefitDetail.name }}
+        {{ benefitDetail?.name }}
         <span class="form-text">Nombre</span>
       </div>
 
@@ -49,7 +49,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let benefit of benefitDetail.benefit">
+      <tr *ngFor="let benefit of benefitDetail?.benefit">
         <td>
           <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
             routerLink="/benefit/show/{{ benefit.id }}">{{ benefit.name }}</a>

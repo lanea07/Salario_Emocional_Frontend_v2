@@ -22,11 +22,7 @@ export class CreateComponent {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ]
   } );
   disableSubmitBtn: boolean = false;
-  role: Role = {
-    name: '',
-    created_at: new Date,
-    updated_at: new Date
-  };
+  role?: Role;
 
   get roleNameErrors (): string {
     const errors = this.createForm.get( 'name' )?.errors;
@@ -95,12 +91,12 @@ export class CreateComponent {
       return;
     }
 
-    if ( this.role.id ) {
-      this.roleService.update( this.role.id, this.createForm.value )
+    if ( this.role?.id ) {
+      this.roleService.update( this.role?.id, this.createForm.value )
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/role/show/${ this.role.id }` )
+              this.router.navigateByUrl( `/role/show/${ this.role?.id }` )
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
             },
             error: ( { error } ) => {

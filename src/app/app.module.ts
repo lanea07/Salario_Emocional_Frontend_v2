@@ -13,8 +13,6 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OffcanvasComponent } from './shared/offcanvas/offcanvas.component';
-import { NZ_I18N } from 'ng-zorro-antd/i18n';
-import { es_ES } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import es from '@angular/common/locales/es';
 import { FormsModule } from '@angular/forms';
@@ -40,7 +38,6 @@ registerLocaleData( es );
   ],
   providers: [
     { provide: NgChartsConfiguration, useValue: { generateColors: false } },
-    { provide: NZ_I18N, useValue: es_ES }
   ],
   bootstrap: [ AppComponent ],
 } )

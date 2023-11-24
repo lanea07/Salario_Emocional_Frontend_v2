@@ -7,7 +7,8 @@
         <label class="form-label" for="name"><i class="fa-solid fa-box me-1"></i>Nombre del Beneficio</label>
         <small *ngIf="campoEsValido('name')" class="text-danger">{{benefitNameErrors}}</small>
       </div>
-      <div *ngIf="politicsInput; else politicLinks" class="mb-3 input-group">
+      <div *ngIf="politicsInput; else politicLinks" class="mb-3">
+        <label for="filePoliticas" class="form-label">Archivo de políticas</label>
         <input class="form-control" type="file" id="filePoliticas" formControlName="filePoliticas"
           (change)="onFileChange($event)">
       </div>
@@ -31,7 +32,7 @@
 
       <div class="mb-3">
         <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
-          {{ benefit.id ? "Actualizar" : "Crear" }}
+          {{ benefit?.id ? "Actualizar" : "Crear" }}
         </button>
       </div>
     </form>

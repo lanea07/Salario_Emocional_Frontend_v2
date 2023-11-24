@@ -7,6 +7,7 @@ export interface BenefitDetail {
   created_at: Date;
   updated_at: Date;
   benefit: Benefit[];
+  valid_id: boolean;
 }
 
 interface Pivot {

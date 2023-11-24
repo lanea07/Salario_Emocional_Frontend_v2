@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { UserService } from '../../services/user.service';
+import { DependencyService } from 'src/app/dependency/services/dependency.service';
 
 @Component( {
   selector: 'user-index',
@@ -18,8 +19,8 @@ export class IndexComponent implements OnInit, AfterViewInit {
     { title: 'Correo', data: 'email' },
     { title: 'Roles', data: 'roles[0].name' },
     { title: 'Cargo', data: 'positions.name' },
-    { title: 'Jefe Directo', data: 'leader.name' },
-    { title: 'Empleados a cargo', data: 'subordinates.length' },
+    { title: 'Jefe Directo', data: 'parent.name' },
+    { title: 'Empleados directos a cargo', data: 'children.length' },
     { 
       title: 'Válido',
       data: function ( data: any, type: any, full: any ) {
@@ -40,6 +41,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
 
   constructor (
     private as: AlertService,
+    private dependencyService: DependencyService,
     private renderer: Renderer2,
     private router: Router,
     private titleService: Title,
@@ -55,7 +57,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
           .subscribe(
             {
               next: users => {
-                callback( { data: users } );
+                callback( { data: this.dependencyService.flattenDependency( { ...users[ 0 ] } ) } );
               },
               error: err => {
                 this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
@@ -69,7 +71,13 @@ export class IndexComponent implements OnInit, AfterViewInit {
         if ( !data[ 'valid_id' ] ) {
           $( row ).addClass( 'invalid-user' );
         }
-      }
+      },
+      columnDefs: [
+        {
+          render: ( data: any, type: any, row: any ) => '<p class="fw-bold">' + data + '</p>',
+          targets: 0
+        }
+      ]
     }
   }
 

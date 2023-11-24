@@ -17,12 +17,7 @@ import { BenefitService } from '../../services/benefit.service';
 } )
 export class ShowComponent {
 
-  benefit: Benefit = {
-    name: '',
-    created_at: new Date,
-    updated_at: new Date,
-    benefit_detail: []
-  };
+  benefit?: Benefit;
   details: any;
   filePoliticas: string = "";
   isAdmin: boolean = false;
@@ -46,8 +41,8 @@ export class ShowComponent {
       .subscribe( {
         next: ( benefit ) => {
           this.benefit = Object.values( benefit )[ 0 ];
-          this.details = this.benefit.benefit_detail;
-          this.filePoliticas = this.benefit.politicas_path ? this.benefit.politicas_path : '';
+          this.details = this.benefit?.benefit_detail;
+          this.filePoliticas = this.benefit?.politicas_path ? this.benefit.politicas_path : '';
           this.loaded = true;
         },
         error: ( error ) => {

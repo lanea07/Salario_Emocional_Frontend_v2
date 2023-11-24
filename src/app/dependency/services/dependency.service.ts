@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Dependency } from '../interfaces/dependency.interface';
-import { TreeNode } from '../interfaces/TreeNode';
+import { TreeNode } from 'primeng/api';
 
 @Injectable( {
   providedIn: 'root'
@@ -57,24 +57,45 @@ export class DependencyService {
     return this.http.delete( `${ this.apiBaseUrl }/dependencies/${ id }`, { headers, withCredentials: true } );
   }
 
-  simplifyDependency ( original: Dependency ): TreeNode {
-    const { id, name, children } = original;
-    const simplifiedChildren: TreeNode[] = children!.map( child => this.simplifyDependency( child ) );
+  // Methods for transform the dependencies results
 
-    return { id, name, children: simplifiedChildren };
+  /**
+   * Transforms the dependencies nested array into a tree structure
+   * @param Dependency dependency 
+   * @returns TreeNode
+   */
+  public buildDependencyTreeNode ( dependency: Dependency ): TreeNode {
+    const { path, name, children } = dependency;
+    const simplifiedChildren: TreeNode[] = children!.map( child => this.buildDependencyTreeNode( child ) );
+    return { key: path.replace( '.', '-' ), label: name, children: simplifiedChildren };
   }
 
-  flattenDependency ( dependency: any ): Dependency[] {
+  /**
+   * Takes the input dependencies nested array and returns a level 1 flatted array of dependencies
+   * 
+   * @param any dependency 
+   * @returns Dependency[]
+   */
+  public flattenDependency ( dependency: any ): Dependency[] {
     let flattened: Dependency[] = [ dependency ];
-
     if ( dependency.children && dependency.children.length > 0 ) {
       for ( const child of dependency.children ) {
         flattened = flattened.concat( this.flattenDependency( child ) );
       }
     }
-    delete dependency.children;
-
     return flattened;
+  }
+
+  /**
+   * Takes a dependency and transforms it into a TreeNode
+   * 
+   * @param Dependency dependency 
+   * @returns TreeNode
+   */
+  public makeNode ( dependency: Dependency ): TreeNode {
+    const { path, name, children } = dependency;
+    const simplifiedChildren: TreeNode[] = children ? children!.map( child => this.makeNode( child ) ) : [];
+    return { key: path.replace( '.', '-' ), label: name, children: simplifiedChildren };
   }
 
 }

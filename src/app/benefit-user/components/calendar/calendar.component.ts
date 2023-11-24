@@ -1,13 +1,13 @@
-import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { isSameDay, isSameMonth } from 'date-fns';
 import { Subject } from 'rxjs';
-// import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
+
+import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
-import { BenefitUser } from '../../interfaces/benefit-user.interface';
-import Swal from 'sweetalert2';
-import { BenefitUserService } from '../../services/benefit-user.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import Swal from 'sweetalert2';
+import { BenefitUser } from '../../interfaces/benefit-user.interface';
+import { BenefitUserService } from '../../services/benefit-user.service';
 
 const colors: Record<string, EventColor> = {
   primary: {
@@ -31,77 +31,17 @@ export class CalendarComponent implements OnChanges {
   @ViewChild( 'modalContent', { static: true } ) modalContent!: TemplateRef<any>;
   @Input() data: any;
 
-  view: CalendarView = CalendarView.Month;
-  CalendarView = CalendarView;
-  viewDate: Date = new Date();
-  modalData!: { action: string; event: CalendarEvent; };
-  isAdmin: boolean = false;
-
-  // actions: CalendarEventAction[] = [
-  //   {
-  //     label: '<i class="fas fa-fw fa-pencil-alt"></i>',
-  //     a11yLabel: 'Edit',
-  //     onClick: ( { event }: { event: CalendarEvent } ): void => {
-  //       this.handleEvent( 'Edited', event );
-  //     },
-  //   },
-  //   {
-  //     label: '<i class="fas fa-fw fa-trash-alt"></i>',
-  //     a11yLabel: 'Delete',
-  //     onClick: ( { event }: { event: CalendarEvent } ): void => {
-  //       this.events = this.events.filter( ( iEvent ) => iEvent !== event );
-  //       this.handleEvent( 'Deleted', event );
-  //     },
-  //   },
-  // ];
-
-  refresh = new Subject<void>();
-
-  events: CalendarEvent[] = [
-    // {
-    //   start: subDays( startOfDay( new Date() ), 1 ),
-    //   end: addDays( new Date(), 1 ),
-    //   title: 'A 3 day event',
-    //   color: { ...colors[ 'red' ] },
-    //   actions: this.actions,
-    //   allDay: true,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-    // {
-    //   start: startOfDay( new Date() ),
-    //   title: 'An event with no end date',
-    //   color: { ...colors[ 'yellow' ] },
-    //   actions: this.actions,
-    // },
-    // {
-    //   start: subDays( endOfMonth( new Date() ), 3 ),
-    //   end: addDays( endOfMonth( new Date() ), 3 ),
-    //   title: 'A long event that spans 2 months',
-    //   color: { ...colors[ 'blue' ] },
-    //   allDay: true,
-    // },
-    // {
-    //   start: addHours( startOfDay( new Date() ), 2 ),
-    //   end: addHours( new Date(), 2 ),
-    //   title: 'A draggable and resizable event',
-    //   color: { ...colors[ 'yellow' ] },
-    //   actions: this.actions,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-  ];
-
   activeDayIsOpen: boolean = false;
+  CalendarView = CalendarView;
+  events: CalendarEvent[] = [];
+  isAdmin: boolean = false;
+  modalData?: { action: string; event: CalendarEvent; };
+  refresh = new Subject<void>();
+  view: CalendarView = CalendarView.Month;
+  viewDate: Date = new Date();
+  visible: boolean = false;
 
   constructor (
-    // private modal: NgbModal,
     private benefitUserService: BenefitUserService,
     private authService: AuthService
   ) { }
@@ -163,34 +103,12 @@ export class CalendarComponent implements OnChanges {
       }
       return iEvent;
     } );
-    // this.handleEvent( 'Dropped or resized', event );
   }
 
   handleEvent ( action: string, event: CalendarEvent ): void {
     this.modalData = { event, action };
-    // this.modal.open( this.modalContent, { size: 'lg' } );
+    this.visible = true;
   }
-
-  // addEvent (): void {
-  //   this.events = [
-  //     ...this.events,
-  //     {
-  //       title: 'New event',
-  //       start: startOfDay( new Date() ),
-  //       end: endOfDay( new Date() ),
-  //       color: colors[ 'red' ],
-  //       draggable: true,
-  //       resizable: {
-  //         beforeStart: true,
-  //         afterEnd: true,
-  //       },
-  //     },
-  //   ];
-  // }
-
-  // deleteEvent ( eventToDelete: CalendarEvent ) {
-  //   this.events = this.events.filter( ( event ) => event !== eventToDelete );
-  // }
 
   setView ( view: CalendarView ) {
     this.view = view;
@@ -242,12 +160,11 @@ export class CalendarComponent implements OnChanges {
       cancelButtonText: 'Cancelar',
     } ).then( ( result ) => {
       if ( result.isConfirmed ) {
-        this.benefitUserService.destroy( this.modalData.event.meta.id )
+        this.benefitUserService.destroy( this.modalData?.event.meta.id )
           .subscribe( {
             next: () => {
               this.events = this.events.filter( event => event.meta.id !== eventID );
               this.refresh.next();
-              // this.modal.dismissAll();
               this.activeDayIsOpen = false;
             },
             error: ( err ) => { }

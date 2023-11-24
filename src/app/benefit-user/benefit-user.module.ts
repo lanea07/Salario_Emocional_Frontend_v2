@@ -16,15 +16,13 @@ import { ShowComponent } from './pages/show/show.component';
 // import { CreateComponent, NgbTimeStringAdapter } from './pages/create/create.component';
 import { CreateComponent } from './pages/create/create.component';
 import { TotalBancoHorasPipe } from '../shared/pipes/TotalBancoHoras.pipe';
-import { DatePickerComponent } from './components/date-time-picker/date-time-picker.component';
-import { NgZorroAntdModule } from '../ng-zorro/ng-zorro-antd/ng-zorro-antd.module';
+import { PrimengModule } from '../primeng/primeng.module';
 
 @NgModule( {
   declarations: [
     BarChartComponent,
     CalendarComponent,
     CreateComponent,
-    DatePickerComponent,
     DoughnutChartComponent,
     IndexComponent,
     ShowComponent,
@@ -40,7 +38,7 @@ import { NgZorroAntdModule } from '../ng-zorro/ng-zorro-antd/ng-zorro-antd.modul
     // NgbDatepickerModule,
     // NgbTimepickerModule,
     NgChartsModule,
-    NgZorroAntdModule,
+    PrimengModule,
     ReactiveFormsModule,
     FormsModule
   ],

@@ -16,13 +16,7 @@ import { Title } from '@angular/platform-browser';
 } )
 export class ShowComponent {
 
-  benefitDetail: BenefitDetail = {
-    name: '',
-    time_hours: 0,
-    created_at: new Date,
-    updated_at: new Date,
-    benefit: []
-  };
+  benefitDetail?: BenefitDetail;
   loaded: boolean = false;
 
   constructor (
