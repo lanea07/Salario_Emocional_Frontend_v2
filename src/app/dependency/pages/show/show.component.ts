@@ -42,7 +42,7 @@ export class ShowComponent {
           Swal.fire( {
             title: 'Error',
             icon: 'error',
-            html: error.error.msg,
+            html: error.error.message,
             timer: 3000,
             timerProgressBar: true,
             didOpen: ( toast ) => {

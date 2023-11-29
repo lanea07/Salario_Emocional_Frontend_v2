@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgChartsModule } from 'ng2-charts';
 
 import { PrimengModule } from '../primeng/primeng.module';
@@ -26,6 +24,7 @@ import { MiCumpleanosComponent } from './pages/index/components/my-benefits/comp
 import { MiTiempoViajeroComponent } from './pages/index/components/my-benefits/components/mi-tiempo-viajero/mi-tiempo-viajero.component';
 import { MiHorarioAlternanciaComponent } from './pages/index/components/my-benefits/components/mi-horario-alternancia/mi-horario-alternancia.component';
 import { MisVacacionesComponent } from './pages/index/components/my-benefits/components/mis-vacaciones/mis-vacaciones.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 
 @NgModule( {
@@ -51,13 +50,8 @@ import { MisVacacionesComponent } from './pages/index/components/my-benefits/com
   ],
   imports: [
     BenefitUserRoutingModule,
-    CalendarModule.forRoot( {
-      provide: DateAdapter,
-      useFactory: adapterFactory,
-    } ),
     CommonModule,
-    // NgbDatepickerModule,
-    // NgbTimepickerModule,
+    FullCalendarModule,
     NgChartsModule,
     PrimengModule,
     ReactiveFormsModule,
@@ -65,7 +59,6 @@ import { MisVacacionesComponent } from './pages/index/components/my-benefits/com
   ],
   providers: [
     TotalBancoHorasPipe,
-    // { provide: NgbTimeAdapter, useClass: NgbTimeStringAdapter }
   ]
 } )
 export class BenefitEmployeeModule { }

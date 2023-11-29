@@ -1,146 +1,98 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { isSameDay, isSameMonth } from 'date-fns';
-import { Subject } from 'rxjs';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 
-import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
-import { EventColor } from 'calendar-utils';
-import { AuthService } from 'src/app/auth/services/auth.service';
+import { FullCalendarComponent } from '@fullcalendar/angular';
+import { CalendarOptions } from '@fullcalendar/core';
+import esLocale from '@fullcalendar/core/locales/es';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import Swal from 'sweetalert2';
-import { BenefitUser } from '../../../../../../interfaces/benefit-user.interface';
-import { BenefitUserService } from '../../../../../../services/benefit-user.service';
 
-const colors: Record<string, EventColor> = {
-  primary: {
-    primary: '#37a91b',
-    secondary: '#55ffbb',
-  },
-  secondary: {
-    primary: '#888888',
-    secondary: '#bbbbbb',
-  }
-}
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
+import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'calendar-component',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [],
   templateUrl: './calendar.component.html',
+  styles: [],
 } )
 export class CalendarComponent implements OnChanges {
 
-  @ViewChild( 'modalContent', { static: true } ) modalContent!: TemplateRef<any>;
-  @Input() data: any;
-
-  activeDayIsOpen: boolean = false;
-  CalendarView = CalendarView;
-  events: CalendarEvent[] = [];
+  @ViewChild( 'calendar' ) calendar!: FullCalendarComponent;
+  @Input() data?: BenefitUserElement[] = [];
   isAdmin: boolean = false;
-  modalData?: { action: string; event: CalendarEvent; };
-  refresh = new Subject<void>();
-  view: CalendarView = CalendarView.Month;
-  viewDate: Date = new Date();
+  modalData?: any;
   visible: boolean = false;
 
-  constructor (
-    private benefitUserService: BenefitUserService,
-    private authService: AuthService
-  ) { }
+  calendarOptions: CalendarOptions = {
+    initialView: 'dayGridMonth',
+    plugins: [ dayGridPlugin, timeGridPlugin ],
+    eventClick: this.showModal.bind( this ),
+    events: [],
+    locale: esLocale,
+    headerToolbar: {
+      left: 'prev,today,next',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    }
+  };
 
-  ngOnInit () {
+  constructor (
+    private authService: AuthService,
+    private as: AlertService,
+    private benefitUserService: BenefitUserService,
+  ) { 
     this.authService.validarAdmin()
       .subscribe( {
-        next: ( isAdmin: any ) => {
-          this.isAdmin = isAdmin.admin;
+        next: ( resp: any ) => {
+          this.isAdmin = resp.admin;
         },
-        error: ( error ) => {
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
+        error: ( err ) => {
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
         }
       } );
   }
 
-  ngOnChanges ( changes: SimpleChanges ) {
-    this.addEventsToCalendar( this.data );
-  }
-
-  dayClicked ( { date, events }: { date: Date; events: CalendarEvent[] } ): void {
-    if ( isSameMonth( date, this.viewDate ) ) {
-      if ( ( isSameDay( this.viewDate, date ) && this.activeDayIsOpen === true ) || events.length === 0 ) {
-        this.activeDayIsOpen = false;
-      }
-      else {
-        this.activeDayIsOpen = true;
-      }
-      this.viewDate = date;
-    }
-    else {
-      this.viewDate = date
-      this.activeDayIsOpen = false;
-    }
-  }
-
-  eventTimesChanged ( {
-    event,
-    newStart,
-    newEnd,
-  }: CalendarEventTimesChangedEvent ): void {
-    this.events = this.events.map( ( iEvent ) => {
-      if ( iEvent === event ) {
-        return {
-          ...event,
-          start: newStart,
-          end: newEnd,
-        };
-      }
-      return iEvent;
+  ngOnChanges ( changes: SimpleChanges ): void {
+    this.calendar.getApi().removeAllEvents();
+    this.data?.forEach( ( item: BenefitUserElement ) => {
+      this.calendar.getApi().addEvent( this.makeEvent( item ) )
     } );
   }
 
-  handleEvent ( action: string, event: CalendarEvent ): void {
-    this.modalData = { event, action };
+  showModal ( arg: any ) {
+    this.modalData = arg.event
     this.visible = true;
   }
 
-  setView ( view: CalendarView ) {
-    this.view = view;
+  makeEvent ( eventData: BenefitUserElement ): any {
+    const { id, benefit_begin_time, benefit_end_time } = eventData;
+    const event = {
+      id: id,
+      start: new Date( benefit_begin_time ),
+      end: new Date( benefit_end_time ),
+      title: `${ eventData.benefits.name }`,
+      classNames: [ this.classSelector( eventData.benefits.name ) ],
+      extendedProps: eventData,
+      allDay: eventData.benefits.name === "Mis Vacaciones" ? true : false,
+    };
+    return event;
   }
 
-  closeOpenMonthViewDay () {
-    this.activeDayIsOpen = false;
-  }
-
-  addEventsToCalendar ( data: any[] ) {
-    this.events = [];
-    data?.flat().forEach( ( element: BenefitUser ) => {
-      let { benefit_user } = element;
-      benefit_user.forEach( benefit => {
-        if ( benefit.benefits.name === 'Mi Viernes' || benefit.benefits.name === 'Mi Banco de Horas' || benefit.benefits.name === 'Mi Cumpleaños' ) {
-          this.events = [
-            ...this.events,
-            {
-              title: String( element.name + ' - ' + benefit.benefits.name + ' - ' + benefit.benefit_detail.name ),
-              start: new Date( benefit.benefit_begin_time ),
-              end: new Date( benefit.benefit_end_time ),
-              color: ( element.id === Number.parseInt( localStorage.getItem( 'uid' )! ) ) ? colors[ 'primary' ] : colors[ 'secondary' ],
-              draggable: false,
-              //actions: this.actions,
-              meta: benefit
-            }
-          ];
-        }
-
-      } )
-    } );
-
+  classSelector ( benefitName: string ) {
+    switch ( benefitName ) {
+      case 'Mi Cumpleaños':
+        return 'text-bg-danger';
+      case 'Mi Viernes':
+        return 'text-bg-success';
+      case 'Mi Banco de Horas':
+        return 'text-bg-warning';
+      case 'Mis Vacaciones':
+        return 'text-bg-dark';
+      default:
+        return 'text-bg-secondary';
+    }
   }
 
   deleteBenefit ( eventID: number ) {
@@ -160,16 +112,15 @@ export class CalendarComponent implements OnChanges {
       cancelButtonText: 'Cancelar',
     } ).then( ( result ) => {
       if ( result.isConfirmed ) {
-        this.benefitUserService.destroy( this.modalData?.event.meta.id )
+        this.benefitUserService.destroy( this.modalData.event.meta.id )
           .subscribe( {
             next: () => {
-              this.events = this.events.filter( event => event.meta.id !== eventID );
-              this.refresh.next();
-              this.activeDayIsOpen = false;
+              // this.calendarOptions.eventRemove( this.modalData.event._def.publicId );
             },
             error: ( err ) => { }
           } )
       }
     } );
   }
+
 }

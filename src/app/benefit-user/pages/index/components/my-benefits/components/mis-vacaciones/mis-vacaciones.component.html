@@ -1,1 +1,20 @@
-<p>mis-vacaciones works!</p>
+<div class="card text-bg-light shadow">
+    <div class="row">
+        <div class="col-3">
+            <div class="d-flex justify-content-around mt-2">
+                <img class="card-img-top" src="./assets/images/banco_horas.svg" alt="" style="height: 150px;">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Mis Vacaciones</h5>
+            </div>
+        </div>
+        <div class="col-9">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-transparent" *ngFor="let item of dataArray">
+                    Del {{ item.benefit_begin_time | date: 'dd/MM/yyyy' }} al {{ item.benefit_end_time | date:
+                    'dd/MM/yyyy' }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
