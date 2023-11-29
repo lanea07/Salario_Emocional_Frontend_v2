@@ -70,13 +70,15 @@ import { BenefitUserService } from '../../../../services/benefit-user.service';
 } )
 export class MyBenefitsComponent {
 
-  // calendarData: any;
+  calendarData?: BenefitUserElement[];
+  loaded: boolean = false;
   miHorarioFlexible?: BenefitUserElement[];
   miAlternancia?: BenefitUserElement[];
   miBancoHoras?: BenefitUserElement[];
   miCumpleanos?: BenefitUserElement[];
   miViernes?: BenefitUserElement[];
   miTiempoViajero?: BenefitUserElement[];
+  misVacaciones?: BenefitUserElement[];
 
   viewBenefitUser: FormGroup = this.fb.group( {
     years: [ new Date().getFullYear().toString(), Validators.required ],
@@ -102,13 +104,14 @@ export class MyBenefitsComponent {
       .subscribe( {
         next: ( { user, benefits, benefitUser } ) => {
           this.fillBenefits( benefitUser );
+          this.loaded = true;
         },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );
           Swal.fire( {
             title: 'Error',
             icon: 'error',
-            html: error.error.msg,
+            html: error.error.message,
             timer: 3000,
             timerProgressBar: true,
             didOpen: ( toast ) => {
@@ -135,6 +138,13 @@ export class MyBenefitsComponent {
     this.miTiempoViajero = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Tiempo para el Viajero" );
     this.miBancoHoras = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mi Banco de Horas" );
     this.miAlternancia = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mi Alternancia" );
+    this.misVacaciones = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mis Vacaciones" );
+    this.calendarData = [
+      ...this.miCumpleanos,
+      ...this.miViernes,
+      ...this.miBancoHoras,
+      ...this.misVacaciones,
+    ]
   }
 
   getBenefitDetail ( event: any ) {
@@ -143,14 +153,6 @@ export class MyBenefitsComponent {
       this.benefitUserService.index( Number.parseInt( localStorage.getItem( 'uid' )! ), year )
         .subscribe( currentUserBenefits => {
           this.fillBenefits( currentUserBenefits );
-          //         this.currentUserBenefits = currentUserBenefits;
-          //         this.calendarData = this.currentUserBenefits
-
-          //         this.bancosHoras = this.bancosHoras.map( mes => 0 );
-          //         let filteredBenefit = this.currentUserBenefits![ 0 ].benefit_user.filter( benefitUser => benefitUser.benefits.name === "Mi Banco de Horas" );
-          //         filteredBenefit.map( benefit => {
-          //           this.bancosHoras[ new Date( benefit.benefit_begin_time ).getMonth() ] += benefit.benefit_detail.time_hours || 0;
-          //         } );
         } );
     }
   }

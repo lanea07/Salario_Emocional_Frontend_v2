@@ -1,79 +1,47 @@
-<div class="row text-center">
-  <div class="col-md-4">
-    <div class="btn-group">
-      <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()">
-        Anterior
-      </div>
-      <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
-        Hoy
-      </div>
-      <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()">
-        Siguiente
-      </div>
+<div class="card text-bg-light shadow p-3 mt-3">
+    <div class="d-flex align-items-center justify-content-center flex-wrap">
+        <span class="badge text-bg-warning mx-3">Mi Banco de Horas</span>
+        <span class="badge text-bg-danger mx-3">Mi Cumpleaños</span>
+        <span class="badge text-bg-success mx-3">Mi Viernes</span>
+        <span class="badge text-bg-dark mx-3">Mis Vacaciones</span>
+        <span class="badge text-bg-secondary mx-3">Otros Eventos</span>
     </div>
-  </div>
-  <div class="col-md-4">
-    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
-  </div>
-  <div class="col-md-4">
-    <div class="btn-group">
-      <div class="btn btn-primary" (click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
-        Mes
-      </div>
-      <div class="btn btn-primary" (click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
-        Semana
-      </div>
-      <div class="btn btn-primary" (click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
-        Día
-      </div>
-    </div>
-  </div>
-</div>
-<br />
-<div [ngSwitch]="view">
-  <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
-    [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
-    (eventTimesChanged)="eventTimesChanged($event)" (eventClicked)="handleEvent('Clicked', $event.event)">
-  </mwl-calendar-month-view>
-  <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
-    (eventTimesChanged)="eventTimesChanged($event)" (eventClicked)="handleEvent('Clicked', $event.event)">
-  </mwl-calendar-week-view>
-  <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
-    (eventTimesChanged)="eventTimesChanged($event)" (eventClicked)="handleEvent('Clicked', $event.event)">
-  </mwl-calendar-day-view>
-</div>
 
+    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
 
-<!-- Modal -->
-<div class="card flex justify-content-center">
-  <p-dialog header="Header" [(visible)]="visible" [style]="{ width: '50vw' }">
-    <ng-template pTemplate="header">
-      <h5 class="modal-title">Detalle del Beneficio</h5>
-    </ng-template>
-    <div class="container">
-      <h2>Colaborador: {{ modalData?.event?.title }}</h2>
-      <div class="row">
-        <div class="col-6">
-          <small>Beneficio</small>
-          <p>{{ modalData?.event?.meta.benefits.name }}</p>
-          </div>
-          <div class="col-6">
-            <small>Detalle</small>
-          <p>{{ modalData?.event?.meta.benefit_detail.name }}</p>
-          </div>
-          </div>
-          <div class="row">
-            <div class="col-6">
-              <small>Fecha de redención</small>
-          <p>{{ modalData?.event?.meta.benefit_begin_time | date:'medium' }}</p>
-          </div>
-          </div>
-      </div>
-    <ng-template pTemplate="footer">
-      <a class="btn btn-warning" href="./benefit-employee/edit/{{ modalData?.event?.meta.id }}" *ngIf="isAdmin">Editar</a>
-      <a class="btn btn-outline-danger" (click)="deleteBenefit( modalData?.event?.meta.id )" *ngIf="isAdmin">Eliminar</a>
-    </ng-template>
-  </p-dialog>
-  </div>
+    <!-- Modal -->
+    <div class="card flex justify-content-center">
+        <p-dialog header="Header" [(visible)]="visible" [style]="{ width: '50vw' }">
+            <ng-template pTemplate="header">
+                <h5 class="modal-title">Detalle del Beneficio</h5>
+            </ng-template>
+            <div class="container">
+                <h2>Colaborador: {{ modalData?.extendedProps.user.name }}</h2>
+                <div class="row">
+                    <div class="col-6">
+                        <small>Beneficio</small>
+                        <p>{{ modalData?.title }}</p>
+                        </div>
+                        <div class="col-6">
+                            <small>Detalle</small>
+                        <p>{{ modalData?.extendedProps.benefit_detail.name }}</p>
+                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <small>Fecha de redención</small>
+                        <p>{{ modalData?.startStr | date:'medium' }}</p>
+                        </div>
+                        </div>
+                        </div>
+                        <ng-template pTemplate="footer">
+                <a class="btn btn-warning" href="./benefit-employee/edit/{{ modalData?.id }}" *ngIf="isAdmin">
+                    Editar
+                </a>
+                <a class="btn btn-outline-danger" (click)="deleteBenefit( modalData?.id )" *ngIf="isAdmin">
+                    Eliminar
+                </a>
+                </ng-template>
+                </p-dialog>
+                </div>
+</div>

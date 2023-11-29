@@ -29,7 +29,6 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/angular-calendar/css/angular-calendar.css",
               "src/styles.scss",
               "node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css",
               "node_modules/datatables.net-responsive-dt/css/responsive.dataTables.css"
@@ -106,8 +105,6 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/angular-calendar/css/angular-calendar.css",
-              "node_modules/angular-calendar/css/angular-calendar.css",
               "src/styles.scss"
             ],
             "scripts": []
