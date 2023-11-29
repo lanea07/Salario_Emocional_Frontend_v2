@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 
@@ -28,10 +27,7 @@ export class ShowComponent {
     private authService: AuthService,
     private benefitService: BenefitService,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Detalle' );
-  }
+  ) { }
 
   ngOnInit () {
     this.activatedRoute.params

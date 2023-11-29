@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MainComponent } from './pages/main/main.component';
+
 import { LoginComponent } from './pages/login/login.component';
+import { MainComponent } from './pages/main/main.component';
 import { PassChangeComponent } from './pages/pass-change/pass-change.component';
-import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [ {
   path: '',
   component: MainComponent,
   children: [
-    { path: 'login', component: LoginComponent },
-    { path: 'password-change', component: PassChangeComponent },
+    { path: 'login', component: LoginComponent, title: 'Login' },
+    { path: 'password-change', component: PassChangeComponent, title: 'Cambiar Contraseña' },
     { path: '**', redirectTo: 'login' },
   ]
 } ];

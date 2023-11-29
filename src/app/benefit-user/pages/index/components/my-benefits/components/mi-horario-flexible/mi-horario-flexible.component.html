@@ -1,0 +1,11 @@
+<div class="card text-bg-light shadow" style="width: 22rem;">
+    <div class="d-flex justify-content-around mt-2">
+        <img class="card-img-top" src="./assets/images/horario_flexible.svg" alt="" style="height: 150px;">
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Mi Horario Flexible</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item bg-transparent" *ngFor="let item of dataArray">{{ item }}</li>
+        </ul>
+    </div>
+</div>

@@ -10,10 +10,10 @@ import { BaseChartDirective } from 'ng2-charts';
 export class DoughnutChartComponent implements OnChanges {
 
   @ViewChild( BaseChartDirective ) chart?: BaseChartDirective;
-  @Input() totalBancoHoras?: number;
+  @Input() data?: number;
 
   ngOnChanges ( changes: SimpleChanges ): void {
-    this.doughnutChartData.datasets[ 0 ].data = [ this.totalBancoHoras!, 16 - this.totalBancoHoras! ];
+    this.doughnutChartData.datasets[ 0 ].data = [ this.data!, 16 - this.data! ];
     this.chart?.chart?.update();
   }
 
@@ -23,7 +23,7 @@ export class DoughnutChartComponent implements OnChanges {
     labels: this.doughnutChartLabels,
     datasets: [
       {
-        data: [ this.totalBancoHoras!, 16 - this.totalBancoHoras! ],
+        data: [ this.data!, 16 - this.data! ],
         backgroundColor: [ "#C8102E", "gray" ],
         hoverBackgroundColor: [ "#D8102E", "darkgray" ]
       },

@@ -14,7 +14,9 @@ export class NavbarComponent {
   constructor (
     public authService: AuthService,
     public router: Router
-  ) { }
+  ) {
+    this.user = JSON.parse( localStorage.getItem( 'user' )! );
+  }
 
   logout () {
     this.authService.logout()

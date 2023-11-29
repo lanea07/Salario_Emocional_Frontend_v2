@@ -1,13 +1,11 @@
 import { formatDate } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
 import { addHours } from 'date-fns';
-import { TreeNode } from 'primeng/api';
 import Swal from 'sweetalert2';
 
 import { BenefitDetail } from '../../../benefit-detail/interfaces/benefit-detail.interface';
@@ -19,7 +17,6 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 import { User } from '../../../user/interfaces/user.interface';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
-import { TreeSelect } from 'primeng/treeselect';
 
 @Component( {
   selector: 'benefitemployee-create',
@@ -83,10 +80,7 @@ export class CreateComponent implements OnInit {
     private dependencyService: DependencyService,
     private fb: FormBuilder,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Nuevo beneficio para el colaborador' );
-  }
+  ) { }
 
   ngOnInit (): void {
 

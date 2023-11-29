@@ -1,10 +1,9 @@
-import { Component, OnInit, AfterViewInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { BenefitService } from '../../services/benefit.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
-import { Title } from '@angular/platform-browser';
+import { BenefitService } from '../../services/benefit.service';
 
 @Component( {
   selector: 'benefit-index',
@@ -34,10 +33,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
     private benefitService: BenefitService,
     private renderer: Renderer2,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Beneficios' );
-  }
+  ) { }
 
   ngOnInit () {
     this.dtOptions = {

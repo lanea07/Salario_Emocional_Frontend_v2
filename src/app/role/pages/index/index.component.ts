@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { RoleService } from '../../services/role.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
-import { Title } from '@angular/platform-browser';
+import { RoleService } from '../../services/role.service';
 
 @Component( {
   selector: 'role-index',
@@ -33,10 +32,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
     private renderer: Renderer2,
     private roleService: RoleService,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Roles' );
-  }
+  ) { }
 
   ngOnInit (): void {
     this.dtOptions = {

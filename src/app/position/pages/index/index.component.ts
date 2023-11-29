@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { PositionService } from '../../services/position.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
-import { Title } from '@angular/platform-browser';
+import { PositionService } from '../../services/position.service';
 
 @Component( {
   selector: 'position-index',
@@ -33,10 +32,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
     private positionService: PositionService,
     private renderer: Renderer2,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Cargos' );
-  }
+  ) { }
 
   ngOnInit (): void {
     this.dtOptions = {

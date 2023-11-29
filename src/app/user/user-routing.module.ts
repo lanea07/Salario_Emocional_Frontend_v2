@@ -9,10 +9,10 @@ const routes: Routes = [ {
   path: '',
   component: MainContainerComponent,
   children: [
-    { path: 'index', component: IndexComponent },
-    { path: 'create', component: CreateComponent },
-    { path: 'edit/:id', component: CreateComponent },
-    { path: 'show/:id', component: ShowComponent },
+    { path: 'index', component: IndexComponent, title: 'Página Principal' },
+    { path: 'create', component: CreateComponent, title: 'Crear Usuario' },
+    { path: 'edit/:id', component: CreateComponent, title: 'Editar Usuario' },
+    { path: 'show/:id', component: ShowComponent, title: 'Ver Usuario' },
     { path: '**', redirectTo: 'index' }
   ]
 } ];

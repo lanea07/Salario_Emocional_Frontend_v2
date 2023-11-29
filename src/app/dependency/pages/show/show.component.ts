@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap, map } from 'rxjs';
+import { switchMap } from 'rxjs';
 
 import Swal from 'sweetalert2';
 
+import { TreeNode } from '../../interfaces/TreeNode';
 import { Dependency } from '../../interfaces/dependency.interface';
 import { DependencyService } from '../../services/dependency.service';
-import { TreeNode } from '../../interfaces/TreeNode';
 
 @Component( {
   selector: 'dependency-show',
@@ -26,10 +25,7 @@ export class ShowComponent {
     private dependencyService: DependencyService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Detalle' );
-  }
+  ) { }
 
   ngOnInit () {
     this.activatedRoute.params

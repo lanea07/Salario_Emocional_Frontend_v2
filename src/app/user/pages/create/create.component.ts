@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, switchMap } from 'rxjs';
 
 import Swal from 'sweetalert2';
 
+import { Dependency } from '../../../dependency/interfaces/dependency.interface';
 import { DependencyService } from '../../../dependency/services/dependency.service';
 import { Position } from '../../../position/interfaces/position.interface';
 import { PositionService } from '../../../position/services/position.service';
@@ -15,7 +15,6 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 import { ValidatorService } from '../../../shared/services/validator.service';
 import { User } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user.service';
-import { Dependency } from '../../../dependency/interfaces/dependency.interface';
 
 @Component( {
   selector: 'user-create',
@@ -73,12 +72,9 @@ export class CreateComponent implements OnInit {
     private positionService: PositionService,
     private roleService: RoleService,
     private router: Router,
-    private titleService: Title,
     private userService: UserService,
     private validatorService: ValidatorService
-  ) {
-    this.titleService.setTitle( 'Nuevo Usuario' );
-  }
+  ) { }
 
 
   ngOnInit () {

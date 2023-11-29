@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 
@@ -40,10 +39,7 @@ export class CreateComponent implements OnInit {
     private fb: FormBuilder,
     private dependencyService: DependencyService,
     private router: Router,
-    private titleService: Title,
-  ) {
-    this.titleService.setTitle( 'Nueva Dependencia' );
-  }
+  ) { }
 
 
   ngOnInit () {

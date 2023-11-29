@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 
 import { Role } from 'src/app/role/interfaces/role.interface';
 import { RoleService } from '../../services/role.service';
-import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'role-show',
@@ -23,10 +22,7 @@ export class ShowComponent {
     private activatedRoute: ActivatedRoute,
     private roleService: RoleService,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Detalle' );
-  }
+  ) { }
 
   ngOnInit () {
     this.activatedRoute.params

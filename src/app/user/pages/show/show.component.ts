@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { User } from '../../interfaces/user.interface';
-import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
+
 import Swal from 'sweetalert2';
-import { Title } from '@angular/platform-browser';
+
+import { User } from '../../interfaces/user.interface';
+import { UserService } from '../../services/user.service';
 
 @Component( {
   selector: 'user-show',
@@ -22,10 +23,7 @@ export class ShowComponent {
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Detalle' );
-  }
+  ) { }
 
   ngOnInit () {
     this.activatedRoute.params

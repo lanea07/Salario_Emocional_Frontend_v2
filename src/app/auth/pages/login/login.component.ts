@@ -4,9 +4,8 @@ import { Router } from '@angular/router';
 
 import Swal from 'sweetalert2';
 
-import { AuthService } from '../../services/auth.service';
-import { Title } from '@angular/platform-browser';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { AuthService } from '../../services/auth.service';
 
 @Component( {
   selector: 'auth-login',
@@ -21,7 +20,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         background-color: rgba(0,0,0,0.6);
       }
 
-      .loader {
+      .loader-lock {
         width: 64px;
         height: 44px;
         position: relative;
@@ -29,7 +28,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         border-radius: 8px;
       }
 
-      .loader::before {
+      .loader-lock::before {
         content: '';
         position: absolute;
         border: 5px solid #fff;
@@ -41,7 +40,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         transform: translate(-50% , -100%)
 
       }
-      .loader::after {
+      .loader-lock::after {
         content: '';
         position: absolute;
         transform: translate(-50% , -50%);
@@ -98,13 +97,11 @@ export class LoginComponent {
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private titleService: Title
   ) {
     this.authService.validarToken()
       .subscribe( {
         next: ( resp ) => resp ? this.router.navigate( [ 'benefit-employee' ] ) : this.showScreen = true
       } );
-    this.titleService.setTitle( 'Iniciar Sesión' );
   }
 
   login () {

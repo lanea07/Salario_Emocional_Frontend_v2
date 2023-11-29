@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
@@ -32,10 +31,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
     private dependencyService: DependencyService,
     private renderer: Renderer2,
     private router: Router,
-    private titleService: Title,
-  ) {
-    this.titleService.setTitle( 'Dependencias' );
-  }
+  ) { }
 
   ngOnInit (): void {
     this.dtOptions = {

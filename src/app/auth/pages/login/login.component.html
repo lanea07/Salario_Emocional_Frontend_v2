@@ -1,6 +1,6 @@
 <!-- div for login -->
 <div *ngIf="loging" class="loginAnimation d-flex align-items-center justify-content-center" [@fadeInOut]>
-  <span class="loader"></span>
+  <span class="loader-lock"></span>
 </div>
 
 <form autocomplete="off" [formGroup]="miFormulario" (ngSubmit)="login()" *ngIf="showScreen">

@@ -5,10 +5,9 @@ import { switchMap } from 'rxjs';
 
 import Swal from 'sweetalert2';
 
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { Role } from '../../interfaces/role.interface';
 import { RoleService } from '../../services/role.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'role-create',
@@ -41,10 +40,7 @@ export class CreateComponent {
     private fb: FormBuilder,
     private roleService: RoleService,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Nuevo Rol' );
-  }
+  ) { }
 
   ngOnInit () {
 

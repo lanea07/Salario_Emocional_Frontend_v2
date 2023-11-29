@@ -5,10 +5,9 @@ import { switchMap } from 'rxjs';
 
 import Swal from 'sweetalert2';
 
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { Position } from '../../interfaces/position.interface';
 import { PositionService } from '../../services/position.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'position-create',
@@ -41,10 +40,7 @@ export class CreateComponent {
     private fb: FormBuilder,
     private positionService: PositionService,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Nuevo Cargo' );
-  }
+  ) { }
 
 
   ngOnInit () {

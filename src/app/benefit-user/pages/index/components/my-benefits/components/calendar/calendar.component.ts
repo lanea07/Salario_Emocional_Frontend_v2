@@ -6,8 +6,8 @@ import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarView } from 'ang
 import { EventColor } from 'calendar-utils';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import Swal from 'sweetalert2';
-import { BenefitUser } from '../../interfaces/benefit-user.interface';
-import { BenefitUserService } from '../../services/benefit-user.service';
+import { BenefitUser } from '../../../../../../interfaces/benefit-user.interface';
+import { BenefitUserService } from '../../../../../../services/benefit-user.service';
 
 const colors: Record<string, EventColor> = {
   primary: {

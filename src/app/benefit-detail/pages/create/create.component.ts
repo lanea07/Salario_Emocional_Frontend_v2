@@ -9,7 +9,6 @@ import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
-import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'benefitdetail-create',
@@ -53,11 +52,8 @@ export class CreateComponent {
     private benefitDetailService: BenefitDetailService,
     private fb: FormBuilder,
     private router: Router,
-    private titleService: Title,
     private validatorService: ValidatorService
-  ) {
-    this.titleService.setTitle( 'Nuevo detalle de Beneficio' );
-  }
+  ) { }
 
 
   ngOnInit () {

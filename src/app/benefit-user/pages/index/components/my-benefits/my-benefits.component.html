@@ -1,0 +1,87 @@
+<form class="mb-4" [formGroup]="viewBenefitUser" (ngSubmit)="downloadReport()">
+    <div class="input-group">
+        <span class="input-group-text">Año</span>
+        <p-calendar formControlName="years" view="year" dateFormat="yy" inputId="yearpicker"
+            (ngModelChange)="getBenefitDetail($event)"></p-calendar>
+        <button pButton type="submit" class="btn btn-outline-primary">Descargar</button>
+    </div>
+</form>
+
+<!-- <div *ngIf="currentUserBenefits else loading" class="pb-3"> -->
+<div class="pb-3">
+    <div class="row mb-3">
+        <div class="col-8">
+            <div class="row d-flex mb-3">
+                <div class="col-6 d-flex justify-content-around">
+                    <mi-horario-flexible [data]="miHorarioFlexible"></mi-horario-flexible>
+                </div>
+                <div class="col-6 d-flex justify-content-around">
+                    <mi-cumpleanos [data]="miCumpleanos"></mi-cumpleanos>
+                </div>
+            </div>
+            <div class="row d-flex mb-3">
+                <div class="col-6 d-flex justify-content-around">
+                    <mi-tiempo-viajero [data]="miTiempoViajero"></mi-tiempo-viajero>
+                </div>
+                <div class="col-6 d-flex justify-content-around">
+                    <mi-horario-alternancia [data]="miAlternancia"></mi-horario-alternancia>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 d-flex justify-content-around">
+            <mi-viernes [data]="miViernes"></mi-viernes>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <mi-banco-de-horas [data]="miBancoHoras"></mi-banco-de-horas>
+    </div>
+    <div class="row mb-3">
+        <mis-vacaciones></mis-vacaciones>
+    </div>
+    <!-- <div *ngFor="let benefit of benefits">
+        <div class="input-group mt-3">
+            <div [ngSwitch]="benefit.name" class="input-group-text" style="width: 20%;">
+                <img *ngSwitchCase="'Mi Cumpleaños'" src="./assets/images/cumpleaños.svg" width="100%;" alt="">
+                <img *ngSwitchCase="'Mi Banco de Horas'" src="./assets/images/banco_horas.svg" width="100%;" alt="">
+                <img *ngSwitchCase="'Mi Horario Flexible'" src="./assets/images/horario_flexible.svg" width="100%;"
+                    alt="">
+                <img *ngSwitchCase="'Mi Viernes'" src="./assets/images/mi_viernes.svg" width="100%;" alt="">
+                <img *ngSwitchCase="'Tiempo para el Viajero'" src="./assets/images/tiempo_viajero.svg" width="100%;"
+                    alt="">
+            </div>
+            <div class="form-control">
+                <div class="card-header">
+                    {{ benefit.name }}
+                </div>
+                <ul class="list-group list-group-flush" [innerHTML]="selectBenefit(benefit.id!)"></ul>
+            </div>
+        </div>
+        <div *ngIf="benefit.name === 'Mi Banco de Horas'" class="row">
+            <div class="col-4">
+                <doughnut-chart-component [totalBancoHoras]="totalBancoHoras"></doughnut-chart-component>
+            </div>
+            <div class="col-8">
+                <bar-chart-component [input]="bancosHoras"></bar-chart-component>
+            </div>
+        </div>
+    </div> -->
+    <div class="mt-4">
+        <!-- <calendar-component [data]="calendarData"></calendar-component> -->
+    </div>
+</div>
+
+<ng-template #loading>
+    <span class="loader-cloud"></span>
+</ng-template>
+
+<!-- 
+
+Mi Horario Flexible         OK
+Mi Viernes                  OK
+Banco de Horas              OK
+Mi cumpleaños               OK
+Tiempo Viajero              OK
+Mi Horario Alternancia      OK
+Mis Vacaciones 
+
+-->

@@ -16,12 +16,14 @@ import { OffcanvasComponent } from './shared/offcanvas/offcanvas.component';
 import { registerLocaleData } from '@angular/common';
 import es from '@angular/common/locales/es';
 import { FormsModule } from '@angular/forms';
+import { BreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
 
 registerLocaleData( es );
 
 @NgModule( {
   declarations: [
     AppComponent,
+    BreadcrumbComponent,
     MainContainerComponent,
     NavbarComponent,
     OffcanvasComponent

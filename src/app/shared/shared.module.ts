@@ -4,11 +4,11 @@ import { BackButtonDirective } from './directives/back-button-directive.directiv
 
 @NgModule( {
   declarations: [
-    BackButtonDirective
+    BackButtonDirective,
   ],
   imports: [],
   exports: [
-    BackButtonDirective
+    BackButtonDirective,
   ]
 } )
 export class SharedModule { }

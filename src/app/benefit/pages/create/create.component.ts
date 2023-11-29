@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { EMPTY, switchMap } from 'rxjs';
@@ -54,11 +53,8 @@ export class CreateComponent {
     private benefitService: BenefitService,
     private fb: FormBuilder,
     private router: Router,
-    private titleService: Title,
     private validatorService: ValidatorService
-  ) {
-    this.titleService.setTitle( 'Nuevo Beneficio' );
-  }
+  ) { }
 
 
   ngOnInit () {
