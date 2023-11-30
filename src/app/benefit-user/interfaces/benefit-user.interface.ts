@@ -1,6 +1,7 @@
 import { BenefitDetail } from "src/app/benefit-detail/interfaces/benefit-detail.interface";
 import { Benefit } from "src/app/benefit/interfaces/benefit.interface";
 import { Dependency } from "src/app/dependency/interfaces/dependency.interface";
+import { User } from "src/app/user/interfaces/user.interface";
 
 export interface BenefitUser {
   id: number;

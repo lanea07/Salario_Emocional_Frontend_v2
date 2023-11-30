@@ -1,48 +1,54 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, ViewChild } from '@angular/core';
 
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { CalendarOptions } from '@fullcalendar/core';
 import esLocale from '@fullcalendar/core/locales/es';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import Swal from 'sweetalert2';
 
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import Swal from 'sweetalert2';
 
 @Component( {
-  selector: 'calendar-component',
-  templateUrl: './calendar.component.html',
+  selector: 'my-team-calendar-component',
+  templateUrl: './my-team-calendar.component.html',
   styles: [],
 } )
-export class CalendarComponent implements AfterViewInit {
+export class MyTeamCalendarComponent implements OnChanges {
 
-  @ViewChild( 'calendar' ) calendar?: FullCalendarComponent;
+  @ViewChild( 'my_team_calendar' ) my_team_calendar?: FullCalendarComponent;
   @Input() data?: BenefitUserElement[] = [];
   isAdmin: boolean = false;
   modalData?: any;
   visible: boolean = false;
 
-  calendarOptions: CalendarOptions = {
-    initialView: 'dayGridMonth',
-    plugins: [ dayGridPlugin, timeGridPlugin ],
+  my_team_calendarOptions: CalendarOptions = {
+    initialView: 'listMonth',
+    plugins: [ dayGridPlugin, timeGridPlugin, listPlugin ],
     eventClick: this.showModal.bind( this ),
     events: [],
     locale: esLocale,
     headerToolbar: {
       left: 'prev,today,next',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    }
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth,listWeek,listDay'
+    },
+    views: {
+      listDay: { buttonText: 'Agenda Diaria' },
+      listWeek: { buttonText: 'Agenda Semanal' },
+      listMonth: { buttonText: 'Agenda Mensual' }
+    },
   };
 
   constructor (
     private authService: AuthService,
     private as: AlertService,
     private benefitUserService: BenefitUserService,
-  ) { 
+  ) {
     this.authService.validarAdmin()
       .subscribe( {
         next: ( resp: any ) => {
@@ -53,11 +59,13 @@ export class CalendarComponent implements AfterViewInit {
         }
       } );
   }
-  ngAfterViewInit (): void {
-    this.calendar?.getApi().removeAllEvents();
+
+  ngOnChanges (): void {
+    this.my_team_calendar?.getApi().removeAllEvents();
     this.data?.forEach( ( item: BenefitUserElement ) => {
-      this.calendar?.getApi().addEvent( this.makeEvent( item ) )
+      this.my_team_calendar?.getApi().addEvent( this.makeEvent( item ) )
     } );
+    this.my_team_calendar?.getApi().render();
   }
 
   showModal ( arg: any ) {

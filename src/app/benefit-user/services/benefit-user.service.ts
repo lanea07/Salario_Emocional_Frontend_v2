@@ -2,7 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { BenefitUser } from '../interfaces/benefit-user.interface';
+import { BenefitUser, BenefitUserElement } from '../interfaces/benefit-user.interface';
+import { User } from 'src/app/user/interfaces/user.interface';
 
 @Injectable( {
   providedIn: 'root'
@@ -60,6 +61,30 @@ export class BenefitUserService {
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.post( `${ this.apiBaseUrl }/exportbenefits`, formValues, { headers, withCredentials: true } );
+  }
+
+  public indexNonApproved ( id: number ) {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser/indexnonapproved?userId=${ id }`, { headers, withCredentials: true } )
+  }
+
+  public indexCollaboratorsNonApproved () {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/benefituser/indexcollaboratorsnonapproved`, { headers, withCredentials: true } )
+  }
+
+  public indexCollaborators () {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/benefituser/indexcollaborators`, { headers, withCredentials: true } )
   }
 
 }

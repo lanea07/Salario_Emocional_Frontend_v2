@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ContentChildren, Query } from '@angular/core';
+import { FullCalendarComponent } from '@fullcalendar/angular';
 
 
 @Component( {

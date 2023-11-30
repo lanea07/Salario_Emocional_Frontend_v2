@@ -18,8 +18,8 @@ export class IndexComponent implements OnInit, AfterViewInit {
     { title: 'Correo', data: 'email' },
     { title: 'Roles', data: 'roles[0].name' },
     { title: 'Cargo', data: 'positions.name' },
-    { title: 'Jefe Directo', data: 'parent.name' },
-    { title: 'Empleados directos a cargo', data: 'children.length' },
+    { title: 'Responsable Directo', data: 'parent.name' },
+    { title: 'Colaboradores directos a cargo', data: 'children.length' },
     { 
       title: 'Válido',
       data: function ( data: any, type: any, full: any ) {

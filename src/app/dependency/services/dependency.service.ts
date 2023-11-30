@@ -22,7 +22,7 @@ export class DependencyService {
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependencies`, { headers, withCredentials: true } )
+    return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependency`, { headers, withCredentials: true } )
   }
 
   show ( id: number ): Observable<Dependency> {
@@ -30,7 +30,7 @@ export class DependencyService {
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.get<Dependency>( `${ this.apiBaseUrl }/dependencies/${ id }`, { headers, withCredentials: true } )
+    return this.http.get<Dependency>( `${ this.apiBaseUrl }/dependency/${ id }`, { headers, withCredentials: true } )
   }
 
   create ( formValues: any ): Observable<Dependency> {
@@ -38,7 +38,7 @@ export class DependencyService {
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.post<Dependency>( `${ this.apiBaseUrl }/dependencies`, formValues, { headers, withCredentials: true } );
+    return this.http.post<Dependency>( `${ this.apiBaseUrl }/dependency`, formValues, { headers, withCredentials: true } );
   }
 
   update ( id: number | undefined, formValues: any ) {
@@ -46,7 +46,7 @@ export class DependencyService {
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.put<Dependency>( `${ this.apiBaseUrl }/dependencies/${ id }`, formValues, { headers, withCredentials: true } );
+    return this.http.put<Dependency>( `${ this.apiBaseUrl }/dependency/${ id }`, formValues, { headers, withCredentials: true } );
   }
 
   destroy ( id: number | undefined ) {
@@ -54,7 +54,7 @@ export class DependencyService {
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.delete( `${ this.apiBaseUrl }/dependencies/${ id }`, { headers, withCredentials: true } );
+    return this.http.delete( `${ this.apiBaseUrl }/dependency/${ id }`, { headers, withCredentials: true } );
   }
 
   // Methods for transform the dependencies results

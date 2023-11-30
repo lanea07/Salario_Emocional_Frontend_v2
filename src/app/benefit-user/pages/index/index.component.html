@@ -2,20 +2,28 @@
   <p-tabPanel header="Mis beneficios">
     <p-tabView>
       <p-tabPanel header="Mis Beneficios Redimidos">
-        <my-benefits></my-benefits>
+        <ng-template pTemplate="my-benefits">
+          <my-benefits></my-benefits>
+        </ng-template>
       </p-tabPanel>
       <p-tabPanel header="Mis Solicitudes">
-        <my-pending-benefits></my-pending-benefits>
+        <ng-template pTemplate="my-pending-benefits">
+          <my-pending-benefits></my-pending-benefits>
+        </ng-template>
       </p-tabPanel>
     </p-tabView>
   </p-tabPanel>
   <p-tabPanel header="Mi Equipo">
     <p-tabView>
       <p-tabPanel header="Beneficios Redimidos">
-        <my-team></my-team>
+        <ng-template pTemplate="my-team">
+          <my-team></my-team>
+        </ng-template>
       </p-tabPanel>
       <p-tabPanel header="Aprobaciones Pendientes">
-        <my-team-request></my-team-request>
+        <ng-template pTemplate="my-team-request">
+          <my-team-request></my-team-request>
+        </ng-template>
       </p-tabPanel>
     </p-tabView>
   </p-tabPanel>
