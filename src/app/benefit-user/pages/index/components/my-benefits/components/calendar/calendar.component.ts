@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { CalendarOptions } from '@fullcalendar/core';
@@ -17,9 +17,9 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
   templateUrl: './calendar.component.html',
   styles: [],
 } )
-export class CalendarComponent implements AfterViewInit {
+export class CalendarComponent implements OnChanges, AfterViewInit {
 
-  @ViewChild( 'calendar' ) calendar?: FullCalendarComponent;
+  @ViewChild( 'calendar' ) calendar!: FullCalendarComponent;
   @Input() data?: BenefitUserElement[] = [];
   isAdmin: boolean = false;
   modalData?: any;
@@ -35,13 +35,22 @@ export class CalendarComponent implements AfterViewInit {
       left: 'prev,today,next',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    }
+    },
+    showNonCurrentDates: false,
+    navLinks: true,
+    businessHours: {
+      daysOfWeek: [ 1, 2, 3, 4, 5 ],
+      startTime: '07:00',
+      endTime: '17:00',
+    },
+    firstDay: 7,
   };
 
   constructor (
     private authService: AuthService,
     private as: AlertService,
     private benefitUserService: BenefitUserService,
+    private elementRef: ElementRef
   ) { 
     this.authService.validarAdmin()
       .subscribe( {
@@ -53,11 +62,28 @@ export class CalendarComponent implements AfterViewInit {
         }
       } );
   }
+
+  ngOnChanges ( changes: SimpleChanges ): void {
+    this.calendar?.getApi().removeAllEvents();
+    this.data?.forEach( ( item: BenefitUserElement ) => {
+      this.calendar?.getApi().addEvent( this.makeEvent( item ) )
+    } );
+    let year = new Date( Object.values( this.data! )[ 0 ]?.benefit_begin_time ).getFullYear();
+    let month = new Date().getMonth() + 1;
+    let day = '01';
+    this.calendar?.getApi().gotoDate( `${ year }-${ month }-${ day }` );
+  }
+
   ngAfterViewInit (): void {
     this.calendar?.getApi().removeAllEvents();
     this.data?.forEach( ( item: BenefitUserElement ) => {
       this.calendar?.getApi().addEvent( this.makeEvent( item ) )
     } );
+    const event: CustomEvent = new CustomEvent<FullCalendarComponent>( 'CalendarReady', {
+      bubbles: true,
+      detail: this.calendar
+    } );
+    this.elementRef.nativeElement.dispatchEvent( event );
   }
 
   showModal ( arg: any ) {
@@ -72,7 +98,7 @@ export class CalendarComponent implements AfterViewInit {
       start: new Date( benefit_begin_time ),
       end: new Date( benefit_end_time ),
       title: `${ eventData.benefits.name }`,
-      classNames: [ this.classSelector( eventData.benefits.name ) ],
+      classNames: [ this.classSelector( eventData.benefits.name ), 'text-dark' ],
       extendedProps: eventData,
       allDay: eventData.benefits.name === "Mis Vacaciones" ? true : false,
     };
@@ -82,19 +108,20 @@ export class CalendarComponent implements AfterViewInit {
   classSelector ( benefitName: string ) {
     switch ( benefitName ) {
       case 'Mi Cumpleaños':
-        return 'text-bg-danger';
+        return 'bg-danger-subtle';
       case 'Mi Viernes':
-        return 'text-bg-success';
+        return 'bg-success-subtle';
       case 'Mi Banco de Horas':
-        return 'text-bg-warning';
+        return 'bg-warning-subtle';
       case 'Mis Vacaciones':
-        return 'text-bg-dark';
+        return 'bg-dark-subtle';
       default:
-        return 'text-bg-secondary';
+        return 'bg-secondary-subtle';
     }
   }
 
   deleteBenefit ( eventID: number ) {
+    this.visible = false;
     Swal.fire( {
       title: 'Eliminar beneficio?',
       text: 'Confirme que desea eliminar el beneficio.',
@@ -111,10 +138,10 @@ export class CalendarComponent implements AfterViewInit {
       cancelButtonText: 'Cancelar',
     } ).then( ( result ) => {
       if ( result.isConfirmed ) {
-        this.benefitUserService.destroy( this.modalData.event.meta.id )
+        this.benefitUserService.destroy( eventID )
           .subscribe( {
             next: () => {
-              // this.calendarOptions.eventRemove( this.modalData.event._def.publicId );
+              this.calendar.getApi().getEventById( eventID.toString() )?.remove();
             },
             error: ( err ) => { }
           } )

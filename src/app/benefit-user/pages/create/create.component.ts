@@ -26,6 +26,8 @@ import { BenefitUserService } from '../../services/benefit-user.service';
 } )
 export class CreateComponent implements OnInit {
 
+  // #TODO: When benefit is vacations, a new field must appear to define end date
+
   benefits?: Benefit[];
   benefit_details?: BenefitDetail[];
   benefitDetailSpinner: boolean = true;

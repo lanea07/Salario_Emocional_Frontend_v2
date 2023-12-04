@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.service';
-import { BenefitUser, BenefitUserElement } from '../../../../interfaces/benefit-user.interface';
+import { BenefitUserElement } from '../../../../interfaces/benefit-user.interface';
 
 @Component( {
   selector: 'my-team',
@@ -31,12 +31,12 @@ export class MyTeamComponent implements AfterViewInit {
   }
 
   fillBenefits ( benefitUser: BenefitUserElement[] ) {
-    // this.miHorarioFlexible = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mi Horario Flexible" );
+    this.miHorarioFlexible = benefitUser.filter( benefit => benefit.benefits.name === "Mi Horario Flexible" );
     this.miCumpleanos = benefitUser.filter( benefit => benefit.benefits.name === "Mi Cumpleaños" );
     this.miViernes = benefitUser.filter( benefit => benefit.benefits.name === "Mi Viernes" );
-    // this.miTiempoViajero = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Tiempo para el Viajero" );
+    this.miTiempoViajero = benefitUser.filter( benefit => benefit.benefits.name === "Tiempo para el Viajero" );
     this.miBancoHoras = benefitUser.filter( benefit => benefit.benefits.name === "Mi Banco de Horas" );
-    // this.miAlternancia = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mi Alternancia" );
+    this.miAlternancia = benefitUser.filter( benefit => benefit.benefits.name === "Mi Alternancia" );
     this.misVacaciones = benefitUser.filter( benefit => benefit.benefits.name === "Mis Vacaciones" );
     this.calendarData = [
       ...this.miCumpleanos,
