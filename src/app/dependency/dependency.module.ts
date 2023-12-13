@@ -9,6 +9,7 @@ import { DependencyRoutingModule } from './dependency-routing.module';
 import { CreateComponent } from './pages/create/create.component';
 import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
+import { PrimengModule } from '../primeng/primeng.module';
 
 
 @NgModule( {
@@ -22,6 +23,7 @@ import { ShowComponent } from './pages/show/show.component';
     DataTablesModule,
     DependencyRoutingModule,
     FormsModule,
+    PrimengModule,
     ReactiveFormsModule,
     SharedModule,
   ]

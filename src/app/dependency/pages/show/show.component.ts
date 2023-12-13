@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { TreeNode } from '../../interfaces/TreeNode';
 import { Dependency } from '../../interfaces/dependency.interface';
 import { DependencyService } from '../../services/dependency.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'dependency-show',
@@ -24,6 +25,7 @@ export class ShowComponent {
   constructor (
     private dependencyService: DependencyService,
     private activatedRoute: ActivatedRoute,
+    private as: AlertService,
     private router: Router,
   ) { }
 
@@ -37,19 +39,9 @@ export class ShowComponent {
           this.dependency = Object.values( dependency )[ 0 ];
           this.loaded = true;
         },
-        error: ( error ) => {
+        error: ( { error } ) => {
           this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.message,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
         }
       } );
   }

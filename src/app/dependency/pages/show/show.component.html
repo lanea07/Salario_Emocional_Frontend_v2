@@ -12,7 +12,7 @@
 <div class="row">
   <div class="col">
 
-    <!-- <div class="row px-5">
+    <div class="row px-5">
       <div class="col-xs-12 col-md-4 d-flex flex-column my-2">
         <div *ngIf="!loaded">
           <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
@@ -20,51 +20,7 @@
         {{ dependency?.name }}
         <span class="form-text">Nombre</span>
       </div>
-    </div> -->
-
-    <div class="row px-5">
-      <!-- <div class="col-xs-12 col-md-4 d-flex flex-column my-2"> -->
-      <div *ngIf="!loaded">
-        <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-      </div>
-      <!-- </div> -->
     </div>
 
   </div>
 </div>
-
-
-<!-- Templates -->
-<ng-template #subordinates>
-  <!-- <mat-accordion class="example-headers-align" multi>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <span class="form-text">
-              Empleados directos a su cargo
-            </span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-  
-        <table class="table table-hover table-sm">
-          <thead class="bg-dark text-light">
-            <tr>
-              <th>Nombre</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let subordinate of dependency?.subordinates">
-              <td><a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                  routerLink="/dependency/show/{{ subordinate.id }}">{{ subordinate?.name }}</a></td>
-            </tr>
-          </tbody>
-        </table>
-  
-      </mat-expansion-panel>
-    </mat-accordion> -->
-</ng-template>
-
-<ng-template #leader>
-  <!-- <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-        routerLink="/dependency/show/{{ dependency?.leader?.id }}">{{ dependency?.leader?.name }}</a> -->
-</ng-template>

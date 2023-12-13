@@ -140,7 +140,6 @@ export class CreateComponent implements OnInit {
     }
 
     if ( this.user?.id ) {
-      console.log( this.user?.id );
       this.userService.update( this.user?.id, this.createForm.value )
         .subscribe(
           {
