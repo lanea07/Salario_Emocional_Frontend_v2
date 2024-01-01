@@ -71,7 +71,8 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
     let year = new Date( Object.values( this.data! )[ 0 ]?.benefit_begin_time ).getFullYear();
     let month = new Date().getMonth() + 1;
     let day = '01';
-    this.calendar?.getApi().gotoDate( `${ year }-${ month }-${ day }` );
+    let date = new Date( `${ year }-${ month }-${ day }` );
+    this.calendar?.getApi().gotoDate( date );
   }
 
   ngAfterViewInit (): void {
