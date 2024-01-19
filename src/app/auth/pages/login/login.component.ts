@@ -83,15 +83,32 @@ import { AuthService } from '../../services/auth.service';
 
   ]
 } )
+
 export class LoginComponent {
 
-  miFormulario: FormGroup = this.fb.group( {
+  loginForm: FormGroup = this.fb.group( {
     email: [ '', [ Validators.required, Validators.email ] ],
     password: [ '', [ Validators.required, Validators.minLength( 6 ) ] ],
     device_name: [ 'PC' ]
   } );
   showScreen: boolean = false;
   loging: boolean = false;
+
+  get userIdErrors (): string {
+    const errors = this.loginForm.get( 'email' )?.errors;
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
+    }
+    return '';
+  }
+
+  get benefitIdErrors (): string {
+    const errors = this.loginForm.get( 'password' )?.errors;
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
+    }
+    return '';
+  }
 
   constructor (
     private authService: AuthService,
@@ -105,7 +122,11 @@ export class LoginComponent {
   }
 
   login () {
-    const { email, password, device_name } = this.miFormulario.value;
+    if ( this.loginForm.invalid ) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+    const { email, password, device_name } = this.loginForm.value;
     this.loging = true;
     this.authService.login( email, password, device_name )
       .subscribe( {
@@ -132,6 +153,11 @@ export class LoginComponent {
   logout () {
     this.authService.logout()
       .subscribe();
+  }
+
+  campoEsValido ( campo: string ) {
+    return this.loginForm.controls[ campo ].errors
+      && this.loginForm.controls[ campo ].touched;
   }
 
 }

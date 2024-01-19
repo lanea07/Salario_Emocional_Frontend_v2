@@ -1,11 +1,11 @@
 import { formatDate } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
-import { addHours } from 'date-fns';
+import { addDays, addHours } from 'date-fns';
 import Swal from 'sweetalert2';
 
 import { BenefitDetail } from '../../../benefit-detail/interfaces/benefit-detail.interface';
@@ -17,6 +17,8 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 import { User } from '../../../user/interfaces/user.interface';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
+import { Calendar } from 'primeng/calendar';
+import { Dropdown } from 'primeng/dropdown';
 
 @Component( {
   selector: 'benefitemployee-create',
@@ -24,9 +26,10 @@ import { BenefitUserService } from '../../services/benefit-user.service';
   styles: [
   ]
 } )
-export class CreateComponent implements OnInit {
+export class CreateComponent implements OnInit, AfterViewInit {
 
-  // #TODO: When benefit is vacations, a new field must appear to define end date
+  @ViewChild( 'calendar' ) calendar!: Calendar;
+  @ViewChild( 'benefit' ) benefit!: Dropdown;
 
   benefits?: Benefit[];
   benefit_details?: BenefitDetail[];
@@ -36,7 +39,7 @@ export class CreateComponent implements OnInit {
     benefit_detail_id: [ { value: '', disabled: true }, Validators.required ],
     benefit_end_time: [ '' ],
     benefit_id: [ { value: '', disabled: true }, Validators.required ],
-    user_id: [ { value: '', disabled: true }, Validators.required ],
+    user_id: [ '', Validators.required ],
     rangeDates: [ '' ],
   } );
   currentUserBenefits?: BenefitUser;
@@ -45,6 +48,7 @@ export class CreateComponent implements OnInit {
   disabledDays: number[] = [];
   disableSubmitBtn: boolean = false;
   nodes!: any[];
+  numberOfMonths: number = 1;
   selectedBenefitDetail?: BenefitDetail;
   users?: User[];
   userAndBenefitSpinner: boolean = true;
@@ -82,7 +86,9 @@ export class CreateComponent implements OnInit {
     private dependencyService: DependencyService,
     private fb: FormBuilder,
     private router: Router,
-  ) { }
+  ) {
+    this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
+  }
 
   ngOnInit (): void {
 
@@ -95,16 +101,9 @@ export class CreateComponent implements OnInit {
             this.userAndBenefitSpinner = false;
           } )
       ),
-      loadDependencies: this.dependencyService.index()
-        .pipe(
-          tap( ( dependencies ) => {
-            this.dependencies = dependencies;
-            this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependencies[ 0 ] ) ];
-          } )
-        )
     } )
       .subscribe( {
-        next: ( { loadBenefits } ) => {
+        next: () => {
           this.createForm.get( 'selectedNodes' )?.enable();
 
           if ( this.router.url.includes( 'edit' ) ) {
@@ -116,13 +115,9 @@ export class CreateComponent implements OnInit {
                 {
                   next: user => {
                     this.currentUserBenefits = Object.values( user )[ 0 ];
-                    let dep = this.dependencyService.flattenDependency( this.dependencies[ 0 ] ).find( ( dependency: any ) => this.currentUserBenefits?.benefit_user[ 0 ].user.dependency.name === dependency.name );
                     this.createForm.get( 'benefit_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
                     this.createForm.get( 'rangeDates' )?.setValue( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ) );
-                    this.fillColaboradores( { node: { label: this.currentUserBenefits!.benefit_user[ 0 ].user.dependency.name } } );
-                    this.createForm.get( 'user_id' )?.setValue( this.currentUserBenefits!.id );
-                    this.createForm.get( 'user_id' )?.disable();
-                    this.createForm.get( 'selectedNodes' )?.disable();
+                    this.createForm.get( 'benefit_id' )?.disable();
                     this.fillBenefitDetail( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
                   },
                   error: err => {
@@ -157,6 +152,11 @@ export class CreateComponent implements OnInit {
 
   }
 
+  ngAfterViewInit (): void {
+    this.calendar.currentHour = new Date().getHours();
+    this.calendar.currentMinute = 0;
+  }
+
   ngAfterViewChecked (): void {
     this.changeDetectorRef.detectChanges();
   }
@@ -171,9 +171,21 @@ export class CreateComponent implements OnInit {
       this.createForm.markAllAsTouched();
       return;
     }
+
     let date = this.createForm.get( 'rangeDates' )?.value;
-    this.createForm.get( 'benefit_begin_time' )?.setValue( formatDate( new Date( date ), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
-    this.createForm.get( 'benefit_end_time' )?.setValue( formatDate( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ).toString(), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
+    if ( this.benefit.containerViewChild?.nativeElement.innerText === 'Mis Vacaciones' ) {
+      let initialDate = new Date( date[ 0 ] );
+      let finalDate = new Date( date[ 1 ] );
+      finalDate.setDate( finalDate.getDate() + 1 );
+      initialDate.setHours( 0, 0, 0, 0 );
+      finalDate.setHours( 0, 0, 0, 0 );
+      this.createForm.get( 'benefit_begin_time' )?.setValue( formatDate( initialDate, 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
+      this.createForm.get( 'benefit_end_time' )?.setValue( formatDate( finalDate, 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
+    } else {
+      this.createForm.get( 'benefit_begin_time' )?.setValue( formatDate( new Date( date ), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
+      this.createForm.get( 'benefit_end_time' )?.setValue( formatDate( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ).toString(), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
+    }
+
 
     if ( this.currentUserBenefits?.id ) {
       this.benefitUserService.update( this.currentUserBenefits!.benefit_user[ 0 ].id, this.createForm.getRawValue() )
@@ -231,22 +243,46 @@ export class CreateComponent implements OnInit {
             this.benefit_details = Object.values( benefit_details )[ 0 ].benefit_detail;
             if ( this.createForm.get( 'benefit_id' )!.valid ) {
               this.benefitDetailSpinner = true;
-              this.createForm.get( 'benefit_detail_id' )!.enable();
             }
             if ( this.router.url.includes( 'edit' ) ) {
               this.createForm.get( 'benefit_detail_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefit_detail.id );
+              this.benefitDetailSpinner = true;
             }
+            this.createForm.get( 'benefit_detail_id' )!.enable();
           },
           error: ( { error } ) => {
             this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
           }
         }
       );
-    if ( event.target && event.target.options[ event.target.options.selectedIndex ].text == "Mi Viernes" ) {
+    if ( event.originalEvent && event.originalEvent.target.textContent == "Mi Viernes" ) {
       this.disabledDays = [ 0, 1, 2, 3, 4, 6 ];
+      this.calendar.currentHour = 13;
+      this.calendar.currentMinute = 0;
     } else {
       this.disabledDays = [];
     }
+    if ( event.originalEvent && event.originalEvent.target.textContent == "Mis Vacaciones" ) {
+      this.calendar.selectionMode = 'range'
+      this.numberOfMonths = 2;
+    }
+    else {
+      this.calendar.selectionMode = 'single'
+      this.numberOfMonths = 1;
+    }
+    this.calendar.updateUI();
+    this.createForm.get( 'rangeDates' )?.reset( '' );
+    this.calendar.clear();
+  }
+
+  validateBenefitDetail ( event: any ) {
+    if ( event.originalEvent && event.originalEvent.target.textContent == "Mañana" ) {
+      this.calendar.currentHour = 7;
+    } else if ( event.originalEvent && event.originalEvent.target.textContent == "Tarde" ) {
+      this.calendar.currentHour = 13;
+    }
+    this.calendar.currentMinute = 0;
+    this.calendar.updateTime();
   }
 
 }

@@ -1,16 +1,16 @@
 <div class="row mt-5">
   <h1>
-    {{ currentUserBenefits?.id ? "Actualizar" : "Nuevo" }} beneficio para {{ currentUserBenefits?.name }}
+    {{ currentUserBenefits?.id ? "Actualizar" : "Nuevo" }} beneficio
   </h1>
   <hr />
 
   <div class="col">
     <form [formGroup]="createForm" (ngSubmit)="save()">
       <div class="row mb-3">
-        <div class="col-xl-7 px-2 d-flex flex-column justify-content-evenly">
+        <div class="px-2 d-flex flex-column justify-content-evenly">
 
           <!-- Dependencias -->
-          <div class="row mb-3" *ngIf="!currentUserBenefits">
+          <!-- <div class="row mb-3" *ngIf="!currentUserBenefits">
             <label for="user_id">Selecciona una dependencia</label>
             <div class="p-inputgroup">
               <p-treeSelect class="md:w-20rem w-100" containerStyleClass="w-100" [options]="nodes"
@@ -20,10 +20,10 @@
                 <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
               </span>
             </div>
-          </div>
+          </div> -->
           
           <!-- Colaboradores -->
-          <div class="row mb-3">
+          <!-- <div class="row mb-3">
             <label for="user_id">Selecciona un colaborador</label>
             <div class="p-inputgroup">
               <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="user_id"
@@ -33,13 +33,13 @@
               </span>
             </div>
             <small *ngIf="campoEsValido('user_id')" class="text-danger">{{ userIdErrors }}</small>
-          </div>
+          </div> -->
 
           <!-- Beneficios -->
           <div class="row mb-3">
             <label for="benefit_id">Selecciona un beneficio</label>
             <div class="p-inputgroup">
-              <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="benefit_id"
+              <p-dropdown #benefit class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="benefit_id"
                 [options]="benefits" placeholder="-- Seleccione Beneficio --" (onChange)="fillBenefitDetail($event)"></p-dropdown>
               <span *ngIf="userAndBenefitSpinner" class="p-inputgroup-addon">
                 <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
@@ -53,7 +53,7 @@
             <label for="benefit_detail_id">Selecciona un Detalle</label>
             <div class="p-inputgroup">
               <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="benefit_detail_id"
-                [options]="benefit_details" placeholder="-- Seleccione Detalle --"></p-dropdown>
+                [options]="benefit_details" placeholder="-- Seleccione Detalle --" (onChange)="validateBenefitDetail($event)"></p-dropdown>
               <span *ngIf="!benefitDetailSpinner" class="p-inputgroup-addon">
                 <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
               </span>
@@ -62,15 +62,16 @@
           </div>
 
         </div>
-
-        <div class="col-xl-5 px-2 d-flex flex-column">
-          <p-calendar #calendar [inline]="true" [showTime]="true" formControlName="rangeDates" selectionMode="single"
-            [readonlyInput]="true" [disabledDays]="disabledDays"></p-calendar>
+        <div class="row mb-3">
+          <label for="benefit_detail_id">Selecciona una fecha</label>
+          <p-calendar styleClass="w-100" #calendar [showTime]="true" formControlName="rangeDates" selectionMode="single"
+            [readonlyInput]="true" [disabledDays]="disabledDays" [numberOfMonths]="numberOfMonths" appendTo="main"></p-calendar>
         </div>
       </div>
 
       <input type="hidden" formControlName="benefit_begin_time" />
       <input type="hidden" formControlName="benefit_end_time" />
+      <input type="hidden" formControlName="user_id" />
 
       <div class="mb-3">
         <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
@@ -80,3 +81,6 @@
     </form>
   </div>
 </div>
+<pre>
+  {{ createForm.value | json }}
+</pre>

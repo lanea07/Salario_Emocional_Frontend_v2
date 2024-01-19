@@ -3,7 +3,7 @@
   <span class="loader-lock"></span>
 </div>
 
-<form autocomplete="off" [formGroup]="miFormulario" (ngSubmit)="login()" *ngIf="showScreen">
+<form autocomplete="off" [formGroup]="loginForm" (ngSubmit)="login()" *ngIf="showScreen">
   <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -15,12 +15,16 @@
 
                 <div class="form-outline form-white mb-4">
                   <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Correo"
-                    formControlName="email" />
+                    formControlName="email" required/>
+                    <small *ngIf="campoEsValido('email')" class="text-danger">{{ benefitIdErrors }}</small>
+
                 </div>
 
                 <div class="form-outline form-white mb-4">
                   <input type="password" id="password" name="password" class="form-control form-control-lg"
-                    placeholder="Contraseña" formControlName="password" />
+                    placeholder="Contraseña" formControlName="password" required/>
+                    <small *ngIf="campoEsValido('password')" class="text-danger">{{ benefitIdErrors }}</small>
+
                 </div>
 
                 <input type="hidden" id="device_name" formControlName="device_name" />
