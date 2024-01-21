@@ -244,13 +244,18 @@ export class CreateComponent implements OnInit {
       this.emptyColaboradores();
       return;
     }
-    let dependencies = this.dependencyService.flattenDependency( { ...this.dependencies[ 0 ] } )
-    let dependency = dependencies.find( ( dependency: Dependency ) => {
-      return dependency.name === event.node.parent.label;
-    } );
+    this.dependencyService.dependencyAncestors()
+      .subscribe( {
+        next: ( dependencies ) => {
+          let dependenciesArray = this.dependencyService.flattenDependency( dependencies[ 0 ] )
+          this.users = dependenciesArray.flatMap( ( dependency: Dependency ) => {
+            return dependency.users;
+          } );
+        },
+        error: ( error ) => { }
+      } )
     this.createForm.get( 'parent' )?.reset( '' );
     this.createForm.get( 'parent' )?.enable();
-    this.users = dependency!.users;
   }
 
   emptyColaboradores () {

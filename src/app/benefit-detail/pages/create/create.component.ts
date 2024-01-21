@@ -21,7 +21,7 @@ export class CreateComponent {
   benefitDetail?: Benefit;
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
-    time_hours: [ '', [ this.validatorService.minIfFilled( 0 ) ] ]
+    time_hours: [ '', [ Validators.required, this.validatorService.minIfFilled( 1 ) ] ]
   } );
   disableSubmitBtn: boolean = false;
 

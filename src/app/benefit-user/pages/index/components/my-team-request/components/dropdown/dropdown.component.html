@@ -1,0 +1,4 @@
+<form [formGroup]="formGroup">
+    <p-dropdown formControlName="selectedAction" [options]="options" optionLabel="label" optionValue="action"
+        placeholder="Acciones" (onChange)="emitEvent($event)"></p-dropdown>
+</form>

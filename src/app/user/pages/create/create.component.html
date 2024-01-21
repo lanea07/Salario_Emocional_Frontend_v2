@@ -55,7 +55,9 @@
       <div class="mb-3">
         <p-panel header="Dependencia y Responsable">
           <div class="row mb-3">
-            <label for="user_id">Selecciona una dependencia y un colaborador para asignárselo como jefe</label>
+            <label for="user_id">Selecciona la dependencia a la que pertenece y un colaborador para asignárselo como jefe<br>
+              <small class="text-secondary">(El colaborador que seleccione aquí será quién apruebe sus beneficios)</small>
+            </label>
             <div class="p-inputgroup">
               <p-treeSelect class="md:w-20rem w-100" containerStyleClass="w-100" formControlName="dependency_id"
                 [options]="nodes" placeholder="-- Seleccione Dependencia --" [filter]="true"

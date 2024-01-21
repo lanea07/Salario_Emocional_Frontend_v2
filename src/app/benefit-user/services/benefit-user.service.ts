@@ -87,4 +87,12 @@ export class BenefitUserService {
     return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/benefituser/indexcollaborators`, { headers, withCredentials: true } )
   }
 
+  decideBenefitUser ( formValues: any ) {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.post<any>( `${ this.apiBaseUrl }/benefituser/decidebenefituser`, formValues, { headers, withCredentials: true } )
+  }
+
 }

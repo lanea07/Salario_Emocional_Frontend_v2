@@ -98,4 +98,12 @@ export class DependencyService {
     return { key: path.replace( '.', '-' ), label: name, children: simplifiedChildren };
   }
 
+  public dependencyAncestors (): Observable<Dependency[]> {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependency/dependencyAncestors`, { headers, withCredentials: true } )
+  }
+
 }
