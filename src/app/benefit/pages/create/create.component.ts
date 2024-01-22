@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { EMPTY, switchMap } from 'rxjs';
+
 import Swal from 'sweetalert2';
 
 import { BenefitDetail } from 'src/app/benefit-detail/interfaces/benefit-detail.interface';

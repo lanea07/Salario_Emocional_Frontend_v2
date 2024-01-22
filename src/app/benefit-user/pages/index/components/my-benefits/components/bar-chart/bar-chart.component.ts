@@ -3,7 +3,6 @@ import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from 'ng2-charts';
-import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 
 @Component( {
   selector: 'bar-chart-component',

@@ -1,10 +1,10 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import Swal from 'sweetalert2';
 
-import { animate, style, transition, trigger } from '@angular/animations';
 import { AuthService } from '../../services/auth.service';
 
 @Component( {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { FullCalendarComponent } from '@fullcalendar/angular';
 
+import { FullCalendarComponent } from '@fullcalendar/angular';
 
 @Component( {
   selector: 'benefitemployee-index',

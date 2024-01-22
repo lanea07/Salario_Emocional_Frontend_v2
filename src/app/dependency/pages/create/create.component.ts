@@ -3,11 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 
-import Swal from 'sweetalert2';
-
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { Dependency } from '../../interfaces/dependency.interface';
 import { DependencyService } from '../../services/dependency.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'user-create',

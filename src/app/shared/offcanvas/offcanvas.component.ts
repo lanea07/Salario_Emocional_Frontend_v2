@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { is } from 'date-fns/locale';
+
+import Swal from 'sweetalert2';
+
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from 'src/app/user/interfaces/user.interface';
-import Swal from 'sweetalert2';
 
 @Component( {
   selector: 'offcanvas',

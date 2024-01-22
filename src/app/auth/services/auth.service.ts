@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+
 import { environment } from 'src/environments/environment';
 import { AuthResponse, ValidToken } from '../interfaces/auth.interface';
-import { map, catchError, tap, mergeMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
 
 @Injectable( {
   providedIn: 'root'

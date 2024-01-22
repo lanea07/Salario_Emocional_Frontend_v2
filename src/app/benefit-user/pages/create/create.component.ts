@@ -5,7 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
-import { addDays, addHours } from 'date-fns';
+import { addHours } from 'date-fns';
+import { Calendar } from 'primeng/calendar';
+import { Dropdown } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 
 import { BenefitDetail } from '../../../benefit-detail/interfaces/benefit-detail.interface';
@@ -17,8 +19,6 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 import { User } from '../../../user/interfaces/user.interface';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
-import { Calendar } from 'primeng/calendar';
-import { Dropdown } from 'primeng/dropdown';
 
 @Component( {
   selector: 'benefitemployee-create',

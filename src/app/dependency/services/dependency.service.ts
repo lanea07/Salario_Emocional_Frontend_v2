@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Dependency } from '../interfaces/dependency.interface';
+
 import { TreeNode } from 'primeng/api';
+
+import { environment } from 'src/environments/environment';
+import { Dependency } from '../interfaces/dependency.interface';
 
 @Injectable( {
   providedIn: 'root'

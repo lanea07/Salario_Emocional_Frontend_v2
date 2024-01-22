@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+
 import { ChartData, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 

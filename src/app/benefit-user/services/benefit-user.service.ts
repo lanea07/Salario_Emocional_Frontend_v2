@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { environment } from 'src/environments/environment';
 import { BenefitUser, BenefitUserElement } from '../interfaces/benefit-user.interface';
-import { User } from 'src/app/user/interfaces/user.interface';
 
 @Injectable( {
   providedIn: 'root'

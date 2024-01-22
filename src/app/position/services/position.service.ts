@@ -1,9 +1,9 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Position } from '../interfaces/position.interface';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 
 @Injectable( {
   providedIn: 'root'
