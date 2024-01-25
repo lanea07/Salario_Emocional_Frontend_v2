@@ -35,7 +35,7 @@
           <div class="mb-3 input-group">
             <div class="form-floating">
               <input [ngClass]="{'invalid': campoEsValido('password')}" class="form-control" type="password"
-                formControlName="password" id="password" placeholder="password">
+                formControlName="password" id="password" placeholder="password" (keyup)="validatePasswordRequired()">
               <label class="form-label" for="password"><i class="fa-solid fa-key me-1"></i>Contraseña</label>
             </div>
             <div class="input-group-text">
@@ -53,10 +53,11 @@
 
       <!-- Posible leader -->
       <div class="mb-3">
-        <p-panel header="Dependencia y Responsable">
+        <p-panel header="Dependencia y Responsable (Opcional)">
           <div class="row mb-3">
             <label for="user_id">Selecciona la dependencia a la que pertenece y un colaborador para asignárselo como jefe<br>
-              <small class="text-secondary">(El colaborador que seleccione aquí será quién apruebe sus beneficios)</small>
+              <small class="text-secondary">(El colaborador que seleccione aquí será quién apruebe sus beneficios. Si no se asigna un
+                responsable, los beneficios que solicité nuevo colaborador serán aprobados automáticamente)</small>
             </label>
             <div class="p-inputgroup">
               <p-treeSelect class="md:w-20rem w-100" containerStyleClass="w-100" formControlName="dependency_id"
@@ -109,13 +110,15 @@
         </p-panel>
       </div>
 
-
-      <div class="col-sm-6 col-md-4 col-lg-2">
-
-        <input type="checkbox" class="form-check-input" id="valid_id"
-          [ngClass]="{'invalid': !createForm.get('valid_id')!.valid && createForm.get('valid_id')!.touched}"
-          formControlName="valid_id" />
-        <label class="form-check-label ms-2" for="valid_id">Válido</label>
+      <div class="mb-3">
+        <p-panel header="Válido">
+          <div class="col-sm-6 col-md-4 col-lg-2">
+            <input type="checkbox" class="form-check-input" id="valid_id"
+              [ngClass]="{'invalid': !createForm.get('valid_id')!.valid && createForm.get('valid_id')!.touched}"
+              formControlName="valid_id" />
+            <label class="form-check-label ms-2" for="valid_id">Válido</label>
+            </div>
+            </p-panel>
       </div>
 
       <div class="mb-3">

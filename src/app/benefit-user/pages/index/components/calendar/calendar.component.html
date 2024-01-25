@@ -4,10 +4,11 @@
         <span class="badge text-bg-danger mx-3">Mi Cumpleaños</span>
         <span class="badge text-bg-success mx-3">Mi Viernes</span>
         <span class="badge text-bg-dark mx-3">Mis Vacaciones</span>
-        <span class="badge text-bg-secondary mx-3">Otros Eventos</span>
+        <span class="badge text-bg-secondary mx-3">Dia de la Familia</span>
+        <span class="badge text-bg-primary mx-3">Otros Eventos</span>
     </div>
 
-    <full-calendar #my_team_calendar [options]="my_team_calendarOptions"></full-calendar>
+    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
 
     <!-- Modal -->
     <div class="card flex justify-content-center">
@@ -21,27 +22,27 @@
                     <div class="col-6">
                         <small>Beneficio</small>
                         <p>{{ modalData?.title }}</p>
-                    </div>
-                    <div class="col-6">
-                        <small>Detalle</small>
+                        </div>
+                        <div class="col-6">
+                            <small>Detalle</small>
                         <p>{{ modalData?.extendedProps.benefit_detail.name }}</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <small>Fecha de redención</small>
+                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <small>Fecha de redención</small>
                         <p>{{ modalData?.startStr | date:'medium' }}</p>
-                    </div>
-                </div>
-            </div>
-            <ng-template pTemplate="footer">
+                        </div>
+                        </div>
+                        </div>
+                        <ng-template pTemplate="footer">
                 <a class="btn btn-warning" href="./benefit-employee/edit/{{ modalData?.id }}" *ngIf="isAdmin">
                     Editar
                 </a>
                 <a class="btn btn-outline-danger" (click)="deleteBenefit( modalData?.id )" *ngIf="isAdmin">
                     Eliminar
                 </a>
-            </ng-template>
-        </p-dialog>
-    </div>
+                </ng-template>
+                </p-dialog>
+                </div>
 </div>

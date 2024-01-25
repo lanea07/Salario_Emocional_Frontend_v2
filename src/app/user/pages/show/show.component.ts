@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import { User } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'user-show',
@@ -22,6 +23,7 @@ export class ShowComponent {
   constructor (
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
+    private as: AlertService,
     private router: Router,
   ) { }
 
@@ -36,19 +38,9 @@ export class ShowComponent {
           this.loaded = true;
           this.user?.roles?.forEach( role => this.roles.push( role.name ) );
         },
-        error: ( { error } ) => {
+        error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.message,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
   }
@@ -72,21 +64,11 @@ export class ShowComponent {
       if ( result.isConfirmed ) {
         this.userService.destroy( this.user?.id )
           .subscribe( {
-            next: resp => {
+            next: ( resp ) => {
               this.router.navigateByUrl( 'user/index' );
-              Swal.fire( {
-                title: 'Eliminado',
-                icon: 'success'
-              } );
-
+              this.as.subscriptionAlert( subscriptionMessageTitle.ELIMINADO, subscriptionMessageIcon.SUCCESS )
             },
-            error: err => {
-              Swal.fire( {
-                title: 'Error al borrar registro',
-                text: err,
-                icon: 'error'
-              } );
-            }
+            error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
           } );
       };
     } );

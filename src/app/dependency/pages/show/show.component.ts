@@ -65,21 +65,11 @@ export class ShowComponent {
       if ( result.isConfirmed ) {
         this.dependencyService.destroy( this.dependency?.id )
           .subscribe( {
-            next: resp => {
+            next: ( resp ) => {
               this.router.navigateByUrl( 'dependency/index' );
-              Swal.fire( {
-                title: 'Eliminado',
-                icon: 'success'
-              } );
-
+              this.as.subscriptionAlert( subscriptionMessageTitle.ELIMINADO, subscriptionMessageIcon.SUCCESS )
             },
-            error: err => {
-              Swal.fire( {
-                title: 'Error al borrar registro',
-                text: err,
-                icon: 'error'
-              } );
-            }
+            error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
           } );
       };
     } );

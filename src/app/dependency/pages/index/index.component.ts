@@ -25,6 +25,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
       }
     } ];
   dtOptions: any;
+  nodes: any[] = [];
 
   constructor (
     private as: AlertService,
@@ -41,6 +42,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
             {
               next: dependency => {
                 callback( { data: this.dependencyService.flattenDependency( dependency[ 0 ] ) } );
+                this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependency[ 0 ] ) ];
               },
               error: err => {
                 this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );

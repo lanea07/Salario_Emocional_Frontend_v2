@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'benefit-show',
@@ -24,9 +25,9 @@ export class ShowComponent {
 
   constructor (
     private activatedRoute: ActivatedRoute,
+    private as: AlertService,
     private authService: AuthService,
     private benefitService: BenefitService,
-    private router: Router,
   ) { }
 
   ngOnInit () {
@@ -41,20 +42,7 @@ export class ShowComponent {
           this.filePoliticas = this.benefit?.politicas_path ? this.benefit.politicas_path : '';
           this.loaded = true;
         },
-        error: ( error ) => {
-          this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.message,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } );
-        }
+        error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } );
 
     this.authService.validarAdmin()
@@ -62,19 +50,7 @@ export class ShowComponent {
         next: ( isAdmin: any ) => {
           this.isAdmin = isAdmin.admin;
         },
-        error: ( error ) => {
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.message,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
-        }
+        error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } );
   }
 

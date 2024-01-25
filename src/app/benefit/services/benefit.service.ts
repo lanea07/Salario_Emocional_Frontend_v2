@@ -58,4 +58,13 @@ export class BenefitService {
     return this.http.delete( `${ this.apiBaseUrl }/benefit/${ id }`, { headers, withCredentials: true } );
   }
 
+  indexAvailable (): Observable<Benefit[]> {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    this.http.get( `${ this.baseUrl }/sanctum/csrf-cookie` ).subscribe()
+    return this.http.get<Benefit[]>( `${ this.apiBaseUrl }/benefit/available`, { headers, withCredentials: true } )
+  }
+
 }

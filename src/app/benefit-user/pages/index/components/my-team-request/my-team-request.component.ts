@@ -14,17 +14,16 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
 @Component( {
   selector: 'my-team-request',
   templateUrl: './my-team-request.component.html',
-  styles: [
-  ]
+  styles: []
 } )
 export class MyTeamRequestComponent implements OnInit, OnDestroy {
 
-  dtOptions: ADTSettings = {};
-  dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
   @ViewChild( 'dropdownComponent' ) dropdownComponent!: TemplateRef<DropdownComponent>;
   @ViewChild( DataTableDirective, { static: false } )
-  dtElement!: DataTableDirective;
 
+  dtElement!: DataTableDirective;
+  dtOptions: ADTSettings = {};
+  dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
 
   constructor (
     private benefitUserService: BenefitUserService,
@@ -90,7 +89,7 @@ export class MyTeamRequestComponent implements OnInit, OnDestroy {
           }
         ],
         responsive: true,
-        language: es_CO
+        language: es_CO,
       }
     } );
   }
@@ -109,6 +108,9 @@ export class MyTeamRequestComponent implements OnInit, OnDestroy {
   }
 
   onCaptureEvent ( event: DropdownComponentEventType ) {
+    if ( event.cmd === 'view' ) {
+      return this.router.navigate( [ "/benefit-employee/show/" + event.data.id ] );
+    }
     this.benefitUserService.decideBenefitUser( event )
       .subscribe( {
         next: ( res ) => {
@@ -121,6 +123,7 @@ export class MyTeamRequestComponent implements OnInit, OnDestroy {
         },
         error: ( err ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.statusText )
       } );
+    return;
   }
 
   ngOnDestroy (): void {

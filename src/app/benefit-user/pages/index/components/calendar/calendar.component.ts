@@ -4,6 +4,8 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
 import { CalendarOptions } from '@fullcalendar/core';
 import esLocale from '@fullcalendar/core/locales/es';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import listPlugin from '@fullcalendar/list';
+import multiMonthPlugin from '@fullcalendar/multimonth';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import Swal from 'sweetalert2';
 
@@ -20,21 +22,28 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 export class CalendarComponent implements OnChanges, AfterViewInit {
 
   @ViewChild( 'calendar' ) calendar!: FullCalendarComponent;
-  @Input() data?: BenefitUserElement[] = [];
+  @Input() data: BenefitUserElement[] = [];
+  @Input() year: number = new Date().getFullYear().valueOf();
   isAdmin: boolean = false;
   modalData?: any;
   visible: boolean = false;
 
   calendarOptions: CalendarOptions = {
-    initialView: 'dayGridMonth',
-    plugins: [ dayGridPlugin, timeGridPlugin ],
+    initialView: 'listMonth',
+    plugins: [ dayGridPlugin, timeGridPlugin, listPlugin, multiMonthPlugin ],
     eventClick: this.showModal.bind( this ),
     events: [],
     locale: esLocale,
     headerToolbar: {
       left: 'prev,today,next',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listMonth,listWeek,listDay'
+    },
+    views: {
+      multiMonthYear: { buttonText: 'Año' },
+      listDay: { buttonText: 'Agenda Diaria' },
+      listWeek: { buttonText: 'Agenda Semanal' },
+      listMonth: { buttonText: 'Agenda Mensual' }
     },
     showNonCurrentDates: false,
     navLinks: true,
@@ -51,7 +60,7 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
     private as: AlertService,
     private benefitUserService: BenefitUserService,
     private elementRef: ElementRef
-  ) { 
+  ) {
     this.authService.validarAdmin()
       .subscribe( {
         next: ( resp: any ) => {
@@ -65,10 +74,12 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
 
   ngOnChanges ( changes: SimpleChanges ): void {
     this.calendar?.getApi().removeAllEvents();
-    this.data?.forEach( ( item: BenefitUserElement ) => {
-      this.calendar?.getApi().addEvent( this.makeEvent( item ) )
-    } );
-    let year = new Date( Object.values( this.data! )[ 0 ]?.benefit_begin_time ).getFullYear();
+    if ( this.data.length > 0 ) {
+      this.data?.forEach( ( item: BenefitUserElement ) => {
+        this.calendar?.getApi().addEvent( this.makeEvent( item ) )
+      } );
+    }
+    let year = new Date( this.year ).getFullYear();
     let month = new Date().getMonth() + 1;
     let day = '01';
     let date = new Date( `${ year }-${ month }-${ day }` );
@@ -98,7 +109,7 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
       id: id,
       start: new Date( benefit_begin_time ),
       end: new Date( benefit_end_time ),
-      title: `${ eventData.benefits.name }`,
+      title: `${ eventData.user.name } - ${ eventData.benefits.name }- ${ eventData.benefit_detail.name }`,
       classNames: [ this.classSelector( eventData.benefits.name ), 'text-dark' ],
       extendedProps: eventData,
       allDay: eventData.benefits.name === "Mis Vacaciones" ? true : false,
@@ -116,8 +127,10 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
         return 'bg-warning-subtle';
       case 'Mis Vacaciones':
         return 'bg-dark-subtle';
-      default:
+      case 'Día de la Familia':
         return 'bg-secondary-subtle';
+      default:
+        return 'bg-primary-subtle';
     }
   }
 
@@ -144,7 +157,7 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
             next: () => {
               this.calendar.getApi().getEventById( eventID.toString() )?.remove();
             },
-            error: ( err ) => { }
+            error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
           } )
       }
     } );

@@ -1,8 +1,22 @@
-<div class="row mt-5">
-    <div class="col">
-        <table datatable [dtOptions]="dtOptions" class="table table-hover table-sm table-striped">
-            <thead class="bg-dark text-light"></thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</div>
+<p-tabView>
+    <p-tabPanel header="Tabla">
+        <ng-template pTemplate="content">
+
+            <table datatable [dtOptions]="dtOptions" class="table table-hover table-sm table-striped">
+                <thead class="bg-dark text-light"></thead>
+                <tbody></tbody>
+            </table>
+        </ng-template>
+        </p-tabPanel>
+        <p-tabPanel header="Organigrama">
+            <ng-template pTemplate="content">
+                <p-organizationChart [value]="nodes">
+                    <ng-template let-node pTemplate="default">
+                        <div class="p-2 text-center">
+                            {{ node.label }}
+                    </div>
+                </ng-template>
+                </p-organizationChart>
+                </ng-template>
+                </p-tabPanel>
+                </p-tabView>

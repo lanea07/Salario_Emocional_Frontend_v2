@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'benefitdetail-show',
@@ -21,6 +22,7 @@ export class ShowComponent {
   constructor (
     private benefitDetailService: BenefitDetailService,
     private activatedRoute: ActivatedRoute,
+    private as: AlertService,
     private router: Router,
   ) { }
 
@@ -36,17 +38,7 @@ export class ShowComponent {
         },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.message,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
   }

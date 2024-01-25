@@ -69,7 +69,12 @@ export class DependencyService {
   public buildDependencyTreeNode ( dependency: Dependency ): TreeNode {
     const { path, name, children } = dependency;
     const simplifiedChildren: TreeNode[] = children!.map( child => this.buildDependencyTreeNode( child ) );
-    return { key: path.replace( '.', '-' ), label: name, children: simplifiedChildren };
+    return {
+      key: path,
+      label: name,
+      children: simplifiedChildren,
+      expanded: true,
+    };
   }
 
   /**
@@ -89,17 +94,10 @@ export class DependencyService {
   }
 
   /**
-   * Takes a dependency and transforms it into a TreeNode
+   * Returns all parent dependencies of the current logged-in user's dependency
    * 
-   * @param Dependency dependency 
-   * @returns TreeNode
+   * @returns Dependency[]
    */
-  public makeNode ( dependency: Dependency ): TreeNode {
-    const { path, name, children } = dependency;
-    const simplifiedChildren: TreeNode[] = children ? children!.map( child => this.makeNode( child ) ) : [];
-    return { key: path.replace( '.', '-' ), label: name, children: simplifiedChildren };
-  }
-
   public dependencyAncestors (): Observable<Dependency[]> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
@@ -108,4 +106,20 @@ export class DependencyService {
     return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependency/dependencyAncestors`, { headers, withCredentials: true } )
   }
 
+  /**
+ * Takes a dependency and transforms it into a TreeNode
+ * 
+ * @param Dependency dependency 
+ * @returns TreeNode
+ */
+  public makeNode ( dependency: Dependency ): TreeNode {
+    const { path, name, children } = dependency;
+    const simplifiedChildren: TreeNode[] = children ? children!.map( child => this.makeNode( child ) ) : [];
+    return {
+      key: path.replace( '.', '-' ),
+      label: name,
+      children: simplifiedChildren,
+      expanded: true,
+    };
+  }
 }

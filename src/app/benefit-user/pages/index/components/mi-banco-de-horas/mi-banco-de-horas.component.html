@@ -1,0 +1,28 @@
+<div class="row d-flex flex-column flex-lg-row p-3 border rounded-3 shadow-sm">
+    <div class="row d-flex flex-column flex-lg-row">
+        <div class="col-12 col-lg-3 d-flex flex-column">
+            <div class="d-flex flex-column justify-content-around align-items-center mt-2">
+                <img class="card-img-top" src="./assets/images/banco_horas.svg" alt="" style="height: 150px;">
+                <h5 class="card-title">Mi Banco de Horas</h5>
+            </div>
+            </div>
+            <div class="col-12 col-lg-6 justify-content-around" style="position: relative;">
+                <ul *ngIf="dataArray.length > 0; else empty" class="list-group">
+                    <li class="list-group-item bg-transparent" *ngFor="let item of dataArray">{{ item }}</li>
+                </ul>
+            </div>
+        <div class="col-12 col-lg-3 justify-content-around" style="position: relative;">
+            <doughnut-chart-component [data]="doughutChartData"></doughnut-chart-component>
+        </div>
+    </div>
+    <div class="row">
+        <div class="w-100 mb-md-3">
+            <bar-chart-component [data]="barChartData"></bar-chart-component>
+        </div>
+    </div>
+    </div>
+<ng-template #empty>
+    <ul class="list-group">
+        <li class="list-group-item bg-transparent">No tienes beneficios redimidos</li>
+    </ul>
+</ng-template>

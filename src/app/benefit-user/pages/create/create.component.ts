@@ -19,6 +19,7 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 import { User } from '../../../user/interfaces/user.interface';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
+import { PrimeNGConfig } from 'primeng/api';
 
 @Component( {
   selector: 'benefitemployee-create',
@@ -30,6 +31,16 @@ export class CreateComponent implements OnInit, AfterViewInit {
 
   @ViewChild( 'calendar' ) calendar!: Calendar;
   @ViewChild( 'benefit' ) benefit!: Dropdown;
+  es: any = {
+    firstDayOfWeek: 1,
+    dayNames: [ "domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado" ],
+    dayNamesShort: [ "dom", "lun", "mar", "mié", "jue", "vie", "sáb" ],
+    dayNamesMin: [ "D", "L", "M", "X", "J", "V", "S" ],
+    monthNames: [ "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre" ],
+    monthNamesShort: [ "ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic" ],
+    today: 'Hoy',
+    clear: 'Borrar'
+  }
 
   benefits?: Benefit[];
   benefit_details?: BenefitDetail[];
@@ -85,15 +96,16 @@ export class CreateComponent implements OnInit, AfterViewInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dependencyService: DependencyService,
     private fb: FormBuilder,
+    private pgConfig: PrimeNGConfig,
     private router: Router,
   ) {
     this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
   }
 
   ngOnInit (): void {
-
+    this.pgConfig.setTranslation( this.es );
     forkJoin( {
-      loadBenefits: this.benefitService.index()
+      loadBenefits: this.benefitService.indexAvailable()
         .pipe(
           tap( ( benefits ) => {
             this.benefits = benefits;
@@ -131,17 +143,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
         },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.message,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
 
@@ -194,6 +196,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
             next: () => {
               this.disableSubmitBtn = false;
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
+              this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
             },
             error: ( { error } ) => {
               this.disableSubmitBtn = false;
@@ -207,6 +210,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
             this.disableSubmitBtn = false;
             this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS );
             this.createForm.reset();
+            this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
           },
           error: ( { error } ) => {
             this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );

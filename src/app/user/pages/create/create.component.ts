@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, switchMap } from 'rxjs';
+import { forkJoin, switchMap, EMPTY } from 'rxjs';
 
-import Swal from 'sweetalert2';
 
 import { Dependency } from '../../../dependency/interfaces/dependency.interface';
 import { DependencyService } from '../../../dependency/services/dependency.service';
@@ -32,7 +31,7 @@ export class CreateComponent implements OnInit {
     password: [ '', [ this.passwordRequiredIfNotNull() ] ],
     parent: [ '' ],
     position_id: [ '', Validators.required ],
-    requirePassChange: [ false ],
+    requirePassChange: [ true ],
     valid_id: [ '', Validators.required ],
     dependency_id: [ '', Validators.required ]
   } );
@@ -145,17 +144,10 @@ export class CreateComponent implements OnInit {
           {
             next: () => {
               this.router.navigateByUrl( `/user/show/${ this.user?.id }` )
-              Swal.fire( {
-                title: 'Actualizado',
-                icon: 'success',
-              } );
+              this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS )
             },
-            error: err => {
-              Swal.fire( {
-                title: 'Error',
-                text: err.error.message,
-                icon: 'error',
-              } );
+            error: ( error ) => {
+              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
               this.disableSubmitBtn = false;
             }
           } );
@@ -167,19 +159,12 @@ export class CreateComponent implements OnInit {
       this.userService.create( this.createForm.value ) 
         .subscribe(
           {
-            next: userCreated => {
+            next: ( userCreated ) => {
               this.router.navigateByUrl( `/user/show/${ userCreated.id }` )
-              Swal.fire( {
-                title: 'Creado',
-                icon: 'success',
-              } );
+              this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS )
             },
-            error: err => {
-              Swal.fire( {
-                title: 'Error',
-                text: err.error.message,
-                icon: 'error',
-              } );
+            error: ( error ) => {
+              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
               this.disableSubmitBtn = false;
             }
           } );
@@ -251,6 +236,7 @@ export class CreateComponent implements OnInit {
           this.users = dependenciesArray.flatMap( ( dependency: Dependency ) => {
             return dependency.users;
           } );
+          this.users = this.users.sort( ( a, b ) => a.name.localeCompare( b.name ) );
         },
         error: ( error ) => { }
       } )
@@ -261,6 +247,12 @@ export class CreateComponent implements OnInit {
   emptyColaboradores () {
     this.users = [];
     this.createForm.get( 'parent' )?.disable();
+  }
+
+  validatePasswordRequired () {
+    !this.createForm.get( 'password' )?.value ?
+      this.createForm.get( 'requirePassChange' )?.setValue( true ) :
+      this.createForm.get( 'requirePassChange' )?.setValue( false );
   }
 
 }

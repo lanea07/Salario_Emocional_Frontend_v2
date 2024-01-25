@@ -13,13 +13,13 @@
 
     <div class="row px-5">
 
-      <div class="col-10 d-flex flex-column my-2">
+      <div>
         <div *ngIf="!loaded">
           <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
         </div>
-        {{ benefit?.name }}
-        <span class="form-text">Nombre</span>
+        {{ benefit?.name }}<span *ngIf="!benefit?.valid_id && loaded" class='badge rounded-pill text-bg-danger ms-1'>Inactivo</span>
       </div>
+      <span class="form-text">Nombre</span>
       <div *ngIf="filePoliticas" class="col-2">
         <p><a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
             href="{{filePoliticas}}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Política</a>

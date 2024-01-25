@@ -1,9 +1,24 @@
+<p-toolbar styleClass="mb-4">
+  <form [formGroup]="viewBenefitUser" (ngSubmit)="downloadReport()">
+    <div class="input-group">
+      <span class="input-group-text">
+        Año
+        <div [ngClass]="{'invisible': loaded}" class="mx-2">
+          <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+        </div>
+      </span>
+      <p-calendar formControlName="years" view="year" dateFormat="yy" inputId="yearpicker"></p-calendar>
+      <button pButton type="submit" class="btn btn-outline-primary">Descargar</button>
+    </div>
+  </form>
+</p-toolbar>
+
 <p-tabView (CalendarReady)="printObject($event)" (onChange)="renderCalendars()">
   <p-tabPanel header="Mis beneficios">
-    <p-tabView>
+    <p-tabView (onChange)="renderCalendars()">
       <p-tabPanel header="Mis Beneficios Redimidos">
         <ng-template pTemplate="content">
-          <my-benefits></my-benefits>
+          <my-benefits (loadedData)="loadedData($event)" [year]="viewBenefitUser.get('years')!.value"></my-benefits>
         </ng-template>
       </p-tabPanel>
       <p-tabPanel header="Mis Solicitudes">
@@ -14,15 +29,20 @@
     </p-tabView>
   </p-tabPanel>
   <p-tabPanel header="Mi Equipo">
-    <p-tabView>
+    <p-tabView (onChange)="renderCalendars()">
       <p-tabPanel header="Beneficios Redimidos">
         <ng-template pTemplate="content">
-          <my-team></my-team>
+          <my-team [year]="viewBenefitUser.get('years')!.value"></my-team>
         </ng-template>
       </p-tabPanel>
       <p-tabPanel header="Aprobaciones Pendientes">
         <ng-template pTemplate="content">
           <my-team-request></my-team-request>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="Mis Colaboradores">
+        <ng-template pTemplate="content">
+          <my-collaborators-benefits [year]="viewBenefitUser.get('years')!.value"></my-collaborators-benefits>
         </ng-template>
       </p-tabPanel>
     </p-tabView>

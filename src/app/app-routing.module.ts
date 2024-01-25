@@ -10,7 +10,7 @@ const routes: Routes = [
   { path: 'benefit-detail', loadChildren: () => import( './benefit-detail/benefit-detail.module' ).then( m => m.BenefitDetailModule ), canMatch: [ authGuard ], title: 'Detalles de Beneficio' },
   { path: 'benefit-employee', loadChildren: () => import( './benefit-user/benefit-user.module' ).then( m => m.BenefitEmployeeModule ), canMatch: [ authGuard ], title: 'Beneficios de Empleado' },
   { path: 'dependency', loadChildren: () => import( './dependency/dependency.module' ).then( m => m.DependencyModule ), canMatch: [ authGuard ], title: 'Dependencias' },
-  { path: 'position', loadChildren: () => import( './position/position.module' ).then( m => m.PositionModule ), canMatch: [ authGuard ], title: 'Cargis' },
+  { path: 'position', loadChildren: () => import( './position/position.module' ).then( m => m.PositionModule ), canMatch: [ authGuard ], title: 'Cargos' },
   { path: 'role', loadChildren: () => import( './role/role.module' ).then( m => m.RoleModule ), canMatch: [ authGuard ], title: 'Roles' },
   { path: 'user', loadChildren: () => import( './user/user.module' ).then( m => m.UserModule ), canMatch: [ authGuard ], title: 'Usuarios' },
   { path: '**', component: LoginComponent }

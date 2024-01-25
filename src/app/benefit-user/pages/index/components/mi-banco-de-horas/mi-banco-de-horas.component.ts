@@ -9,9 +9,9 @@ import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user
 } )
 export class MiBancoDeHorasComponent implements OnChanges {
 
-  @Input() data?: BenefitUserElement[];
-  dataArray?: any[];
-  barChartData!: number[];
+  @Input() data: BenefitUserElement[] = [];
+  dataArray: any[] = [];
+  barChartData: number[] = [];
   doughutChartData!: number;
 
   ngOnChanges ( changes: SimpleChanges ): void {

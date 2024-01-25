@@ -79,12 +79,12 @@ export class BenefitUserService {
     return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/benefituser/indexcollaboratorsnonapproved`, { headers, withCredentials: true } )
   }
 
-  public indexCollaborators () {
+  public indexCollaborators ( year: number ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
-    return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/benefituser/indexcollaborators`, { headers, withCredentials: true } )
+    return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser/indexcollaborators?year=${ year }`, { headers, withCredentials: true } )
   }
 
   decideBenefitUser ( formValues: any ) {

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 import { AuthService } from '../../services/auth.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'auth-login',
@@ -88,7 +89,7 @@ export class LoginComponent {
 
   loginForm: FormGroup = this.fb.group( {
     email: [ '', [ Validators.required, Validators.email ] ],
-    password: [ '', [ Validators.required, Validators.minLength( 6 ) ] ],
+    password: [ '', [ Validators.required, Validators.minLength( 4 ) ] ],
     device_name: [ 'PC' ]
   } );
   showScreen: boolean = false;
@@ -111,6 +112,7 @@ export class LoginComponent {
   }
 
   constructor (
+    private as: AlertService,
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
@@ -130,23 +132,8 @@ export class LoginComponent {
     this.loging = true;
     this.authService.login( email, password, device_name )
       .subscribe( {
-        next: ( resp ) => {
-          this.router.navigateByUrl( '/benefit-employee' );
-        },
-        error: ( err ) => {
-          this.loging = false;
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            text: err.error.message,
-            showClass: {
-              popup: 'animate__animated animate__fadeIn'
-            },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp'
-            }
-          } );
-        }
+        next: ( resp ) => this.router.navigateByUrl( '/benefit-employee' ),
+        error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.error.msg ),
       } );
   }
 

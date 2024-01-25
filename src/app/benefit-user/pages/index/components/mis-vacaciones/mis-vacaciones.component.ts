@@ -10,8 +10,8 @@ import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user
 } )
 export class MisVacacionesComponent {
 
-  @Input() data?: BenefitUserElement[];
-  dataArray?: any[];
+  @Input() data: BenefitUserElement[] = [];
+  dataArray: any[] = [];
 
   ngOnChanges ( changes: SimpleChanges ): void {
     this.dataArray = this.data?.map( ( item: BenefitUserElement ) => {
