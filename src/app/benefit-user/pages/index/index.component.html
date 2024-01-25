@@ -1,106 +1,50 @@
-<div class="row mt-5">
-  <div class="col">
-
-    <form [formGroup]="viewBenefitUser" (ngSubmit)="downloadReport()">
-      <div class="row p-3">
-
-        <div class="col-sm-4 my-1 my-sm-0">
-          <div class=" input-group">
-            <label class="input-group-text" for="years">Año</label>
-            <select class="form-select" formControlName="years" (change)="getBenefitDetail($event)">
-              <option *ngFor="let year of years" value="{{ year }}">{{ year }}
-              </option>
-            </select>
-          </div>
+<p-toolbar styleClass="mb-4">
+  <form [formGroup]="viewBenefitUser" (ngSubmit)="downloadReport()">
+    <div class="input-group">
+      <span class="input-group-text">
+        Año
+        <div [ngClass]="{'invisible': loaded}" class="mx-2">
+          <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
         </div>
-
-        <div class="col-sm-8 my-1 my-sm-0">
-          <div class=" input-group">
-            <label class="input-group-text" for="user">Colaborador</label>
-            <select class="form-select" formControlName="users" (change)="getBenefitDetail($event)">
-
-              <option value="">
-                -- Seleccione un colaborador --
-              </option>
-
-              <ng-container *ngIf="isAdmin">
-                <option *ngFor="let user of users" value=" {{ user?.id }}">
-                  {{user?.name}}
-                </option>
-              </ng-container>
-
-              <ng-container *ngIf="!isAdmin">
-                <option value=" {{ user?.id }}">
-                  {{user?.name}}
-                </option>
-
-                <option *ngFor="let user of user?.subordinates" value=" {{ user.id }}">
-                  {{user.name}}
-                </option>
-              </ng-container>
-
-            </select>
-            <button type="submit" class="btn btn-outline-primary" [disabled]="!viewBenefitUser.valid">Descargar</button>
-          </div>
-        </div>
-      </div>
-    </form>
-
-  </div>
-</div>
-
-<div *ngIf="viewBenefitUser.valid && viewBenefitUser.get('users')!.enabled; then newBenefitDetailTemplate"></div>
-<hr>
-
-<div class="row p-3 bg-light rounded shadow">
-  <h2>Calendario de beneficios MiViernes - Mis colaboradores</h2>
-  <calendar-component [data]="calendarData"></calendar-component>
-</div>
-
-
-<!-- Templates -->
-
-<ng-template #newBenefitDetailTemplate>
-
-  <hr>
-
-  <div class="row shadow rounded mb-3 pb-3 bg-light">
-
-    <div class="d-flex flex-row justify-content-between align-items-center">
-      <h2>Detalle de beneficios de {{ currentUserBenefits?.name }}</h2>
-      <button (click)="closePanel()" type="button" class="btn-close" aria-label="Close"></button>
+      </span>
+      <p-calendar formControlName="years" view="year" dateFormat="yy" inputId="yearpicker"></p-calendar>
+      <button pButton type="submit" class="btn btn-outline-primary">Descargar</button>
     </div>
+  </form>
+</p-toolbar>
 
-    <div *ngFor="let benefit of benefits">
-
-      <div class="input-group mt-3">
-        <div [ngSwitch]="benefit.name" class="input-group-text" style="width: 20%;">
-          <img *ngSwitchCase="'Mi Cumpleaños'" src="./assets/images/cumpleaños.svg" width="100%;">
-          <img *ngSwitchCase="'Mi Banco de Horas'" src="./assets/images/banco_horas.svg" width="100%;">
-          <img *ngSwitchCase="'Mi Horario Flexible'" src="./assets/images/horario_flexible.svg" width="100%;">
-          <img *ngSwitchCase="'Mi Viernes'" src="./assets/images/mi_viernes.svg" width="100%;">
-          <img *ngSwitchCase="'Tiempo para el Viajero'" src="./assets/images/tiempo_viajero.svg" width="100%;">
-        </div>
-        <div class="form-control">
-          <div class="card-header">
-            {{ benefit.name }}
-          </div>
-          <ul class="list-group list-group-flush" [innerHTML]="selectBenefit(benefit.id!)"></ul>
-        </div>
-      </div>
-
-
-      <div *ngIf="benefit.name === 'Mi Banco de Horas'" class="row">
-        <div class="col-4">
-          <doughnut-chart-component [totalBancoHoras]="totalBancoHoras"></doughnut-chart-component>
-        </div>
-        <div class="col-8">
-          <bar-chart-component [input]="bancosHoras"></bar-chart-component>
-        </div>
-      </div>
-    </div>
-    </div>
-
-
-
-</ng-template>
+<p-tabView (CalendarReady)="printObject($event)" (onChange)="renderCalendars()">
+  <p-tabPanel header="Mis beneficios">
+    <p-tabView (onChange)="renderCalendars()">
+      <p-tabPanel header="Mis Beneficios Redimidos">
+        <ng-template pTemplate="content">
+          <my-benefits (loadedData)="loadedData($event)" [year]="viewBenefitUser.get('years')!.value"></my-benefits>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="Mis Solicitudes">
+        <ng-template pTemplate="content">
+          <my-pending-benefits></my-pending-benefits>
+        </ng-template>
+      </p-tabPanel>
+    </p-tabView>
+  </p-tabPanel>
+  <p-tabPanel header="Mi Equipo">
+    <p-tabView (onChange)="renderCalendars()">
+      <p-tabPanel header="Beneficios Redimidos">
+        <ng-template pTemplate="content">
+          <my-team [year]="viewBenefitUser.get('years')!.value"></my-team>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="Aprobaciones Pendientes">
+        <ng-template pTemplate="content">
+          <my-team-request></my-team-request>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="Mis Colaboradores">
+        <ng-template pTemplate="content">
+          <my-collaborators-benefits [year]="viewBenefitUser.get('years')!.value"></my-collaborators-benefits>
+        </ng-template>
+      </p-tabPanel>
+    </p-tabView>
+  </p-tabPanel>
+</p-tabView>

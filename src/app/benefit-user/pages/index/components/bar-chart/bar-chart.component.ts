@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from 'ng2-charts';
@@ -6,12 +7,11 @@ import { BaseChartDirective } from 'ng2-charts';
 @Component( {
   selector: 'bar-chart-component',
   templateUrl: './bar-chart.component.html',
-  styles: [
-  ]
+  styles: [],
 } )
 export class BarChartComponent implements OnChanges {
 
-  @Input() input!: number[];
+  @Input() data?: number[];
   @ViewChild( BaseChartDirective ) chart?: BaseChartDirective;
 
 
@@ -50,9 +50,8 @@ export class BarChartComponent implements OnChanges {
   };
 
   ngOnChanges ( changes: SimpleChanges ): void {
-    this.barChartData.datasets[ 0 ].data = this.input;
+    this.barChartData.datasets[ 0 ].data = this.data!;
     this.chart?.update();
   }
-
 
 }

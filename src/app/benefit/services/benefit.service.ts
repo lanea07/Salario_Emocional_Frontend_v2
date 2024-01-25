@@ -1,8 +1,9 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { environment } from 'src/environments/environment';
 import { Benefit } from '../interfaces/benefit.interface';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable( {
   providedIn: 'root'
@@ -55,6 +56,15 @@ export class BenefitService {
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.delete( `${ this.apiBaseUrl }/benefit/${ id }`, { headers, withCredentials: true } );
+  }
+
+  indexAvailable (): Observable<Benefit[]> {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    this.http.get( `${ this.baseUrl }/sanctum/csrf-cookie` ).subscribe()
+    return this.http.get<Benefit[]>( `${ this.apiBaseUrl }/benefit/available`, { headers, withCredentials: true } )
   }
 
 }

@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 
 import { Role } from 'src/app/role/interfaces/role.interface';
 import { RoleService } from '../../services/role.service';
-import { Title } from '@angular/platform-browser';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'role-show',
@@ -21,12 +21,10 @@ export class ShowComponent {
 
   constructor (
     private activatedRoute: ActivatedRoute,
+    private as: AlertService,
     private roleService: RoleService,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Detalle' );
-  }
+  ) { }
 
   ngOnInit () {
     this.activatedRoute.params
@@ -38,20 +36,7 @@ export class ShowComponent {
           this.role = role;
           this.loaded = true;
         },
-        error: ( error ) => {
-          this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
-        }
+        error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } );
   }
 

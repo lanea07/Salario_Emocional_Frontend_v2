@@ -2,16 +2,20 @@
   <div class="col">
     <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
 
-      <div class="mb-3 form-floating">
-        <input [ngClass]="{'invalid': campoEsValido('name')}" class="form-control" type="text" formControlName="name"
-          id="name" placeholder="Nombre Completo">
-        <label class="form-label" for="name"><i class="fa-solid fa-briefcase me-1"></i>Nombre del Cargo</label>
-        <small *ngIf="campoEsValido('name')" class="text-danger">{{ positionNameErrors }}</small>
+      <div class="mb-3">
+        <p-panel header="Información Básica">
+        <div class="mb-3 form-floating">
+            <input [ngClass]="{'invalid': campoEsValido('name')}" class="form-control" type="text" formControlName="name" id="name"
+              placeholder="Nombre Completo">
+            <label class="form-label" for="name"><i class="fa-solid fa-briefcase me-1"></i>Nombre del Cargo</label>
+            <small *ngIf="campoEsValido('name')" class="text-danger">{{ positionNameErrors }}</small>
+            </div>
+            </p-panel>
       </div>
 
       <div class="mb-3">
         <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
-          {{ ( position.id ) ? 'Actualizar' : 'Crear' }}
+          {{ ( position?.id ) ? 'Actualizar' : 'Crear' }}
         </button>
       </div>
 

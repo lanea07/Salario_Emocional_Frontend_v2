@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+
 import { environment } from 'src/environments/environment';
 import { AuthResponse, ValidToken } from '../interfaces/auth.interface';
-import { map, catchError, tap, mergeMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
 
 @Injectable( {
   providedIn: 'root'
@@ -12,12 +13,13 @@ export class AuthService {
 
   private baseUrl: string = environment.apiBaseUrl;
   private baseUrl1: string = environment.baseUrl;
-
-  constructor ( private http: HttpClient ) { }
-
   private getCookie (): Observable<any> {
     return this.http.get( `${ this.baseUrl1 }/sanctum/csrf-cookie` )
   }
+
+  constructor (
+    private http: HttpClient
+  ) { }
 
   login ( email: string, password: string, device_name: string ) {
     const url = `${ this.baseUrl }/login`;
@@ -30,7 +32,6 @@ export class AuthService {
             tap( resp => {
               if ( resp.token ) {
                 localStorage.setItem( 'token', resp.token! );
-                localStorage.setItem( 'can', JSON.stringify( resp.can! ) );
                 localStorage.setItem( 'user', JSON.stringify( resp.user! ) );
                 localStorage.setItem( 'uid', resp.id!.toString() );
               }
@@ -41,13 +42,11 @@ export class AuthService {
   }
 
   logout () {
-
     const url = `${ this.baseUrl }/logout`;
     const token = localStorage.getItem( 'token' );
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ token }` );
-
 
     return this.http.post<AuthResponse>( url, [], { headers, withCredentials: true } )
       .pipe(
@@ -58,7 +57,6 @@ export class AuthService {
   }
 
   validarToken (): Observable<boolean> {
-
     const url = `${ this.baseUrl }/validate-token`;
     const token = localStorage.getItem( 'token' );
     const headers = new HttpHeaders()
@@ -68,8 +66,7 @@ export class AuthService {
       .pipe(
         map( resp => resp.valid ),
         catchError( err => { return of( false ) } )
-      );
-
+    );
   }
 
   validarAdmin () {
@@ -101,7 +98,5 @@ export class AuthService {
       .append( 'Authorization', `Bearer ${ token }` );
 
     return this.http.post<boolean>( url, formValues, { headers, withCredentials: true } )
-
   }
-
 }

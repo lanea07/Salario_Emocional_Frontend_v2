@@ -1,37 +1,44 @@
 <div class="row">
   <div class="col">
     <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
-      <div class="mb-3 form-floating">
-        <input [ngClass]="{ invalid: campoEsValido('name') }" class="form-control" type="text" formControlName="name"
-          id="name" placeholder="Nombre Completo" />
-        <label class="form-label" for="name"><i class="fa-solid fa-box me-1"></i>Nombre del Beneficio</label>
-        <small *ngIf="campoEsValido('name')" class="text-danger">{{benefitNameErrors}}</small>
-      </div>
-      <div *ngIf="politicsInput; else politicLinks" class="mb-3 input-group">
-        <input class="form-control" type="file" id="filePoliticas" formControlName="filePoliticas"
-          (change)="onFileChange($event)">
+      <div class="mb-3">
+        <p-panel header="Información del Beneficio">
+          <div class="mb-3 form-floating">
+            <input [ngClass]="{ invalid: campoEsValido('name') }" class="form-control" type="text" formControlName="name"
+              id="name" placeholder="Nombre Completo" />
+            <label class="form-label" for="name"><i class="fa-solid fa-box me-1"></i>Nombre del Beneficio</label>
+            <small *ngIf="campoEsValido('name')" class="text-danger">{{benefitNameErrors}}</small>
+          </div>
+          <div *ngIf="politicsInput; else politicLinks" class="mb-3">
+            <label for="filePoliticas" class="form-label">Archivo de políticas</label>
+            <input class="form-control" type="file" id="filePoliticas" formControlName="filePoliticas"
+              (change)="onFileChange($event)">
+          </div>
+          </p-panel>
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Detalles de Beneficio Disponibles</label>
-        <div class="row">
-          <div *ngIf="!loaded">
-            <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+        <p-panel header="Configuración Asociada">
+          <label class="form-label">Detalles de Beneficio Disponibles</label>
+          <div class="row">
+            <div *ngIf="!loaded">
+              <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+            </div>
+            <div class="col-3 mb-2" *ngFor="let benefitDetail of benefitDetails; let i = index">
+              <label class="form-check-label ms-2">
+                <input type="checkbox" class="form-check-input"
+                  [ngClass]="{invalid: !benefitDetailFormGroup?.valid && benefitDetailFormGroup?.touched}"
+                  [formControl]="benefitDetailFormGroup?.get(benefitDetail.id?.toString())" />
+                {{ benefitDetail.name }}
+              </label>
+            </div>
           </div>
-          <div class="col-3 mb-2" *ngFor="let benefitDetail of benefitDetails; let i = index">
-            <label class="form-check-label ms-2">
-              <input type="checkbox" class="form-check-input"
-                [ngClass]="{invalid: !benefitDetailFormGroup?.valid && benefitDetailFormGroup?.touched}"
-                [formControl]="benefitDetailFormGroup?.get(benefitDetail.id?.toString())" />
-              {{ benefitDetail.name }}
-            </label>
-          </div>
-        </div>
+        </p-panel>
       </div>
 
       <div class="mb-3">
         <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
-          {{ benefit.id ? "Actualizar" : "Crear" }}
+          {{ benefit?.id ? "Actualizar" : "Crear" }}
         </button>
       </div>
     </form>

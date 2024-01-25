@@ -9,6 +9,7 @@ import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
 import { RoleRoutingModule } from './role-routing.module';
 import { SharedModule } from '../shared/shared.module';
+import { PrimengModule } from '../primeng/primeng.module';
 
 @NgModule( {
   declarations: [
@@ -19,6 +20,7 @@ import { SharedModule } from '../shared/shared.module';
   imports: [
     CommonModule,
     DataTablesModule,
+    PrimengModule,
     RoleRoutingModule,
     ReactiveFormsModule,
     SharedModule

@@ -1,32 +1,33 @@
 <!-- div for login -->
 <div *ngIf="loging" class="loginAnimation d-flex align-items-center justify-content-center" [@fadeInOut]>
-  <span class="loader"></span>
+  <span class="loader-lock"></span>
 </div>
 
-<form autocomplete="off" [formGroup]="miFormulario" (ngSubmit)="login()" *ngIf="showScreen">
+<form autocomplete="off" [formGroup]="loginForm" (ngSubmit)="login()" *ngIf="showScreen">
   <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
           <div class="card bg-dark text-white">
             <div class="card-body p-5 text-center">
-
-              <div class="mb-md-5 mt-md-4 pb-5">
-
-                <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
+              <img src="./assets/images/pajaro_transparencia.png" width="50">
+              <div class="mb-md-5 mt-4">
 
                 <div class="form-outline form-white mb-4">
                   <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Correo"
-                    formControlName="email" />
+                    formControlName="email" required/>
+                    <small *ngIf="campoEsValido('email')" class="text-danger">{{ benefitIdErrors }}</small>
+
                 </div>
 
                 <div class="form-outline form-white mb-4">
                   <input type="password" id="password" name="password" class="form-control form-control-lg"
-                    placeholder="Contraseña" formControlName="password" />
+                    placeholder="Contraseña" formControlName="password" required/>
+                    <small *ngIf="campoEsValido('password')" class="text-danger">{{ benefitIdErrors }}</small>
+
                 </div>
 
                 <input type="hidden" id="device_name" formControlName="device_name" />
-
                 <button type="submit" class="btn btn-outline-light btn-lg px-5 my-auto">Login</button>
 
               </div>

@@ -9,6 +9,7 @@ import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
 import { CreateComponent } from './pages/create/create.component';
 import { SharedModule } from '../shared/shared.module';
+import { PrimengModule } from '../primeng/primeng.module';
 
 @NgModule( {
   declarations: [
@@ -20,6 +21,7 @@ import { SharedModule } from '../shared/shared.module';
     BenefitDetailRoutingModule,
     CommonModule,
     DataTablesModule,
+    PrimengModule,
     ReactiveFormsModule,
     SharedModule
   ]

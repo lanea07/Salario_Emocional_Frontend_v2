@@ -2,127 +2,128 @@
   <div class="col">
     <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
 
-      <div class="row">
-        <div class="col-lg-9">
-          <div class="mb-3 form-floating">
-            <input [ngClass]="{'invalid': campoEsValido('name')}" class="form-control" type="text" formControlName="name"
-              id="name" placeholder="Nombre Completo">
-            <label class="form-label" for="name"><i class="fa-solid fa-user me-1"></i>Nombre Completo</label>
-            <span class="form-text text-danger" *ngIf="campoEsValido('name')">Obligatorio</span>
-          </div>
-          </div>
-          
-          <div class="col-lg-3">
-            <div class="mb-3 form-floating">
-              <input [ngClass]="{'invalid': campoEsValido('birthdate')}" class="form-control" type="date"
-                formControlName="birthdate" id="birthdate" placeholder="Nombre Completo">
-              <label class="form-label" for="birthdate"><i class="fa-solid fa-calendar-days me-1"></i>Fecha de Nacimiento</label>
-              <span class="form-text text-danger" *ngIf="campoEsValido('birthdate')">Obligatorio</span>
+      <div class="mb-3">
+        <p-panel header="Información Básica">
+          <div class="row">
+            <div class="col-lg-9">
+              <div class="mb-3 form-floating">
+                <input [ngClass]="{'invalid': campoEsValido('name')}" class="form-control" type="text"
+                  formControlName="name" id="name" placeholder="Nombre Completo">
+                <label class="form-label" for="name"><i class="fa-solid fa-user me-1"></i>Nombre Completo</label>
+                <span class="form-text text-danger" *ngIf="campoEsValido('name')">Obligatorio</span>
+              </div>
+            </div>
+
+            <div class="col-lg-3">
+              <div class="mb-3 form-floating">
+                <input [ngClass]="{'invalid': campoEsValido('birthdate')}" class="form-control" type="date"
+                  formControlName="birthdate" id="birthdate" placeholder="Nombre Completo">
+                <label class="form-label" for="birthdate"><i class="fa-solid fa-calendar-days me-1"></i>Fecha de
+                  Nacimiento</label>
+                <span class="form-text text-danger" *ngIf="campoEsValido('birthdate')">Obligatorio</span>
+              </div>
             </div>
           </div>
 
-      </div>
-
-      <div class="mb-3 form-floating">
-        <input [ngClass]="{'invalid': campoEsValido('email')}" class="form-control" type="email" formControlName="email"
-          id="email" placeholder="email@company.com">
-        <label class="form-label" for="email"><i class="fa-solid fa-at me-1"></i>Correo Electrónico</label>
-        <span class="form-text text-danger" *ngIf="campoEsValido('email')">Obligatorio</span>
-      </div>
-
-      <div class="mb-3 input-group">
-        <div class="form-floating">
-          <input [ngClass]="{'invalid': campoEsValido('password')}" class="form-control" type="password"
-            formControlName="password" id="password" placeholder="password">
-          <label class="form-label" for="password"><i class="fa-solid fa-key me-1"></i>Contraseña</label>
-        </div>
-        <div class="input-group-text">
-          <div class="form-check form-switch">
-            <small><label class="form-check-label" for="requirePassChange">¿Requiere cambiar password?</label></small>
-            <input class="form-check-input" type="checkbox" role="switch" formControlName="requirePassChange">
+          <div class="mb-3 form-floating">
+            <input [ngClass]="{'invalid': campoEsValido('email')}" class="form-control" type="email"
+              formControlName="email" id="email" placeholder="email@company.com">
+            <label class="form-label" for="email"><i class="fa-solid fa-at me-1"></i>Correo Electrónico</label>
+            <span class="form-text text-danger" *ngIf="campoEsValido('email')">Obligatorio</span>
           </div>
-        </div>
-        </div>
-        <span class="form-text text-danger" *ngIf="campoEsValido('password')">{{ passErrorMsg }}</span>
 
-
+          <div class="mb-3 input-group">
+            <div class="form-floating">
+              <input [ngClass]="{'invalid': campoEsValido('password')}" class="form-control" type="password"
+                formControlName="password" id="password" placeholder="password" (keyup)="validatePasswordRequired()">
+              <label class="form-label" for="password"><i class="fa-solid fa-key me-1"></i>Contraseña</label>
+            </div>
+            <div class="input-group-text">
+              <div class="form-check form-switch">
+                <small><label class="form-check-label" for="requirePassChange">¿Requiere cambiar
+                    password?</label></small>
+                <input class="form-check-input" type="checkbox" role="switch" formControlName="requirePassChange"
+                  id="requirePassChange">
+              </div>
+            </div>
+          </div>
+          <span class="form-text text-danger" *ngIf="campoEsValido('password')">{{ passErrorMsg }}</span>
+        </p-panel>
+      </div>
 
       <!-- Posible leader -->
       <div class="mb-3">
-        <mat-form-field>
-          <mat-label>Jefe (Opcional)</mat-label>
-          <mat-select formControlName="leader" (selectionChange)="filterSubordinates( $event )">
-            <mat-option *ngFor="let lead of posibleLeader" [value]="lead.id">{{lead.name}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <!-- Posible Subordinates -->
-      <div class="mb-3">
-        <mat-form-field>
-          <mat-label>Subordinados (Opcional)</mat-label>
-          <mat-select formControlName="subordinates" multiple>
-            <mat-option *ngFor="let sub of filteredSubordinates" [value]="sub.id">{{sub.name}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-
-      <div class="mb-3">
-        <label class="form-label" for="roles">Roles</label>
-
-        <div class="row">
-
-          <div *ngIf="!loaded">
-            <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-          </div>
-
-          <div class="col-sm-6 col-md-4 col-lg-2" *ngFor="let role of roles; let i = index">
-
-            <input type="checkbox" class="form-check-input" id="{{role.name}}"
-              [ngClass]="{'invalid': !rolesFormGroup.valid && rolesFormGroup.touched}"
-              [formControl]="rolesFormGroup.get(role.name)" />
-            <label class="form-check-label ms-2" for="{{role.name}}">{{role.name}}</label>
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label" for="positions">Cargos</label>
-
-        <div class="row">
-
-          <div *ngIf="!loaded">
-            <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-          </div>
-
-          <div class="col-sm-6 col-md-4 col-lg-2" *ngFor="let position of positions; let i = index">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" value="{{position.id}}" formControlName="position_id"
-                id="{{position.id}}" [ngClass]="{'invalid': campoEsValido('position_id')}" id="position.id" required>
-              <label class="form-check-label" for="{{position.id}}">
-                {{ position.name }}
-              </label>
+        <p-panel header="Dependencia y Responsable (Opcional)">
+          <div class="row mb-3">
+            <label for="user_id">Selecciona la dependencia a la que pertenece y un colaborador para asignárselo como jefe<br>
+              <small class="text-secondary">(El colaborador que seleccione aquí será quién apruebe sus beneficios. Si no se asigna un
+                responsable, los beneficios que solicité nuevo colaborador serán aprobados automáticamente)</small>
+            </label>
+            <div class="p-inputgroup">
+              <p-treeSelect class="md:w-20rem w-100" containerStyleClass="w-100" formControlName="dependency_id"
+                [options]="nodes" placeholder="-- Seleccione Dependencia --" [filter]="true"
+                (onNodeSelect)="fillColaboradores($event)" (onNodeUnselect)="emptyColaboradores()"
+                data-="id"></p-treeSelect>
             </div>
           </div>
-
-        </div>
-
+          <div class="row mb-3">
+            <div class="p-inputgroup">
+              <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="leader"
+                [options]="users" placeholder="-- Seleccione Colaborador --"></p-dropdown>
+            </div>
+          </div>
+        </p-panel>
       </div>
 
-      <div class="col-sm-6 col-md-4 col-lg-2">
+      <!-- Roles -->
+      <div class="mb-3">
+        <p-panel header="Roles">
+          <div class="row">
+            <div *ngIf="!loaded">
+              <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-2" *ngFor="let role of roles; let i = index">
+              <input type="checkbox" class="form-check-input" id="{{role.name}}"
+                [ngClass]="{'invalid': !rolesFormGroup.valid && rolesFormGroup.touched}"
+                [formControl]="rolesFormGroup.get(role.name)" />
+              <label class="form-check-label ms-2" for="{{role.name}}">{{role.name}}</label>
+            </div>
+          </div>
+        </p-panel>
+      </div>
 
-        <input type="checkbox" class="form-check-input" id="valid_id"
-          [ngClass]="{'invalid': !createForm.get('valid_id')!.valid && createForm.get('valid_id')!.touched}"
-          formControlName="valid_id" />
-        <label class="form-check-label ms-2" for="valid_id">Válido</label>
+      <!-- Cargos -->
+      <div class="mb-3">
+        <p-panel header="Cargos">
+          <div class="row">
+            <div *ngIf="!loaded">
+              <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-2" *ngFor="let position of positions; let i = index">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" value="{{position.id}}" formControlName="position_id"
+                  id="{{position.id}}" [ngClass]="{'invalid': campoEsValido('position_id')}" id="position.id" required>
+                <label class="form-check-label" for="{{position.id}}">{{ position.name }}</label>
+              </div>
+            </div>
+          </div>
+        </p-panel>
+      </div>
+
+      <div class="mb-3">
+        <p-panel header="Válido">
+          <div class="col-sm-6 col-md-4 col-lg-2">
+            <input type="checkbox" class="form-check-input" id="valid_id"
+              [ngClass]="{'invalid': !createForm.get('valid_id')!.valid && createForm.get('valid_id')!.touched}"
+              formControlName="valid_id" />
+            <label class="form-check-label ms-2" for="valid_id">Válido</label>
+            </div>
+            </p-panel>
       </div>
 
       <div class="mb-3">
         <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
-          {{ ( user.id ) ? 'Actualizar' : 'Crear' }}
+          {{ ( user?.id ) ? 'Actualizar' : 'Crear' }}
         </button>
       </div>
 

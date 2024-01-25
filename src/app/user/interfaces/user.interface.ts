@@ -1,19 +1,25 @@
-import { Role } from "src/app/role/interfaces/role.interface";
+import { Dependency } from "../../dependency/interfaces/dependency.interface";
 import { Position } from '../../position/interfaces/position.interface';
+import { Role } from "../../role/interfaces/role.interface";
 
 export interface User {
-  id?: number;
+  id: number;
   name: string;
   email: string;
-  email_verified_at: null;
+  requirePassChange: boolean;
+  dependency_id: number;
   position_id: number;
-  leader: User | null;
+  leader: number;
+  valid_id: boolean;
+  birthdate: null;
+  email_verified_at: null;
   created_at: Date;
   updated_at: Date;
-  subordinates?: User[];
-  positions?: Position;
+  depth: number;
+  path: string;
+  dependency: Dependency;
+  parent: User;
+  positions: Position;
   roles: Role[];
-  requirePassChange: boolean;
-  valid_id: Boolean;
-  birthdate: Date;
+  children: User[];
 }

@@ -1,4 +1,15 @@
-<div class="row mt-5">
+<div class="row">
+  <div class="col">
+    <div class="btn-group float-end mt-5 mb-5">
+      <button backButton class="btn btn-outline-secondary">Volver</button>
+      <a routerLink="/position/edit/{{position?.id}}" class="btn btn-warning" aria-current="page"
+        [ngClass]="{'disabled': !loaded}">Editar</a>
+      <a class="btn btn-outline-danger" (click)="destroy()" [ngClass]="{'disabled': !loaded}">Eliminar</a>
+    </div>
+  </div>
+</div>
+
+<div class="row">
   <div class="col">
 
     <div class="row px-5">
@@ -11,13 +22,6 @@
         <span class="form-text">Nombre</span>
       </div>
 
-    </div>
-
-    <div class="btn-group float-end mt-5 mb-5">
-      <button backButton class="btn btn-outline-secondary">Volver</button>
-      <a routerLink="/position/edit/{{position?.id}}" class="btn btn-warning" aria-current="page"
-        [ngClass]="{'disabled': !loaded}">Editar</a>
-      <a class="btn btn-outline-danger" (click)="destroy()" [ngClass]="{'disabled': !loaded}">Eliminar</a>
     </div>
 
   </div>

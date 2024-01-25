@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BenefitUser } from '../interfaces/benefit-user.interface';
-import { environment } from 'src/environments/environment';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { environment } from 'src/environments/environment';
+import { BenefitUser, BenefitUserElement } from '../interfaces/benefit-user.interface';
 
 @Injectable( {
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class BenefitUserService {
     return this.http.get<BenefitUser>( `${ this.apiBaseUrl }/benefituser/${ id }`, { headers, withCredentials: true } )
   }
 
-  create ( formValues: any ): Observable<BenefitUser> {
+  public create ( formValues: any ): Observable<BenefitUser> {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
@@ -38,7 +39,7 @@ export class BenefitUserService {
     return this.http.post<BenefitUser>( `${ this.apiBaseUrl }/benefituser`, formValues, { headers, withCredentials: true } );
   }
 
-  update ( id: number | undefined, formValues: any ) {
+  public update ( id: number | undefined, formValues: any ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
@@ -46,7 +47,7 @@ export class BenefitUserService {
     return this.http.put<BenefitUser>( `${ this.apiBaseUrl }/benefituser/${ id }`, formValues, { headers, withCredentials: true } );
   }
 
-  destroy ( id: number ) {
+  public destroy ( id: number ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
@@ -54,12 +55,44 @@ export class BenefitUserService {
     return this.http.delete( `${ this.apiBaseUrl }/benefituser/${ id }`, { headers, withCredentials: true } );
   }
 
-  downloadReport ( formValues: any ) {
+  public downloadReport ( formValues: any ) {
     const headers = new HttpHeaders()
       .set( 'Accept', 'application/json' )
       .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
 
     return this.http.post( `${ this.apiBaseUrl }/exportbenefits`, formValues, { headers, withCredentials: true } );
+  }
+
+  public indexNonApproved ( id: number ) {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser/indexnonapproved?userId=${ id }`, { headers, withCredentials: true } )
+  }
+
+  public indexCollaboratorsNonApproved () {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/benefituser/indexcollaboratorsnonapproved`, { headers, withCredentials: true } )
+  }
+
+  public indexCollaborators ( year: number ) {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser/indexcollaborators?year=${ year }`, { headers, withCredentials: true } )
+  }
+
+  decideBenefitUser ( formValues: any ) {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.post<any>( `${ this.apiBaseUrl }/benefituser/decidebenefituser`, formValues, { headers, withCredentials: true } )
   }
 
 }

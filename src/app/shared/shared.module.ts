@@ -2,14 +2,13 @@ import { NgModule } from '@angular/core';
 
 import { BackButtonDirective } from './directives/back-button-directive.directive';
 
-
 @NgModule( {
   declarations: [
-    BackButtonDirective
+    BackButtonDirective,
   ],
   imports: [],
   exports: [
-    BackButtonDirective
+    BackButtonDirective,
   ]
 } )
 export class SharedModule { }

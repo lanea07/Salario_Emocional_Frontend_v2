@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { switchMap } from 'rxjs';
+
 import Swal from 'sweetalert2';
 
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
-import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'benefitdetail-create',
@@ -19,15 +18,10 @@ import { Title } from '@angular/platform-browser';
 } )
 export class CreateComponent {
 
-  benefitDetail: Benefit = {
-    name: '',
-    created_at: new Date,
-    updated_at: new Date,
-    benefit_detail: []
-  };
+  benefitDetail?: Benefit;
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
-    time_hours: [ '', [ this.validatorService.minIfFilled( 0 ) ] ]
+    time_hours: [ '', [ Validators.required, this.validatorService.minIfFilled( 1 ) ] ]
   } );
   disableSubmitBtn: boolean = false;
 
@@ -58,31 +52,15 @@ export class CreateComponent {
     private benefitDetailService: BenefitDetailService,
     private fb: FormBuilder,
     private router: Router,
-    private titleService: Title,
     private validatorService: ValidatorService
-  ) {
-    this.titleService.setTitle( 'Nuevo detalle de Beneficio' );
-  }
+  ) { }
 
 
   ngOnInit () {
 
     this.benefitDetailService.index()
       .subscribe( {
-        error: ( error ) => {
-          this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
-        }
+        error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } )
 
     if ( !this.router.url.includes( 'edit' ) ) {
@@ -102,17 +80,7 @@ export class CreateComponent {
         },
         error: ( { error } ) => {
           this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } );
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
 
@@ -129,12 +97,12 @@ export class CreateComponent {
       return;
     }
 
-    if ( this.benefitDetail.id ) {
+    if ( this.benefitDetail?.id ) {
       this.benefitDetailService.update( this.benefitDetail.id, this.createForm.value )
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/benefit-detail/show/${ this.benefitDetail.id }` )
+              this.router.navigateByUrl( `/benefit-detail/show/${ this.benefitDetail?.id }` )
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
             },
             error: ( { error } ) => {

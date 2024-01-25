@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 
 import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
-import { Title } from '@angular/platform-browser';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'benefitdetail-show',
@@ -16,23 +16,15 @@ import { Title } from '@angular/platform-browser';
 } )
 export class ShowComponent {
 
-  benefitDetail: BenefitDetail = {
-    name: '',
-    time_hours: 0,
-    created_at: new Date,
-    updated_at: new Date,
-    benefit: []
-  };
+  benefitDetail?: BenefitDetail;
   loaded: boolean = false;
 
   constructor (
     private benefitDetailService: BenefitDetailService,
     private activatedRoute: ActivatedRoute,
+    private as: AlertService,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Detalle' );
-  }
+  ) { }
 
   ngOnInit () {
     this.activatedRoute.params
@@ -46,17 +38,7 @@ export class ShowComponent {
         },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
   }

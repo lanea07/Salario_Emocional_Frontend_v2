@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
-import Swal from 'sweetalert2';
 
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { AuthService } from '../../services/auth.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'app-pass-change',
@@ -43,14 +41,12 @@ export class PassChangeComponent {
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private titleService: Title,
     private validatorService: ValidatorService
   ) {
     this.authService.validarRequirePassChange()
       .subscribe( {
         next: ( resp ) => resp ? this.showScreen = true : this.router.navigate( [ 'benefit-employee' ] )
       } );
-    this.titleService.setTitle( 'Cambiar Contraseña' );
   }
 
   campoEsValido ( campo: string ) {

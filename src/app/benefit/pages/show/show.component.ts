@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 
@@ -8,6 +7,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'benefit-show',
@@ -17,12 +17,7 @@ import { BenefitService } from '../../services/benefit.service';
 } )
 export class ShowComponent {
 
-  benefit: Benefit = {
-    name: '',
-    created_at: new Date,
-    updated_at: new Date,
-    benefit_detail: []
-  };
+  benefit?: Benefit;
   details: any;
   filePoliticas: string = "";
   isAdmin: boolean = false;
@@ -30,13 +25,10 @@ export class ShowComponent {
 
   constructor (
     private activatedRoute: ActivatedRoute,
+    private as: AlertService,
     private authService: AuthService,
     private benefitService: BenefitService,
-    private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Detalle' );
-  }
+  ) { }
 
   ngOnInit () {
     this.activatedRoute.params
@@ -46,24 +38,11 @@ export class ShowComponent {
       .subscribe( {
         next: ( benefit ) => {
           this.benefit = Object.values( benefit )[ 0 ];
-          this.details = this.benefit.benefit_detail;
-          this.filePoliticas = this.benefit.politicas_path ? this.benefit.politicas_path : '';
+          this.details = this.benefit?.benefit_detail;
+          this.filePoliticas = this.benefit?.politicas_path ? this.benefit.politicas_path : '';
           this.loaded = true;
         },
-        error: ( error ) => {
-          this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } );
-        }
+        error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } );
 
     this.authService.validarAdmin()
@@ -71,19 +50,7 @@ export class ShowComponent {
         next: ( isAdmin: any ) => {
           this.isAdmin = isAdmin.admin;
         },
-        error: ( error ) => {
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
-        }
+        error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } );
   }
 

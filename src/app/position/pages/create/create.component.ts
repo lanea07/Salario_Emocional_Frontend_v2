@@ -5,10 +5,9 @@ import { switchMap } from 'rxjs';
 
 import Swal from 'sweetalert2';
 
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { Position } from '../../interfaces/position.interface';
 import { PositionService } from '../../services/position.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'position-create',
@@ -22,11 +21,7 @@ export class CreateComponent {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ]
   } );
   disableSubmitBtn: boolean = false;
-  position: Position = {
-    name: '',
-    created_at: new Date,
-    updated_at: new Date
-  };
+  position?: Position;
 
   get positionNameErrors (): string {
     const errors = this.createForm.get( 'name' )?.errors;
@@ -45,30 +40,14 @@ export class CreateComponent {
     private fb: FormBuilder,
     private positionService: PositionService,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Nuevo Cargo' );
-  }
+  ) { }
 
 
   ngOnInit () {
 
     this.positionService.index()
       .subscribe( {
-        error: ( error ) => {
-          this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
-        }
+        error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } )
 
     if ( !this.router.url.includes( 'edit' ) ) {
@@ -87,17 +66,7 @@ export class CreateComponent {
         },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
 
@@ -114,12 +83,12 @@ export class CreateComponent {
       return;
     }
 
-    if ( this.position.id ) {
-      this.positionService.update( this.position.id, this.createForm.value )
+    if ( this.position?.id ) {
+      this.positionService.update( this.position?.id, this.createForm.value )
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/position/show/${ this.position.id }` );
+              this.router.navigateByUrl( `/position/show/${ this.position?.id }` );
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
             },
             error: ( { error } ) => {

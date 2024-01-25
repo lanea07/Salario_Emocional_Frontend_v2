@@ -1,3 +1,4 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -5,8 +6,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 import { AuthService } from '../../services/auth.service';
-import { Title } from '@angular/platform-browser';
-import { animate, style, transition, trigger } from '@angular/animations';
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'auth-login',
@@ -21,7 +21,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         background-color: rgba(0,0,0,0.6);
       }
 
-      .loader {
+      .loader-lock {
         width: 64px;
         height: 44px;
         position: relative;
@@ -29,7 +29,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         border-radius: 8px;
       }
 
-      .loader::before {
+      .loader-lock::before {
         content: '';
         position: absolute;
         border: 5px solid #fff;
@@ -41,7 +41,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         transform: translate(-50% , -100%)
 
       }
-      .loader::after {
+      .loader-lock::after {
         content: '';
         position: absolute;
         transform: translate(-50% , -50%);
@@ -84,57 +84,67 @@ import { animate, style, transition, trigger } from '@angular/animations';
 
   ]
 } )
+
 export class LoginComponent {
 
-  miFormulario: FormGroup = this.fb.group( {
+  loginForm: FormGroup = this.fb.group( {
     email: [ '', [ Validators.required, Validators.email ] ],
-    password: [ '', [ Validators.required, Validators.minLength( 6 ) ] ],
+    password: [ '', [ Validators.required, Validators.minLength( 4 ) ] ],
     device_name: [ 'PC' ]
   } );
   showScreen: boolean = false;
   loging: boolean = false;
 
+  get userIdErrors (): string {
+    const errors = this.loginForm.get( 'email' )?.errors;
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
+    }
+    return '';
+  }
+
+  get benefitIdErrors (): string {
+    const errors = this.loginForm.get( 'password' )?.errors;
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
+    }
+    return '';
+  }
+
   constructor (
+    private as: AlertService,
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private titleService: Title
   ) {
     this.authService.validarToken()
       .subscribe( {
         next: ( resp ) => resp ? this.router.navigate( [ 'benefit-employee' ] ) : this.showScreen = true
       } );
-    this.titleService.setTitle( 'Iniciar Sesión' );
   }
 
   login () {
-    const { email, password, device_name } = this.miFormulario.value;
+    if ( this.loginForm.invalid ) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+    const { email, password, device_name } = this.loginForm.value;
     this.loging = true;
     this.authService.login( email, password, device_name )
       .subscribe( {
-        next: ( resp ) => {
-          this.router.navigateByUrl( '/benefit-employee' );
-        },
-        error: ( err ) => {
-          this.loging = false;
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            text: err.error.message,
-            showClass: {
-              popup: 'animate__animated animate__fadeIn'
-            },
-            hideClass: {
-              popup: 'animate__animated animate__fadeOutUp'
-            }
-          } );
-        }
+        next: ( resp ) => this.router.navigateByUrl( '/benefit-employee' ),
+        error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.error.msg ),
       } );
   }
 
   logout () {
     this.authService.logout()
       .subscribe();
+  }
+
+  campoEsValido ( campo: string ) {
+    return this.loginForm.controls[ campo ].errors
+      && this.loginForm.controls[ campo ].touched;
   }
 
 }

@@ -5,10 +5,9 @@ import { switchMap } from 'rxjs';
 
 import Swal from 'sweetalert2';
 
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { Role } from '../../interfaces/role.interface';
 import { RoleService } from '../../services/role.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'role-create',
@@ -22,11 +21,7 @@ export class CreateComponent {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ]
   } );
   disableSubmitBtn: boolean = false;
-  role: Role = {
-    name: '',
-    created_at: new Date,
-    updated_at: new Date
-  };
+  role?: Role;
 
   get roleNameErrors (): string {
     const errors = this.createForm.get( 'name' )?.errors;
@@ -45,10 +40,7 @@ export class CreateComponent {
     private fb: FormBuilder,
     private roleService: RoleService,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Nuevo Rol' );
-  }
+  ) { }
 
   ngOnInit () {
 
@@ -68,17 +60,7 @@ export class CreateComponent {
         },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
 
@@ -95,12 +77,12 @@ export class CreateComponent {
       return;
     }
 
-    if ( this.role.id ) {
-      this.roleService.update( this.role.id, this.createForm.value )
+    if ( this.role?.id ) {
+      this.roleService.update( this.role?.id, this.createForm.value )
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/role/show/${ this.role.id }` )
+              this.router.navigateByUrl( `/role/show/${ this.role?.id }` )
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
             },
             error: ( { error } ) => {

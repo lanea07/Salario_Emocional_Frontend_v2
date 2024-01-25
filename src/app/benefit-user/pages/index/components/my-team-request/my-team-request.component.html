@@ -1,0 +1,11 @@
+<div class="row mt-5">
+    <div class="col">
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover table-sm table-striped">
+            <thead class="bg-dark text-light"></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<ng-template #dropdownComponent let-data="adtData" let-emitter="captureEvents">
+    <datatables-dropdown-component [data]="data" (emitter)="emitter($event)"></datatables-dropdown-component>
+</ng-template>

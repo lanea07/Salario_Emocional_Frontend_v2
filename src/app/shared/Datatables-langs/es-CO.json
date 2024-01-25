@@ -100,7 +100,7 @@
             "system": "Ha ocurrido un error del sistema ( Mas Información)"
         }
     },
-    "emptyTable": "Tabla Vacia",
+    "emptyTable": "No se encontraron registros",
     "infoEmpty": "Sin informacion",
     "lengthMenu": "Mostrar _MENU_ entradas",
     "loadingRecords": "Cargando...",

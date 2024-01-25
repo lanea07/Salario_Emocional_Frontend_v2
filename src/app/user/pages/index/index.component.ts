@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
@@ -13,13 +12,13 @@ import { UserService } from '../../services/user.service';
 } )
 export class IndexComponent implements OnInit, AfterViewInit {
 
+  isAdmin: any;
   columns = [
     { title: 'Nombre', data: 'name' },
     { title: 'Correo', data: 'email' },
     { title: 'Roles', data: 'roles[0].name' },
     { title: 'Cargo', data: 'positions.name' },
-    { title: 'Jefe Directo', data: 'leader.name' },
-    { title: 'Empleados a cargo', data: 'subordinates.length' },
+    { title: 'Responsable Directo', data: 'parent.name' },
     { 
       title: 'Válido',
       data: function ( data: any, type: any, full: any ) {
@@ -42,11 +41,8 @@ export class IndexComponent implements OnInit, AfterViewInit {
     private as: AlertService,
     private renderer: Renderer2,
     private router: Router,
-    private titleService: Title,
     private userService: UserService,
-  ) {
-    this.titleService.setTitle( 'Usuarios' );
-  }
+  ) { }
 
   ngOnInit (): void {
     this.dtOptions = {
@@ -66,10 +62,16 @@ export class IndexComponent implements OnInit, AfterViewInit {
       responsive: true,
       language: es_CO,
       createdRow: function ( row: any, data: any, dataIndex: any ) {
-        if ( !data[ 'valid_id' ] ) {
+        if ( !data.valid_id ) {
           $( row ).addClass( 'invalid-user' );
         }
-      }
+      },
+      columnDefs: [
+        {
+          render: ( data: any, type: any, row: any ) => '<p class="fw-bold">' + data + '</p>',
+          targets: 0
+        }
+      ]
     }
   }
 

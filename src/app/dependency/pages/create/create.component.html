@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col">
+        <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
+            <div class="mb-3">
+                <p-panel header="Información de la dependencia">
+                    <div class="mb-3 form-floating">
+                        <input [ngClass]="{ invalid: campoEsValido('name') }" class="form-control" type="text" formControlName="name" id="name"
+                            placeholder="Nombre Completo" />
+                        <label class="form-label" for="name"><i class="fa-solid fa-box me-1"></i>Nombre de la
+                            Dependencia</label>
+                        <small *ngIf="campoEsValido('name')" class="text-danger">Obligatorio</small>
+                        </div>
+                        <div class="mb-3">
+                        <p-treeSelect class="md:w-20rem w-100" containerStyleClass="w-100" formControlName="parent_id" [options]="nodes"
+                            placeholder="-- Seleccione Dependencia --" [filter]="true" data-="id"></p-treeSelect>
+                    </div>
+                </p-panel>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
+                    {{ dependency?.id ? "Actualizar" : "Crear" }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

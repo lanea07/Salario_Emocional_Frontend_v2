@@ -9,6 +9,7 @@ import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
 import { PositionRoutingModule } from './position-routing.module';
 import { SharedModule } from '../shared/shared.module';
+import { PrimengModule } from '../primeng/primeng.module';
 
 
 @NgModule( {
@@ -21,6 +22,7 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     DataTablesModule,
     PositionRoutingModule,
+    PrimengModule,
     ReactiveFormsModule,
     SharedModule
   ]

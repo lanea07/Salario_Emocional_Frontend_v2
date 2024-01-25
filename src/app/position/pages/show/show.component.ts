@@ -4,10 +4,9 @@ import { switchMap } from 'rxjs';
 
 import Swal from 'sweetalert2';
 
+import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { Position } from '../../interfaces/position.interface';
 import { PositionService } from '../../services/position.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { Title } from '@angular/platform-browser';
 
 @Component( {
   selector: 'position-show',
@@ -25,10 +24,7 @@ export class ShowComponent {
     private as: AlertService,
     private positionService: PositionService,
     private router: Router,
-    private titleService: Title
-  ) {
-    this.titleService.setTitle( 'Detalle' );
-  }
+  ) { }
 
   ngOnInit () {
     this.activatedRoute.params
@@ -42,17 +38,7 @@ export class ShowComponent {
         },
         error: ( error ) => {
           this.router.navigateByUrl( 'benefit-employee' );
-          Swal.fire( {
-            title: 'Error',
-            icon: 'error',
-            html: error.error.msg,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: ( toast ) => {
-              toast.addEventListener( 'mouseenter', Swal.stopTimer )
-              toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-            }
-          } )
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
   }
