@@ -25,7 +25,7 @@ export class CreateComponent implements OnInit {
   emailPattern: string = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
-    birthdate: [ '', Validators.required ],
+    birthdate: [ '' ],
     email: [ '', [ Validators.required, Validators.pattern( this.emailPattern ) ] ],
     leader: [ '' ],
     password: [ '', [ this.passwordRequiredIfNotNull() ] ],
