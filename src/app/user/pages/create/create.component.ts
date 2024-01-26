@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, switchMap, EMPTY } from 'rxjs';
+import { combineLatest, mergeMap, of } from 'rxjs';
 
 
 import { Dependency } from '../../../dependency/interfaces/dependency.interface';
@@ -78,53 +78,59 @@ export class CreateComponent implements OnInit {
 
   ngOnInit () {
 
-    forkJoin( {
+    combineLatest( {
       dependencies: this.dependencyService.index(),
       positions: this.positionService.index(),
       roles: this.roleService.index(),
+      user: this.router.url.includes( 'edit' ) ? this.activatedRoute.params.pipe(
+        mergeMap( ( { id } ) => this.userService.show( id ) )
+      ) : of( undefined ),
     } )
       .subscribe( {
-        next: ( { dependencies, positions, roles } ) => {
+        next: ( { dependencies, positions, roles, user } ) => {
           this.dependencies = dependencies;
           this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependencies[ 0 ] ) ];
           this.positions = positions;
           this.roles = roles;
           this.loaded = true;
           this.createForm.addControl( "rolesFormGroup", this.buildChecksFormGroup( roles ) );
+          this.user = user;
+          if ( user ) {
+            const extractUser: User = Object.values( user )[ 0 ];
+            this.createForm.get( 'name' )?.setValue( extractUser.name );
+            this.createForm.get( 'email' )?.setValue( extractUser.email );
+            let dependency = this.dependencyService.flattenDependency( dependencies[ 0 ] ).find( ( dependency: any ) => dependency.id === extractUser.dependency.id );
+            this.createForm.get( 'dependency_id' )?.setValue( this.dependencyService.makeNode( dependency! ) );
+            this.fillColaboradores(
+              {
+                event:
+                {
+                  node:
+                  {
+                    key: `0.${ extractUser.dependency.id }`,
+                    parent: `${ extractUser.parent }`
+                  }
+                }
+              }[ 'event' ]
+            );
+            Object.keys( this.rolesFormGroup.controls ).forEach( ( key: string ) => {
+              Object.values<Role>( extractUser.roles ).forEach( role => {
+                if ( key === role.name ) {
+                  this.rolesFormGroup.get( key ).setValue( true );
+                }
+              } );
+            } );
+            if ( extractUser.parent ) this.createForm.get( 'parent' )?.setValue( extractUser.parent.id );
+            this.createForm.get( 'position_id' )?.setValue( extractUser.positions?.id?.toString() )
+            this.createForm.get( 'requirePassChange' )?.setValue( extractUser.requirePassChange )
+            this.createForm.get( 'valid_id' )?.setValue( extractUser.valid_id )
+            this.createForm.get( 'birthdate' )?.setValue( extractUser.birthdate )
+          }
         },
         error: ( error ) => {
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.statusText );
         }
       } );
-
-    if ( !this.router.url.includes( 'edit' ) ) {
-      return;
-    }
-
-    this.activatedRoute.params
-      .pipe(
-        switchMap( ( { id } ) => this.userService.show( id ) )
-      )
-      .subscribe( user => {
-        const extractUser: User = Object.values( user )[ 0 ];
-        this.user = extractUser;
-        this.createForm.get( 'name' )?.setValue( extractUser.name );
-        this.createForm.get( 'email' )?.setValue( extractUser.email );
-        Object.keys( this.rolesFormGroup.controls ).forEach( ( key: string ) => {
-          Object.values<Role>( extractUser.roles ).forEach( role => {
-            if ( key === role.name ) {
-              this.rolesFormGroup.get( key ).setValue( true );
-            }
-          } );
-        } );
-
-        if ( extractUser.parent ) this.createForm.get( 'parent' )?.setValue( extractUser.parent.id );
-        this.createForm.get( 'position_id' )?.setValue( extractUser.positions?.id?.toString() )
-        this.createForm.get( 'requirePassChange' )?.setValue( extractUser.requirePassChange )
-        this.createForm.get( 'valid_id' )?.setValue( extractUser.valid_id )
-        this.createForm.get( 'birthdate' )?.setValue( extractUser.birthdate )
-      } );
-
   }
 
   campoEsValido ( campo: string ) {
@@ -154,7 +160,7 @@ export class CreateComponent implements OnInit {
             }
           } );
     } else {
-      this.userService.create( this.createForm.value ) 
+      this.userService.create( this.createForm.value )
         .subscribe(
           {
             next: ( userCreated ) => {
@@ -236,6 +242,9 @@ export class CreateComponent implements OnInit {
             return dependency.users.filter( ( user: User ) => user.valid_id );
           } );
           this.users = this.users.sort( ( a, b ) => a.name.localeCompare( b.name ) );
+          if ( this.user ) {
+            this.createForm.get( 'leader' )?.setValue( Object.values( this.user )[ 0 ].parent.id );
+          }
         },
         error: ( error ) => { }
       } )
