@@ -227,12 +227,13 @@ export class CreateComponent implements OnInit {
       this.emptyColaboradores();
       return;
     }
-    this.dependencyService.dependencyAncestors()
+    let id = event.node.key.split( '.' ).pop();
+    this.dependencyService.dependencyAncestors( id )
       .subscribe( {
         next: ( dependencies ) => {
           let dependenciesArray = this.dependencyService.flattenDependency( dependencies[ 0 ] )
           this.users = dependenciesArray.flatMap( ( dependency: Dependency ) => {
-            return dependency.users;
+            return dependency.users.filter( ( user: User ) => user.valid_id );
           } );
           this.users = this.users.sort( ( a, b ) => a.name.localeCompare( b.name ) );
         },
