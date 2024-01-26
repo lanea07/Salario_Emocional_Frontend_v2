@@ -137,6 +137,8 @@ export class CreateComponent implements OnInit {
       this.createForm.markAllAsTouched();
       return;
     }
+    let dependency_id = this.dependencyService.flattenDependency( { ...this.dependencies[ 0 ] } ).find( ( dependency: any ) => this.createForm.get( 'dependency_id' )?.value[ 'label' ] === dependency.name );
+    this.createForm.get( 'dependency_id' )?.setValue( dependency_id?.id );
 
     if ( this.user?.id ) {
       this.userService.update( this.user?.id, this.createForm.value )
@@ -151,11 +153,7 @@ export class CreateComponent implements OnInit {
               this.disableSubmitBtn = false;
             }
           } );
-
     } else {
-
-      let dependency_id = this.dependencyService.flattenDependency( { ...this.dependencies[ 0 ] } ).find( ( dependency: any ) => this.createForm.get( 'dependency_id' )?.value[ 'label' ] === dependency.name );
-      this.createForm.get( 'dependency_id' )?.setValue( dependency_id?.id );
       this.userService.create( this.createForm.value ) 
         .subscribe(
           {
