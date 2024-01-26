@@ -43,7 +43,7 @@ export class MyTeamComponent implements AfterViewInit, OnChanges {
         next: ( benefitUser ) => {
           this.fillBenefits( benefitUser );
         },
-        error: ( error ) => {
+        error: ( { error } ) => {
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.error.message )
         }
       } );

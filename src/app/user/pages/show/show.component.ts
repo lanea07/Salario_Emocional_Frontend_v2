@@ -38,7 +38,7 @@ export class ShowComponent {
           this.loaded = true;
           this.user?.roles?.forEach( role => this.roles.push( role.name ) );
         },
-        error: ( error ) => {
+        error: ( { error } ) => {
           this.router.navigateByUrl( 'benefit-employee' );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
@@ -68,7 +68,7 @@ export class ShowComponent {
               this.router.navigateByUrl( 'user/index' );
               this.as.subscriptionAlert( subscriptionMessageTitle.ELIMINADO, subscriptionMessageIcon.SUCCESS )
             },
-            error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+            error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
           } );
       };
     } );

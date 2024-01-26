@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, mergeMap, of } from 'rxjs';
+import { EMPTY, combineLatest, mergeMap, of, switchMap } from 'rxjs';
 
 
 import { Dependency } from '../../../dependency/interfaces/dependency.interface';
@@ -83,7 +83,7 @@ export class CreateComponent implements OnInit {
       positions: this.positionService.index(),
       roles: this.roleService.index(),
       user: this.router.url.includes( 'edit' ) ? this.activatedRoute.params.pipe(
-        mergeMap( ( { id } ) => this.userService.show( id ) )
+        switchMap( ( { id } ) => this.userService.show( id ) )
       ) : of( undefined ),
     } )
       .subscribe( {
@@ -95,11 +95,11 @@ export class CreateComponent implements OnInit {
           this.loaded = true;
           this.createForm.addControl( "rolesFormGroup", this.buildChecksFormGroup( roles ) );
           this.user = user;
-          if ( user ) {
-            const extractUser: User = Object.values( user )[ 0 ];
-            this.createForm.get( 'name' )?.setValue( extractUser.name );
-            this.createForm.get( 'email' )?.setValue( extractUser.email );
-            let dependency = this.dependencyService.flattenDependency( dependencies[ 0 ] ).find( ( dependency: any ) => dependency.id === extractUser.dependency.id );
+          if ( this.user ) {
+            this.user = Object.values( this.user )[ 0 ];
+            this.createForm.get( 'name' )?.setValue( this.user!.name );
+            this.createForm.get( 'email' )?.setValue( this.user!.email );
+            let dependency = this.dependencyService.flattenDependency( dependencies[ 0 ] ).find( ( dependency: any ) => dependency.id === this.user!.dependency.id );
             this.createForm.get( 'dependency_id' )?.setValue( this.dependencyService.makeNode( dependency! ) );
             this.fillColaboradores(
               {
@@ -107,27 +107,27 @@ export class CreateComponent implements OnInit {
                 {
                   node:
                   {
-                    key: `0.${ extractUser.dependency.id }`,
-                    parent: `${ extractUser.parent }`
+                    key: `0.${ this.user!.dependency.id }`,
+                    parent: `${ this.user!.parent }`
                   }
                 }
               }[ 'event' ]
             );
             Object.keys( this.rolesFormGroup.controls ).forEach( ( key: string ) => {
-              Object.values<Role>( extractUser.roles ).forEach( role => {
+              Object.values<Role>( this.user!.roles ).forEach( role => {
                 if ( key === role.name ) {
                   this.rolesFormGroup.get( key ).setValue( true );
                 }
               } );
             } );
-            if ( extractUser.parent ) this.createForm.get( 'parent' )?.setValue( extractUser.parent.id );
-            this.createForm.get( 'position_id' )?.setValue( extractUser.positions?.id?.toString() )
-            this.createForm.get( 'requirePassChange' )?.setValue( extractUser.requirePassChange )
-            this.createForm.get( 'valid_id' )?.setValue( extractUser.valid_id )
-            this.createForm.get( 'birthdate' )?.setValue( extractUser.birthdate )
+            if ( this.user!.parent ) this.createForm.get( 'parent' )?.setValue( this.user!.parent.id );
+            this.createForm.get( 'position_id' )?.setValue( this.user!.positions?.id?.toString() )
+            this.createForm.get( 'requirePassChange' )?.setValue( this.user!.requirePassChange )
+            this.createForm.get( 'valid_id' )?.setValue( this.user!.valid_id )
+            this.createForm.get( 'birthdate' )?.setValue( this.user!.birthdate )
           }
         },
-        error: ( error ) => {
+        error: ( { error } ) => {
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.statusText );
         }
       } );
@@ -154,7 +154,7 @@ export class CreateComponent implements OnInit {
               this.router.navigateByUrl( `/user/show/${ this.user?.id }` )
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS )
             },
-            error: ( error ) => {
+            error: ( { error } ) => {
               this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
               this.disableSubmitBtn = false;
             }
@@ -167,7 +167,7 @@ export class CreateComponent implements OnInit {
               this.router.navigateByUrl( `/user/show/${ userCreated.id }` )
               this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS )
             },
-            error: ( error ) => {
+            error: ( { error } ) => {
               this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
               this.disableSubmitBtn = false;
             }
@@ -242,11 +242,11 @@ export class CreateComponent implements OnInit {
             return dependency.users.filter( ( user: User ) => user.valid_id );
           } );
           this.users = this.users.sort( ( a, b ) => a.name.localeCompare( b.name ) );
-          if ( this.user ) {
-            this.createForm.get( 'leader' )?.setValue( Object.values( this.user )[ 0 ].parent.id );
+          if ( this.user?.parent ) {
+            this.createForm.get( 'leader' )?.setValue( this.user.parent.id );
           }
         },
-        error: ( error ) => { }
+        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } )
     this.createForm.get( 'parent' )?.reset( '' );
     this.createForm.get( 'parent' )?.enable();

@@ -157,7 +157,7 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
             next: () => {
               this.calendar.getApi().getEventById( eventID.toString() )?.remove();
             },
-            error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+            error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
           } )
       }
     } );

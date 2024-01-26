@@ -47,7 +47,7 @@ export class CreateComponent {
 
     this.positionService.index()
       .subscribe( {
-        error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } )
 
     if ( !this.router.url.includes( 'edit' ) ) {
@@ -64,7 +64,7 @@ export class CreateComponent {
           this.position = extractPositionDetail;
           this.createForm.get( 'name' )?.setValue( extractPositionDetail.name );
         },
-        error: ( error ) => {
+        error: ( { error } ) => {
           this.router.navigateByUrl( 'benefit-employee' );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }

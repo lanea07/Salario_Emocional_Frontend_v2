@@ -59,7 +59,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, Afte
             } );
             this.fillBenefits();
           },
-          error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.error.message )
+          error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.error.message )
         } );
     }
   }

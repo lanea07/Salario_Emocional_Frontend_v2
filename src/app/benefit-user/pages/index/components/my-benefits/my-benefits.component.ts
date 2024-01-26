@@ -56,7 +56,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
             this.loaded = true;
             this.loadedData.emit( true );
           },
-          error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.error.message )
+          error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.error.message )
         } );
     }
   }

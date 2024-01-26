@@ -58,7 +58,7 @@ export class CreateComponent {
           this.role = extractRoleDetail;
           this.createForm.get( 'name' )?.setValue( extractRoleDetail.name );
         },
-        error: ( error ) => {
+        error: ( { error } ) => {
           this.router.navigateByUrl( 'benefit-employee' );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }

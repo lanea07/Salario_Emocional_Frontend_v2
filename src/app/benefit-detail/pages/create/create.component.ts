@@ -60,7 +60,7 @@ export class CreateComponent {
 
     this.benefitDetailService.index()
       .subscribe( {
-        error: ( error ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } )
 
     if ( !this.router.url.includes( 'edit' ) ) {
