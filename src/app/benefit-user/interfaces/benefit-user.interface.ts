@@ -32,6 +32,6 @@ export interface BenefitUserElement {
   benefits: Benefit;
   benefit_detail: BenefitDetail;
   user: BenefitUser;
-  is_approved: boolean;
+  is_approved: number;
   approved_at: Date;
 }

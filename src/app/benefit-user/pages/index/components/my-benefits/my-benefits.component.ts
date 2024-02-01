@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BenefitUser, BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
-import { FullCalendarComponent } from '@fullcalendar/angular';
 
 @Component( {
   selector: 'my-benefits',

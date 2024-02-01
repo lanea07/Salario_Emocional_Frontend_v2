@@ -8,8 +8,7 @@
     <div class="col-12 col-lg-9">
         <ul *ngIf="dataArray.length > 0; else empty" class="list-group list-group-flush">
             <li class="list-group-item bg-transparent" *ngFor="let item of dataArray">
-                    Del {{ item.benefit_begin_time | date: 'dd/MM/yyyy' }} al {{ item.benefit_end_time | date:
-                    'dd/MM/yyyy' }}
+                    Del {{ item.benefit_begin_time | date: 'dd/MM/yyyy' }} al {{ item.benefit_end_time | vacationsDate: 'dd/MM/yyyy' }}
             </li>
             </ul>
     </div>

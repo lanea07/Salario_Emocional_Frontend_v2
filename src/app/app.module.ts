@@ -8,22 +8,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NgChartsConfiguration } from 'ng2-charts';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
-import { MainContainerComponent } from './shared/main-container/main-container.component';
-import { NavbarComponent } from './shared/navbar/navbar.component';
-import { OffcanvasComponent } from './shared/offcanvas/offcanvas.component';
+import { SharedModule } from './shared/shared.module';
+import { AppRoutingModule } from './app-routing.module';
 
 registerLocaleData( es );
 
 @NgModule( {
   declarations: [
     AppComponent,
-    BreadcrumbComponent,
-    MainContainerComponent,
-    NavbarComponent,
-    OffcanvasComponent
+
   ],
   imports: [
     AppRoutingModule,
@@ -31,6 +25,7 @@ registerLocaleData( es );
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    SharedModule
   ],
   providers: [
     { provide: NgChartsConfiguration, useValue: { generateColors: false } },

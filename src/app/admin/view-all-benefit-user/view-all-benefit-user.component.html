@@ -1,0 +1,100 @@
+<!-- Toolbar -->
+<p-toolbar styleClass="mb-4">
+    <div class="row">
+        <div class="col-11">
+            <form [formGroup]="formGroup">
+                <nav class="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <p-calendar formControlName="year" view="year" dateFormat="yy" inputId="yearpicker"
+                                (ngModelChange)="getBenefits()"></p-calendar>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <p-dropdown [filter]="true" optionLabel="name" optionValue="id" formControlName="benefit_id"
+                                [options]="benefits" placeholder="-- Seleccione Beneficio --"
+                                (onChange)="getBenefits()"></p-dropdown>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <p-dropdown [filter]="true" optionLabel="name" optionValue="id" formControlName="user_id"
+                                [options]="users" placeholder="-- Seleccione Colaborador --"
+                                (onChange)="getBenefits()"></p-dropdown>
+                        </li>
+                    </ol>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <p-dropdown [filter]="true" optionLabel="name" optionValue="id"
+                                formControlName="dependency_id" [options]="dependencies"
+                                placeholder="-- Seleccione Dependencia --" (onChange)="getBenefits()"></p-dropdown>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <p-dropdown optionLabel="name" optionValue="value" formControlName="is_approved"
+                                [options]="status" placeholder="-- Seleccione Estado --"
+                                (onChange)="getBenefits()"></p-dropdown>
+                        </li>
+                    </ol>
+                </nav>
+            </form>
+        </div>
+        <div class="col-1 d-flex flex-column justify-content-evenly">
+            <button class="btn btn-outline-secondary border" type="button" (click)="resetForm()">
+                <i class="fa-solid fa-rotate-right"></i>
+            </button>
+            <button [ngClass]="{'d-none': loaded}" class="btn btn-outline-secondary border">
+                <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+            </button>
+        </div>
+    </div>
+</p-toolbar>
+
+<!-- Cards -->
+<div class="row p-3">
+    <div class="col-12 col-sm-6 col-lg-3 px-5">
+        <div class="card text-bg-info mb-3 shadow">
+            <div class="card-header">Todos los Beneficios</div>
+            <div class="card-body">
+                <h5 class="card-title">Total</h5>
+                <h5 class="card-text">{{ allBenefits.length }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3 px-5">
+        <div class="card text-bg-success mb-3 shadow">
+            <div class="card-header">Beneficios aprobados</div>
+            <div class="card-body">
+                <h5 class="card-title">Total</h5>
+                <h5 class="card-text">{{ approvedBenefits.length }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3 px-5">
+        <div class="card text-bg-danger mb-3 shadow">
+            <div class="card-header">Beneficios rechazados</div>
+            <div class="card-body">
+                <h5 class="card-title">Total</h5>
+                <h5 class="card-text">{{ rejectedBenefits.length }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3 px-5">
+        <div class="card text-bg-warning mb-3 shadow">
+            <div class="card-header">En aprobación</div>
+            <div class="card-body">
+                <h5 class="card-title">Total</h5>
+                <h5 class="card-text">{{ pendingBenefits.length }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts -->
+<bar-chart-component #chart [barChartData]="barChartData"></bar-chart-component>
+
+<!-- Tables -->
+<div class="row mt-5">
+    <div class="col">
+        <table datatable [dtOptions]="dtOptions" class="table table-hover table-sm table-striped">
+            <thead class="bg-dark text-light"></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>

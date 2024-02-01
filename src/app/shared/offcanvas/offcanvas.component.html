@@ -117,6 +117,24 @@
           </div>
         </div>
       </div>
+<div class="accordion-item">
+  <h2 class="accordion-header">
+    <button [ngClass]="{collapsed: !router.isActive('/admin', false)}" class="accordion-button" type="button"
+      data-bs-toggle="collapse" data-bs-target="#collapseAdministracion" aria-expanded="false"
+      aria-controls="collapseAdministracion">
+      Administración
+    </button>
+  </h2>
+  <div id="collapseAdministracion" class="accordion-collapse collapse"
+    [ngClass]="{ show: router.isActive('/admin', false) }" data-bs-parent="#accordion">
+    <div class="accordion-body">
+      <div class="list-group">
+        <a class="list-group-item list-group-item-action" routerLink="/admin/all-benefit-user"
+          routerLinkActive="active">Panel Administrativo</a>
+      </div>
+    </div>
+  </div>
+</div>
     </div>
   </div>
 </div>
