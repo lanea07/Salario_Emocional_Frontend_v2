@@ -59,6 +59,14 @@ export class DependencyService {
     return this.http.delete( `${ this.apiBaseUrl }/dependency/${ id }`, { headers, withCredentials: true } );
   }
 
+  getNonTreeValidDependencies (): Observable<Dependency[]> {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependency/getNonTreeValidDependencies`, { headers, withCredentials: true } )
+  }
+
   // Methods for transform the dependencies results
 
   /**

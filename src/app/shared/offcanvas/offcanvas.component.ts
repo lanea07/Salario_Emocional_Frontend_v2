@@ -29,7 +29,7 @@ export class OffcanvasComponent implements OnInit {
           this.isAdmin = isAdmin.admin;
           this.user = JSON.parse( localStorage.getItem( 'user' )! );
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.error.msg )
+        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } );
   }
 

@@ -11,25 +11,22 @@ import { BaseChartDirective } from 'ng2-charts';
 } )
 export class BarChartComponent implements OnChanges {
 
-  @Input() data?: number[];
   @ViewChild( BaseChartDirective ) chart?: BaseChartDirective;
-
+  @Input() barChartData: ChartData<'bar'> = {
+    datasets: [],
+    labels: [],
+  };
 
   public barChartOptions: ChartConfiguration[ 'options' ] = {
     responsive: true,
     // We use these empty structures as placeholders for dynamic theming.
     scales: {
       x: {},
-      y: {
-        max: 16,
-        ticks: {
-          stepSize: 0
-        }
-      }
+      y: {}
     },
     plugins: {
       legend: {
-        display: true,
+        display: false,
       },
       datalabels: {
         anchor: 'end',
@@ -42,16 +39,16 @@ export class BarChartComponent implements OnChanges {
     DataLabelsPlugin
   ];
 
-  public barChartData: ChartData<'bar'> = {
-    labels: [ 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic' ],
-    datasets: [
-      { data: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], label: 'Horas', backgroundColor: "rgba(200, 16, 46, 0.5)" },
-    ]
-  };
-
   ngOnChanges ( changes: SimpleChanges ): void {
-    this.barChartData.datasets[ 0 ].data = this.data!;
-    this.chart?.update();
+    let max = Math.max( ...this.barChartData.datasets.map( dataset => Math.max( ...dataset.data as number[] ) ) )
+    this.barChartOptions!.scales = {
+      y: {
+        max: ( ( Math.ceil( max / 5 ) ) * 5 ) + 5,
+        ticks: {
+          stepSize: ( Math.ceil( max / 5 ) )
+        }
+      }
+    }
   }
 
 }

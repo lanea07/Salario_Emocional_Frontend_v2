@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: 'position', loadChildren: () => import( './position/position.module' ).then( m => m.PositionModule ), canMatch: [ authGuard ], title: 'Cargos' },
   { path: 'role', loadChildren: () => import( './role/role.module' ).then( m => m.RoleModule ), canMatch: [ authGuard ], title: 'Roles' },
   { path: 'user', loadChildren: () => import( './user/user.module' ).then( m => m.UserModule ), canMatch: [ authGuard ], title: 'Usuarios' },
+  { path: 'admin', loadChildren: () => import( './admin/admin.module' ).then( m => m.AdminModule ), canMatch: [ authGuard ], title: 'Administración' },
   { path: '**', component: LoginComponent }
 ];
 

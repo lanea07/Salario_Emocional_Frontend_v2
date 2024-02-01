@@ -4,16 +4,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { DataTablesModule } from 'angular-datatables';
-import { NgChartsModule } from 'ng2-charts';
 
+import { ChartsModule } from '../charts/charts.module';
 import { PrimengModule } from '../primeng/primeng.module';
-import { TotalBancoHorasPipe } from '../shared/pipes/TotalBancoHoras.pipe';
+import { VacationsDatePipe } from '../shared/pipes/vacations-date.pipe';
 import { BenefitUserRoutingModule } from './benefit-user-routing.module';
 import { CreateComponent } from './pages/create/create.component';
-import { BarChartComponent } from './pages/index/components/bar-chart/bar-chart.component';
 import { CalendarComponent } from './pages/index/components/calendar/calendar.component';
 import { DiaDeLaFamiliaComponent } from './pages/index/components/dia-de-la-familia/dia-de-la-familia.component';
-import { DoughnutChartComponent } from './pages/index/components/doughnut-chart/doughnut-chart.component';
 import { MiBancoDeHorasComponent } from './pages/index/components/mi-banco-de-horas/mi-banco-de-horas.component';
 import { MiCumpleanosComponent } from './pages/index/components/mi-cumpleanos/mi-cumpleanos.component';
 import { MiHorarioFlexibleComponent } from './pages/index/components/mi-horario-flexible/mi-horario-flexible.component';
@@ -28,14 +26,13 @@ import { MyTeamComponent } from './pages/index/components/my-team/my-team.compon
 import { TrabajoHibridoComponent } from './pages/index/components/trabajo-hibrido/trabajo-hibrido.component';
 import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule( {
   declarations: [
-    BarChartComponent,
     CalendarComponent,
     CreateComponent,
     DiaDeLaFamiliaComponent,
-    DoughnutChartComponent,
     DropdownComponent,
     IndexComponent,
     MiBancoDeHorasComponent,
@@ -49,21 +46,19 @@ import { ShowComponent } from './pages/show/show.component';
     MyTeamComponent,
     MyTeamRequestComponent,
     ShowComponent,
-    TotalBancoHorasPipe,
     TrabajoHibridoComponent,
   ],
   imports: [
     BenefitUserRoutingModule,
+    ChartsModule,
     CommonModule,
     DataTablesModule,
+    FormsModule,
     FullCalendarModule,
-    NgChartsModule,
     PrimengModule,
     ReactiveFormsModule,
-    FormsModule
+    SharedModule
   ],
-  providers: [
-    TotalBancoHorasPipe,
-  ]
+  providers: []
 } )
 export class BenefitEmployeeModule { }

@@ -133,7 +133,10 @@ export class LoginComponent {
     this.authService.login( email, password, device_name )
       .subscribe( {
         next: ( resp ) => this.router.navigateByUrl( '/benefit-employee' ),
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.error.msg ),
+        error: ( { error } ) => {
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          this.loging = false;
+        },
       } );
   }
 
