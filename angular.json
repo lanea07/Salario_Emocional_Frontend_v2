@@ -54,8 +54,7 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all",
-              "baseHref": "/assets/angular/"
+              "outputHashing": "all"
             },
             "development": {
               "buildOptimizer": false,
