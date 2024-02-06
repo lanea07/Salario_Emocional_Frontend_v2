@@ -6,7 +6,6 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { BackButtonDirective } from './directives/back-button-directive.directive';
 import { MainContainerComponent } from './main-container/main-container.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { OffcanvasComponent } from './offcanvas/offcanvas.component';
 import { TotalBancoHorasPipe } from './pipes/TotalBancoHoras.pipe';
 import { VacationsDatePipe } from './pipes/vacations-date.pipe';
 
@@ -16,7 +15,6 @@ import { VacationsDatePipe } from './pipes/vacations-date.pipe';
     BreadcrumbComponent,
     MainContainerComponent,
     NavbarComponent,
-    OffcanvasComponent,
     TotalBancoHorasPipe,
     VacationsDatePipe,
   ],
@@ -29,7 +27,6 @@ import { VacationsDatePipe } from './pipes/vacations-date.pipe';
     BreadcrumbComponent,
     MainContainerComponent,
     NavbarComponent,
-    OffcanvasComponent,
     TotalBancoHorasPipe,
     VacationsDatePipe,
   ]
