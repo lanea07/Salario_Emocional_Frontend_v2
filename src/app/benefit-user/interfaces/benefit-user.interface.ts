@@ -18,10 +18,12 @@ export interface BenefitUser {
   updated_at: Date;
   benefit_user: BenefitUserElement[];
   dependency: Dependency;
+  descendants_and_self: BenefitUserElement[];
 }
 
 export interface BenefitUserElement {
   id: number;
+  benefit_user: BenefitUserElement[];
   benefit_id: number;
   benefit_detail_id: number;
   user_id: number;
