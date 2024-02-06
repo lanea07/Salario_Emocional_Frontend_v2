@@ -23,17 +23,17 @@
             {{ user?.name }}
           </a>
           <ul class="dropdown-menu">
-            <!-- <li><a class="dropdown-item">Mi Perfil</a></li>
-                                          <li *ngIf="isAdmin">
-                                            <a class="dropdown-item" routerLink="/admin">Panel Administrativo</a>
-                                          </li> 
-                                          <li>
-                                            <hr class="dropdown-divider">
-                                          </li>-->
+            <!-- <li><a class="dropdown-item">Mi Perfil</a></li> -->
+            <li *ngIf="isAdmin">
+              <a class="dropdown-item" routerLink="/admin">Panel Administrativo</a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
             <li><a class="dropdown-item text-danger" (click)="logout()">Cerrar Sesión</a></li>
           </ul>
-          </li>
-          </ul>
-          </div>
+        </li>
+        </ul>
+        </div>
   </div>
 </nav>
