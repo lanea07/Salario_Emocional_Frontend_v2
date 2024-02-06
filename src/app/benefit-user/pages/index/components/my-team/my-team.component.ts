@@ -1,9 +1,11 @@
-import { AfterViewInit, Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUser, BenefitUserElement } from '../../../../interfaces/benefit-user.interface';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import { MessagingService } from '../../../../services/messaging.service';
+import { User } from 'src/app/user/interfaces/user.interface';
 
 @Component( {
   selector: 'my-team',
@@ -11,7 +13,7 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
   styles: [
   ]
 } )
-export class MyTeamComponent implements AfterViewInit, OnChanges {
+export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDestroy {
 
   @Input() year: number = new Date().getFullYear().valueOf();
 
@@ -27,7 +29,19 @@ export class MyTeamComponent implements AfterViewInit, OnChanges {
   constructor (
     private as: AlertService,
     private benefitUserService: BenefitUserService,
+    private messagingService: MessagingService,
   ) { }
+
+  ngOnInit (): void {
+    this.messagingService.message
+      .subscribe( {
+        next: ( { mustRefresh } ) => mustRefresh && this.getBenefitDetail()
+      } )
+  }
+
+  ngOnDestroy (): void {
+    this.messagingService.message.unsubscribe();
+  }
 
   ngAfterViewInit (): void {
     this.getBenefitDetail();
@@ -44,31 +58,31 @@ export class MyTeamComponent implements AfterViewInit, OnChanges {
           this.fillBenefits( benefitUser );
         },
         error: ( { error } ) => {
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.error.message )
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
   }
 
   fillBenefits ( benefitUser: BenefitUser[] ) {
-    this.miViernes = benefitUser.flatMap( user => {
-      return user.benefit_user.filter( benefit => benefit.benefits.name === "Mi Viernes" );
+    this.miViernes = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
+      return user.benefit_user.filter( benefit => { return benefit.benefits.name === "Mi Viernes" } );
     } );
-    this.miHorarioFlexible = benefitUser.flatMap( user => {
+    this.miHorarioFlexible = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
       return user.benefit_user.filter( benefit => benefit.benefits.name === "Mi Horario Flexible" );
     } );
-    this.miCumpleanos = benefitUser.flatMap( user => {
+    this.miCumpleanos = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
       return user.benefit_user.filter( benefit => benefit.benefits.name === "Mi Cumpleaños" );
     } );
-    this.diaDeLaFamilia = benefitUser.flatMap( user => {
+    this.diaDeLaFamilia = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
       return user.benefit_user.filter( benefit => benefit.benefits.name === "Día de la Familia" );
     } );
-    this.miBancoHoras = benefitUser.flatMap( user => {
+    this.miBancoHoras = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
       return user.benefit_user.filter( benefit => benefit.benefits.name === "Mi Banco de Horas" );
     } );
-    this.trabajoHibrido = benefitUser.flatMap( user => {
+    this.trabajoHibrido = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
       return user.benefit_user.filter( benefit => benefit.benefits.name === "Trabajo Híbrido" );
     } );
-    this.misVacaciones = benefitUser.flatMap( user => {
+    this.misVacaciones = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
       return user.benefit_user.filter( benefit => benefit.benefits.name === "Mis Vacaciones" );
     } );
     this.calendarData = [];

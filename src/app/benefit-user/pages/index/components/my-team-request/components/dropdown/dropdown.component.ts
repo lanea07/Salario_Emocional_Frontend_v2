@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 
 import { DropdownComponentEventType } from 'src/app/benefit-user/interfaces/dropdown-component-event-type';
+import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
 
 interface Options {
   action: string;
@@ -21,6 +22,10 @@ export class DropdownComponent implements OnInit, OnDestroy {
   @Input() data = {};
   @Output() emitter = new Subject<DropdownComponentEventType>();
   formGroup!: FormGroup;
+
+  constructor (
+    private messagingService: MessagingService,
+  ) { }
 
   ngOnInit () {
     this.options = [
@@ -42,6 +47,9 @@ export class DropdownComponent implements OnInit, OnDestroy {
     this.emitter.next( {
       cmd: cmd.value,
       data: this.data,
+    } );
+    this.messagingService.message.next( {
+      mustRefresh: true,
     } );
   }
 

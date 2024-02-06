@@ -1,16 +1,17 @@
-import { AfterContentInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
+import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
 
 @Component( {
   selector: 'my-collaborators-benefits',
   templateUrl: './my-collaborators-benefits.component.html',
   styles: []
 } )
-export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, AfterContentInit {
+export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDestroy, AfterContentInit {
 
   @Input() year: number = new Date().getFullYear().valueOf();
 
@@ -33,16 +34,25 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, Afte
     private as: AlertService,
     private benefitUserService: BenefitUserService,
     private changeDetectorRef: ChangeDetectorRef,
+    private messagingService: MessagingService,
     private fb: FormBuilder,
   ) { }
 
   ngOnInit (): void {
     this.getBenefitDetail();
+    this.messagingService.message
+      .subscribe( {
+        next: ( { mustRefresh } ) => mustRefresh && this.getBenefitDetail()
+      } )
   }
 
   ngOnChanges ( changes: SimpleChanges ): void {
     this.loaded = false;
     this.getBenefitDetail();
+  }
+
+  ngOnDestroy (): void {
+    this.messagingService.message.unsubscribe();
   }
 
   ngAfterContentInit (): void {
@@ -54,12 +64,12 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, Afte
       this.benefitUserService.indexCollaborators( new Date( this.year ).getFullYear().valueOf() )
         .subscribe( {
           next: ( benefitUser ) => {
-            this.collaborators = benefitUser.filter( ( user ) => {
+            this.collaborators = benefitUser[ 0 ].descendants_and_self.filter( ( user ) => {
               return user.id !== Number.parseInt( localStorage.getItem( 'uid' )! );
             } );
             this.fillBenefits();
           },
-          error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.error.message )
+          error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         } );
     }
   }
