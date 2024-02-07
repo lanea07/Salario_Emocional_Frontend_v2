@@ -23,9 +23,9 @@ export class ShowComponent {
   treedata!: TreeNode[];
 
   constructor (
-    private dependencyService: DependencyService,
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private as: AlertService,
+    private dependencyService: DependencyService,
     private router: Router,
   ) { }
 

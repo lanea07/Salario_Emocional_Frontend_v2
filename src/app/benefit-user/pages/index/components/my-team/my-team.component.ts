@@ -64,6 +64,7 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
   }
 
   fillBenefits ( benefitUser: BenefitUser[] ) {
+    if ( !benefitUser[ 0 ].descendants_and_self ) return;
     this.miViernes = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
       return user.benefit_user.filter( benefit => { return benefit.benefits.name === "Mi Viernes" } );
     } );

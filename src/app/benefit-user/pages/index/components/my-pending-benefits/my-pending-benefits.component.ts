@@ -1,5 +1,5 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../../../shared/Datatables-langs/es-CO.json';
@@ -48,6 +48,7 @@ export class MyPendingBenefitsComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
 
   constructor (
+    private activatedRoute: ActivatedRoute,
     private BenefitUserService: BenefitUserService,
     private as: AlertService,
     private renderer: Renderer2,
@@ -69,7 +70,40 @@ export class MyPendingBenefitsComponent implements OnInit {
           } );
       },
       columns: this.columns,
-      responsive: true,
+      responsive: [
+        {
+          details: [
+            {
+              type: 'inline',
+              target: 'tr',
+              renderer: function ( api: any, rowIdx: any, columns: any ) {
+                let data = columns.map( ( col: any, i: any ) => {
+                  return col.hidden ?
+                    '<tr data-dt-row="' +
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td>' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>' :
+                    '';
+                } ).join( '' );
+                let table: any = document.createElement( 'table' );
+                table.innerHTML = data;
+                table.classList.add( 'table' );
+                table.classList.add( 'table-hover' );
+                return data ? table : false;
+              }
+            }
+          ]
+        }
+      ],
       language: es_CO
     }
   }
@@ -77,7 +111,7 @@ export class MyPendingBenefitsComponent implements OnInit {
   ngAfterViewInit (): void {
     this.renderer.listen( 'document', 'click', ( event ) => {
       if ( event.target.hasAttribute( "benefit_user_id" ) ) {
-        this.router.navigate( [ "/benefit-employee/show/" + event.target.getAttribute( "benefit_user_id" ) ] );
+        this.router.navigate( [ "../show", event.target.getAttribute( "benefit_user_id" ) ], { relativeTo: this.activatedRoute } );
       }
     } );
   }

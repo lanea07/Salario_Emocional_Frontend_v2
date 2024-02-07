@@ -21,10 +21,10 @@ export class ShowComponent {
   loaded: boolean = false;
 
   constructor (
-    private userService: UserService,
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private as: AlertService,
     private router: Router,
+    private userService: UserService,
   ) { }
 
   ngOnInit () {

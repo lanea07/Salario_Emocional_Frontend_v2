@@ -20,9 +20,9 @@ export class ShowComponent {
   loaded: boolean = false;
 
   constructor (
-    private benefitDetailService: BenefitDetailService,
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private as: AlertService,
+    private benefitDetailService: BenefitDetailService,
     private router: Router,
   ) { }
 

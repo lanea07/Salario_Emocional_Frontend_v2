@@ -2,7 +2,8 @@
   <div class="col">
     <div class="btn-group float-end mt-5 mb-5">
       <button backButton class="btn btn-outline-secondary">Volver</button>
-      <a routerLink="/benefit-detail/edit/{{benefitDetail?.id}}" class="btn btn-warning" aria-current="page"
+      <a [routerLink]="['../../edit', benefitDetail?.id]" [relativeTo]="activatedRoute" class="btn btn-warning"
+        aria-current="page"
         [ngClass]="{'disabled': !loaded}">Editar</a>
     </div>
   </div>

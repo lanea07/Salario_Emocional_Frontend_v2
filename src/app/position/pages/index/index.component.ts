@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
@@ -28,6 +28,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
   dtOptions: any;
 
   constructor (
+    private activatedRoute: ActivatedRoute,
     private as: AlertService,
     private positionService: PositionService,
     private renderer: Renderer2,
@@ -48,7 +49,40 @@ export class IndexComponent implements OnInit, AfterViewInit {
         } );
       },
       columns: this.columns,
-      responsive: true,
+      responsive: [
+        {
+          details: [
+            {
+              type: 'inline',
+              target: 'tr',
+              renderer: function ( api: any, rowIdx: any, columns: any ) {
+                let data = columns.map( ( col: any, i: any ) => {
+                  return col.hidden ?
+                    '<tr data-dt-row="' +
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td>' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>' :
+                    '';
+                } ).join( '' );
+                let table: any = document.createElement( 'table' );
+                table.innerHTML = data;
+                table.classList.add( 'table' );
+                table.classList.add( 'table-hover' );
+                return data ? table : false;
+              }
+            }
+          ]
+        }
+      ],
       language: es_CO
     }
   }
@@ -56,7 +90,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
   ngAfterViewInit (): void {
     this.renderer.listen( 'document', 'click', ( event ) => {
       if ( event.target.hasAttribute( "position_id" ) ) {
-        this.router.navigate( [ "/position/show/" + event.target.getAttribute( "position_id" ) ] );
+        this.router.navigate( [ "../show/", event.target.getAttribute( "position_id" ) ], { relativeTo: this.activatedRoute } );
       }
     } );
   }

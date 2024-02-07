@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { BenefitUser, BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
@@ -26,6 +26,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
   trabajoHibrido: BenefitUserElement[] = [];
 
   constructor (
+    private activatedRoute: ActivatedRoute,
     private as: AlertService,
     private benefitUserService: BenefitUserService,
     private renderer: Renderer2,
@@ -40,7 +41,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
   ngAfterViewInit (): void {
     this.renderer.listen( 'document', 'click', ( event ) => {
       if ( event.target.hasAttribute( "benefit_employee_id" ) ) {
-        this.router.navigate( [ "/benefit-employee/show/" + event.target.getAttribute( "benefit_employee_id" ) ] );
+        this.router.navigate( [ "../show", event.target.getAttribute( "benefit_employee_id" ) ], { relativeTo: this.activatedRoute } );
       }
     } );
     this.getBenefitDetail();
