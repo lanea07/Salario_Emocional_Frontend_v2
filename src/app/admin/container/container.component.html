@@ -1,6 +1,12 @@
 <app-navbar></app-navbar>
 <div class="container-fluid pb-3">
+    <a class="btn btn-outline-secondary mt-2 d-md-none" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasExample" aria-controls="navbarSupportedContent" aria-expanded="false"
+        aria-label="Toggle navigation">
+        Menú
+    </a>
     <div class="row">
+        <admin-offcanvas></admin-offcanvas>
         <nav class="col-md-2 d-none d-md-block bg-light sidebar position-fixed h-100 shadow">
             <admin-sidebar></admin-sidebar>
         </nav>

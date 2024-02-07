@@ -10,12 +10,14 @@ import { ViewAllBenefitUserComponent } from './view-all-benefit-user/view-all-be
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
+import { OffcanvasComponent } from './offcanvas/offcanvas.component';
 
 @NgModule( {
   declarations: [
     ViewAllBenefitUserComponent,
     ContainerComponent,
     SidebarComponent,
+    OffcanvasComponent,
   ],
   imports: [
     AdminRoutingModule,
