@@ -23,7 +23,7 @@
             {{ user?.name }}
           </a>
           <ul class="dropdown-menu">
-            <!-- <li><a class="dropdown-item">Mi Perfil</a></li> -->
+            <li><a routerLink="/user-preferences/index" class="dropdown-item">Mi Perfil</a></li>
             <li *ngIf="isAdmin">
               <a class="dropdown-item" routerLink="/admin">Panel Administrativo</a>
             </li>

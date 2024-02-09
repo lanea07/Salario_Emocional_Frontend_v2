@@ -27,8 +27,8 @@ export class PassChangeComponent {
   }
 
   miFormulario: FormGroup = this.fb.group( {
-    currentPassword: [ , [ Validators.required ] ],
     password: [ , [ Validators.required, Validators.minLength( 6 ) ] ],
+    password_confirmation: [ , [ Validators.required, Validators.minLength( 6 ) ] ],
     retypePassword: [ , [ Validators.required, Validators.minLength( 6 ) ] ],
     device_name: [ 'PC' ]
   }, {

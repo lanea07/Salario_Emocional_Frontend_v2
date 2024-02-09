@@ -12,10 +12,10 @@
                 <h2 class="mb-2">Cambio de contraseña requerido</h2>
 
                 <div class="form-floating mb-3">
-                  <input type="password" class="form-control" id="currentPassword" formControlName="currentPassword"
-                    placeholder="Nueva Contraseña" [ngClass]="{'invalid': campoEsValido('currentPassword')}">
-                  <label for="currentPassword" class="form-label">Contraseña Actual</label>
-                  <small *ngIf="campoEsValido('currentPassword')" class="text-danger">Obligatorio</small>
+                  <input type="password" class="form-control" id="current_password" formControlName="current_password"
+                    placeholder="Nueva Contraseña" [ngClass]="{'invalid': campoEsValido('current_password')}">
+                  <label for="current_password" class="form-label">Contraseña Actual</label>
+                  <small *ngIf="campoEsValido('current_password')" class="text-danger">Obligatorio</small>
                 </div>
                 <div class="form-floating mb-3">
                   <input type="password" class="form-control" id="password" formControlName="password"
@@ -24,10 +24,10 @@
                   <small *ngIf="campoEsValido('password')" class="text-danger">{{ passErrorMsg }}</small>
                 </div>
                 <div class="form-floating mb-3">
-                  <input type="password" class="form-control" id="retypePassword" formControlName="retypePassword"
-                    placeholder="Repita la contraseña" [ngClass]="{'invalid': campoEsValido('retypePassword')}">
-                  <label for="retypePassword" class="form-label">Repita la contraseña</label>
-                  <small *ngIf="campoEsValido('retypePassword')" class="text-danger">{{ 'Las contraseña no coinciden'
+                  <input type="password" class="form-control" id="password_confirmation" formControlName="password_confirmation"
+                    placeholder="Repita la contraseña" [ngClass]="{'invalid': campoEsValido('password_confirmation')}">
+                  <label for="password_confirmation" class="form-label">Repita la contraseña</label>
+                  <small *ngIf="campoEsValido('password_confirmation')" class="text-danger">{{ 'Las contraseña no coinciden'
                     }}</small>
                 </div>
 
