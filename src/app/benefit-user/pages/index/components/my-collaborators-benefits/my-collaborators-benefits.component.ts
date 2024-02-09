@@ -64,6 +64,8 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
       this.benefitUserService.indexCollaborators( new Date( this.year ).getFullYear().valueOf() )
         .subscribe( {
           next: ( benefitUser ) => {
+            this.loaded = true;
+            if ( !benefitUser[ 0 ].descendants_and_self ) return;
             this.collaborators = benefitUser[ 0 ].descendants_and_self.filter( ( user ) => {
               return user.id !== Number.parseInt( localStorage.getItem( 'uid' )! );
             } );
@@ -75,7 +77,6 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
   }
 
   fillBenefits () {
-    this.loaded = false;
     let currentUser = this.collaborators.filter( user => user.id === this.formGroup.value.user_id );
     if ( currentUser.length > 0 ) {
       this.miHorarioFlexible = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Mi Horario Flexible" );

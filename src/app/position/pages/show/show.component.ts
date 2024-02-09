@@ -20,7 +20,7 @@ export class ShowComponent {
   position?: Position;
 
   constructor (
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private as: AlertService,
     private positionService: PositionService,
     private router: Router,

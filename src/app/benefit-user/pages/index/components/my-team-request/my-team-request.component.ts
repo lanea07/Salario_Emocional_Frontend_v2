@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 import { DataTableDirective } from 'angular-datatables';
@@ -26,8 +26,9 @@ export class MyTeamRequestComponent implements OnInit, OnDestroy {
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
 
   constructor (
-    private benefitUserService: BenefitUserService,
+    private activatedRoute: ActivatedRoute,
     private as: AlertService,
+    private benefitUserService: BenefitUserService,
     private renderer: Renderer2,
     private router: Router,
   ) { }
@@ -88,7 +89,40 @@ export class MyTeamRequestComponent implements OnInit, OnDestroy {
             }
           }
         ],
-        responsive: true,
+        responsive: [
+          {
+            details: [
+              {
+                type: 'inline',
+                target: 'tr',
+                renderer: function ( api: any, rowIdx: any, columns: any ) {
+                  let data = columns.map( ( col: any, i: any ) => {
+                    return col.hidden ?
+                      '<tr data-dt-row="' +
+                      col.rowIndex +
+                      '" data-dt-column="' +
+                      col.columnIndex +
+                      '">' +
+                      '<td>' +
+                      col.title +
+                      ':' +
+                      '</td>' +
+                      '<td>' +
+                      col.data +
+                      '</td>' +
+                      '</tr>' :
+                      '';
+                  } ).join( '' );
+                  let table: any = document.createElement( 'table' );
+                  table.innerHTML = data;
+                  table.classList.add( 'table' );
+                  table.classList.add( 'table-hover' );
+                  return data ? table : false;
+                }
+              }
+            ]
+          }
+        ],
         language: es_CO,
       }
     } );
@@ -102,7 +136,7 @@ export class MyTeamRequestComponent implements OnInit, OnDestroy {
 
     this.renderer.listen( 'document', 'click', ( event ) => {
       if ( event.target.hasAttribute( "benefit_user_id" ) ) {
-        this.router.navigate( [ "/benefit-employee/show/" + event.target.getAttribute( "benefit_user_id" ) ] );
+        this.router.navigate( [ "../show", event.target.getAttribute( "benefit_user_id" ) ], { relativeTo: this.activatedRoute } );
       }
     } );
   }

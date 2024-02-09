@@ -2,12 +2,12 @@
   <div class="col">
     <div class="btn-group float-end mt-5 mb-5">
       <button backButton class="btn btn-outline-secondary">Volver</button>
-      <a routerLink="/dependency/edit/{{dependency?.id}}" class="btn btn-warning" aria-current="page"
-        [ngClass]="{'disabled': !loaded}">Editar</a>
+      <a [routerLink]="['../../edit', dependency?.id]" [relativeTo]="activatedRoute" class="btn btn-warning"
+        aria-current="page" [ngClass]="{'disabled': !loaded}">Editar</a>
       <a class="btn btn-outline-danger" (click)="destroy()" [ngClass]="{'disabled': !loaded}">Eliminar</a>
     </div>
-    </div>
-    </div>
+  </div>
+  </div>
 
 <div class="row">
   <div class="col">

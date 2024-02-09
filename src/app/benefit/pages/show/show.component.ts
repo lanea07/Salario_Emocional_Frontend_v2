@@ -24,7 +24,7 @@ export class ShowComponent {
   loaded: boolean = false;
 
   constructor (
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private as: AlertService,
     private authService: AuthService,
     private benefitService: BenefitService,

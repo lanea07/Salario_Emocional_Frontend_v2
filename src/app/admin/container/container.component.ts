@@ -4,6 +4,11 @@ import { Component } from '@angular/core';
   selector: 'app-container',
   templateUrl: './container.component.html',
   styles: [
+    `
+      .sidebar {
+        z-index: 1;
+      }
+    `
   ]
 })
 export class ContainerComponent {

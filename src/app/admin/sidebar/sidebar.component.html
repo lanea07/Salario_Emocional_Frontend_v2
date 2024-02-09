@@ -1,10 +1,134 @@
-<div class="sidebar-sticky">
+<div class="navbar">
     <ul class="nav flex-column py-2">
-        <li class="nav-item">
-            <a class="nav-link active" href="#">
-                <i class="fa-solid fa-house"></i>
+        <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded" routerLink="/admin/all-benefit-user"
+                routerLinkActive="active">
                 General
-            </a>
+            </button>
+        </li>
+        <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#users-collapse"
+                [attr.aria-expanded]="router.isActive('/admin/user', false)">
+                Usuarios
+            </button>
+            <div class="collapse" id="users-collapse" [ngClass]="{ show: router.isActive('/admin/user', false)}">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/user/index" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Usuarios
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/user/create" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Nuevo Colaborador
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse"
+                [attr.aria-expanded]="router.isActive('/admin/position', false)" data-bs-target="#positions-collapse">
+                Cargos
+            </button>
+            <div class="collapse" id="positions-collapse" [ngClass]="{ show: router.isActive('/admin/position', false)}">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/position/index" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Cargos
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/position/create" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Nuevo Cargo
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#roles-collapse"
+                [attr.aria-expanded]="router.isActive('/admin/role', false)">
+                Roles
+            </button>
+            <div class="collapse" id="roles-collapse" [ngClass]="{ show: router.isActive('/admin/role', false)}">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/role/index" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Roles
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/role/create" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Nuevo Rol
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse"
+                data-bs-target="#dependencies-collapse" [attr.aria-expanded]="router.isActive('/admin/dependency', false)">
+                Áreas - Dependencias
+            </button>
+            <div class="collapse" id="dependencies-collapse" [ngClass]="{ show: router.isActive('/admin/dependency', false)}">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/dependency/index" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Áreas - Dependencias
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/dependency/create" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Nueva Área - Dependencia
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse"
+                data-bs-target="#benefit-collapse"
+                [attr.aria-expanded]="router.isActive('/admin/benefit', false) || router.isActive('/admin/benefit-detail', false)">
+                Beneficios
+            </button>
+            <div class="collapse" id="benefit-collapse"
+                [ngClass]="{ show: router.isActive('/admin/benefit', false) || router.isActive('/admin/benefit-detail', false)}">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/benefit/index" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Beneficios
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/benefit/create" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Nuevo Beneficio
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/benefit-detail/index" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Configuraciones
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link-dark rounded" routerLink="/admin/benefit-detail/create" routerLinkActive="active">
+                            <i class="fa-solid fa-house"></i>
+                            Nueva Configuración
+                            </a>
+                    </li>
+                    </ul>
+                    </div>
         </li>
     </ul>
 </div>
