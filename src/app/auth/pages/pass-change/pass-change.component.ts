@@ -27,12 +27,12 @@ export class PassChangeComponent {
   }
 
   miFormulario: FormGroup = this.fb.group( {
+    current_password: [ , [ Validators.required, Validators.minLength( 6 ) ] ],
     password: [ , [ Validators.required, Validators.minLength( 6 ) ] ],
     password_confirmation: [ , [ Validators.required, Validators.minLength( 6 ) ] ],
-    retypePassword: [ , [ Validators.required, Validators.minLength( 6 ) ] ],
     device_name: [ 'PC' ]
   }, {
-    validators: this.validatorService.camposIguales( 'password', 'retypePassword' )
+    validators: this.validatorService.camposIguales( 'password', 'password_confirmation' )
   } );
   showScreen: boolean = false;
 
