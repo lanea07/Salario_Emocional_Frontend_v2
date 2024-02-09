@@ -1,0 +1,38 @@
+<section>
+    <p-panel>
+        <ng-template pTemplate="header">
+            <div class="d-flex flex-column">
+                <h5 class="text-secondary">
+                    <i class="fa-solid fa-gears"></i>
+                    Preferencias de Usuario
+                </h5>
+                <small class="mt-1 text-sm text-gray-600">
+                    Aquí defines tus preferencias de usuario
+                </small>
+            </div>
+        </ng-template>
+        <form [formGroup]="preferencesForm" (ngSubmit)="save()" class="mt-6 space-y-6">
+            <div *ngFor="let preference of defaultPreferences" class="mb-3 row">
+                <div class="col-4 text-end">
+                    {{ preference.name }}
+                </div>
+                <div class="col-8">
+                    <select [ngClass]="{'invalid': campoEsValido(preference.name)}" class="form-select"
+                        aria-label="Default select example" id="{{preference.name}}" name="{{preference.name}}"
+                        formControlName="{{preference.name}}">
+                        <option value="" selected>--- Seleccione una opción ---</option>
+                        <option *ngFor="let value of preference.values" value="{{value}}">{{value}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <button class="btn btn-primary d-flex" type="submit">
+                    Actualizar
+                    <div *ngIf="!loaded" class="ms-1">
+                        <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+                    </div>
+                </button>
+            </div>
+        </form>
+    </p-panel>
+</section>
