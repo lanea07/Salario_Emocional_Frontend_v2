@@ -118,7 +118,18 @@ export class CreateComponent implements OnInit, AfterViewInit {
           this.userAndBenefitSpinner = false;
           if ( user ) {
             this.currentUserBenefits = Object.values( user )[ 0 ];
-            this.fillBenefitDetail( this.currentUserBenefits?.benefit_user[ 0 ].benefits.id );
+
+            let simulatedEvent = {
+              originalEvent: {
+                target: {
+                  textContent: this.currentUserBenefits?.benefit_user[ 0 ].benefits.name
+                }
+              },
+              value: this.currentUserBenefits?.benefit_user[ 0 ].benefits.id
+            }
+
+            // this.fillBenefitDetail( this.currentUserBenefits?.benefit_user[ 0 ].benefits.id );
+            this.fillBenefitDetail( simulatedEvent );
             this.createForm.get( 'benefit_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
             this.createForm.get( 'rangeDates' )?.setValue( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ) );
             this.createForm.get( 'benefit_id' )?.disable();
