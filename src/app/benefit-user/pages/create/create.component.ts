@@ -2,13 +2,13 @@ import { formatDate } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { combineLatest, forkJoin, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
 import { addHours } from 'date-fns';
+import { PrimeNGConfig } from 'primeng/api';
 import { Calendar } from 'primeng/calendar';
 import { Dropdown } from 'primeng/dropdown';
-import Swal from 'sweetalert2';
 
 import { BenefitDetail } from '../../../benefit-detail/interfaces/benefit-detail.interface';
 import { Benefit } from '../../../benefit/interfaces/benefit.interface';
@@ -19,7 +19,6 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 import { User } from '../../../user/interfaces/user.interface';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
-import { PrimeNGConfig } from 'primeng/api';
 
 @Component( {
   selector: 'benefitemployee-create',
@@ -104,45 +103,29 @@ export class CreateComponent implements OnInit, AfterViewInit {
 
   ngOnInit (): void {
     this.pgConfig.setTranslation( this.es );
-    forkJoin( {
-      loadBenefits: this.benefitService.indexAvailable()
-        .pipe(
-          tap( ( benefits ) => {
-            this.benefits = benefits;
-            this.createForm.get( 'benefit_id' )?.enable();
-            this.userAndBenefitSpinner = false;
-          } )
-      ),
+
+    combineLatest( {
+      benefits: this.benefitService.indexAvailable(),
+      user: this.router.url.includes( 'edit' ) ? this.activatedRoute.params.pipe(
+        switchMap( ( { id } ) => this.benefitUserService.show( id ) )
+      ) : of( undefined ),
     } )
       .subscribe( {
-        next: () => {
+        next: ( { benefits, user } ) => {
           this.createForm.get( 'selectedNodes' )?.enable();
-
-          if ( this.router.url.includes( 'edit' ) ) {
-            this.activatedRoute.params
-              .pipe(
-                switchMap( ( { id } ) => this.benefitUserService.show( id ) )
-              )
-              .subscribe(
-                {
-                  next: user => {
-                    this.currentUserBenefits = Object.values( user )[ 0 ];
-                    this.createForm.get( 'benefit_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
-                    this.createForm.get( 'rangeDates' )?.setValue( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ) );
-                    this.createForm.get( 'benefit_id' )?.disable();
-                    this.fillBenefitDetail( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
-                  },
-                  error: err => {
-                    this.router.navigateByUrl( 'benefit-employee' );
-                    this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.statusText );
-                  }
-                }
-              );
+          this.benefits = benefits;
+          this.createForm.get( 'benefit_id' )?.enable();
+          this.userAndBenefitSpinner = false;
+          if ( user ) {
+            this.currentUserBenefits = Object.values( user )[ 0 ];
+            this.fillBenefitDetail( this.currentUserBenefits?.benefit_user[ 0 ].benefits.id );
+            this.createForm.get( 'benefit_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
+            this.createForm.get( 'rangeDates' )?.setValue( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ) );
+            this.createForm.get( 'benefit_id' )?.disable();
           }
-
         },
         error: ( { error } ) => {
-          this.router.navigateByUrl( 'benefit-employee' );
+          this.router.navigateByUrl( '/basic/benefit-employee' );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
@@ -204,7 +187,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
             }
           } );
     } else {
-      this.benefitUserService.create( this.createForm.value ) 
+      this.benefitUserService.create( this.createForm.value )
         .subscribe( {
           next: () => {
             this.disableSubmitBtn = false;

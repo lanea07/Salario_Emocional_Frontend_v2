@@ -22,27 +22,27 @@
                     <div class="col-6">
                         <small>Beneficio</small>
                         <p>{{ modalData?.title }}</p>
-                        </div>
-                        <div class="col-6">
-                            <small>Detalle</small>
+                    </div>
+                    <div class="col-6">
+                        <small>Detalle</small>
                         <p>{{ modalData?.extendedProps.benefit_detail.name }}</p>
-                        </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <small>Fecha de redención</small>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <small>Fecha de redención</small>
                         <p>{{ modalData?.startStr | date:'medium' }}</p>
-                        </div>
-                        </div>
-                        </div>
-                        <ng-template pTemplate="footer">
-                <a class="btn btn-warning" href="./benefit-employee/edit/{{ modalData?.id }}" *ngIf="isAdmin">
+                    </div>
+                    </div>
+                    </div>
+                    <ng-template pTemplate="footer">
+                <a class="btn btn-warning" href="/basic/benefit-employee/edit/{{ modalData?.id }}" *ngIf="isAdmin">
                     Editar
                 </a>
                 <a class="btn btn-outline-danger" (click)="deleteBenefit( modalData?.id )" *ngIf="isAdmin">
                     Eliminar
                 </a>
-                </ng-template>
-                </p-dialog>
-                </div>
+            </ng-template>
+            </p-dialog>
+            </div>
 </div>
