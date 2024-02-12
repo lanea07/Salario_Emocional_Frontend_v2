@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 
@@ -16,6 +16,7 @@ import { BenefitService } from '../../benefit/services/benefit.service';
 import { DependencyService } from '../../dependency/services/dependency.service';
 import es_CO from '../../shared/Datatables-langs/es-CO.json';
 import { AdminService } from '../services/admin.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component( {
   selector: 'app-view-all-benefit-user',
@@ -99,11 +100,14 @@ export class ViewAllBenefitUserComponent implements OnInit {
   ];
 
   constructor (
+    private activatedRoute: ActivatedRoute,
     private adminService: AdminService,
     private as: AlertService,
     private benefitService: BenefitService,
     private dependencyService: DependencyService,
     private fb: FormBuilder,
+    private renderer: Renderer2,
+    private router: Router,
     private userService: UserService,
   ) { }
 
@@ -151,6 +155,14 @@ export class ViewAllBenefitUserComponent implements OnInit {
         },
       }
     };
+  }
+
+  ngAfterViewInit (): void {
+    this.renderer.listen( 'document', 'click', ( event ) => {
+      if ( event.target.hasAttribute( "benefit_user_id" ) ) {
+        this.router.navigate( [ "../benefit-employee/show", event.target.getAttribute( "benefit_user_id" ) ], { relativeTo: this.activatedRoute } );
+      }
+    } );
   }
 
   fillBenefits ( data: BenefitUserElement[] ) {

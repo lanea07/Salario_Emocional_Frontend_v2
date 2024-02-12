@@ -59,7 +59,7 @@ export class CreateComponent {
           this.createForm.get( 'name' )?.setValue( extractRoleDetail.name );
         },
         error: ( { error } ) => {
-          this.router.navigateByUrl( 'benefit-employee' );
+          this.router.navigateByUrl( '/basic/benefit-employee' );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );

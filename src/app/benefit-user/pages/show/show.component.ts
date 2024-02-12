@@ -68,7 +68,7 @@ export class ShowComponent implements OnInit {
               this.as.subscriptionAlert( subscriptionMessageTitle.ELIMINADO, subscriptionMessageIcon.SUCCESS );
               this.router.navigateByUrl( '/benefit-employee/index' );
             },
-            error: err => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
+            error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
           } )
       }
     } );

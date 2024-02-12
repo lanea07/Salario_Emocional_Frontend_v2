@@ -11,6 +11,7 @@ const routes: Routes = [ {
   children: [
     { path: 'all-benefit-user', component: ViewAllBenefitUserComponent, title: 'Dashboard' },
     { path: 'benefit-detail', loadChildren: () => import( '../benefit-detail/benefit-detail.module' ).then( m => m.BenefitDetailModule ), canMatch: [ authGuard ], title: 'Detalles de Beneficio' },
+    { path: 'benefit-employee', loadChildren: () => import( '../benefit-user/benefit-user.module' ).then( m => m.BenefitEmployeeModule ), canMatch: [ authGuard ], title: 'Beneficios de Empleado' },
     { path: 'benefit', loadChildren: () => import( '../benefit/benefit.module' ).then( m => m.BenefitModule ), canMatch: [ authGuard ], title: 'Beneficios' },
     { path: 'dependency', loadChildren: () => import( '../dependency/dependency.module' ).then( m => m.DependencyModule ), canMatch: [ authGuard ], title: 'Dependencias' },
     { path: 'position', loadChildren: () => import( '../position/position.module' ).then( m => m.PositionModule ), canMatch: [ authGuard ], title: 'Cargos' },
