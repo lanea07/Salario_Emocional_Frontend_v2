@@ -45,7 +45,7 @@ export class PassChangeComponent {
   ) {
     this.authService.validarRequirePassChange()
       .subscribe( {
-        next: ( resp ) => resp ? this.showScreen = true : this.router.navigate( [ 'benefit-employee' ] )
+        next: ( resp ) => resp ? this.showScreen = true : this.router.navigate( [ '/basic/benefit-employee' ] )
       } );
   }
 
@@ -58,7 +58,7 @@ export class PassChangeComponent {
     this.authService.passwordChange( this.miFormulario.value )
       .subscribe( {
         next: () => {
-          this.router.navigate( [ 'benefit-employee' ] );
+          this.router.navigate( [ '/basic/benefit-employee' ] );
           this.as.subscriptionAlert( subscriptionMessageTitle.PASSCHANGED, subscriptionMessageIcon.SUCCESS );
         },
         error: ( err ) => {

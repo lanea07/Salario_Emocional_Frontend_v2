@@ -64,7 +64,7 @@ export class MyPendingBenefitsComponent implements OnInit {
               callback( { data: benefitUser[ 0 ].benefit_user } );
             },
             error: ( err ) => {
-              this.router.navigateByUrl( 'benefit-employee' );
+              this.router.navigateByUrl( '/basic/benefit-employee' );
               this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
             }
           } );
