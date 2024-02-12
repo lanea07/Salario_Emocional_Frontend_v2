@@ -8,7 +8,6 @@ import { ShowComponent } from './pages/show/show.component';
 
 const routes: Routes = [ {
   path: '',
-  component: MainContainerComponent,
   children: [
     { path: 'index', component: IndexComponent, title: 'Página Principal' },
     { path: 'edit/:id', component: CreateComponent, title: 'Editar Beneficio' },
