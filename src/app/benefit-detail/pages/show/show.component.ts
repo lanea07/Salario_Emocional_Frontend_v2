@@ -37,7 +37,7 @@ export class ShowComponent {
           this.loaded = true;
         },
         error: ( { error } ) => {
-          this.router.navigateByUrl( '/basic/benefit-employee' );
+          this.router.navigate( [ 'basic', 'benefit-employee' ] );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );

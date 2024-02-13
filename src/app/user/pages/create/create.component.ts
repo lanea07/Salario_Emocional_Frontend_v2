@@ -151,7 +151,7 @@ export class CreateComponent implements OnInit {
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/user/show/${ this.user?.id }` )
+              this.router.navigate( [ `../show`, this.user?.id ], { relativeTo: this.activatedRoute } )
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS )
             },
             error: ( { error } ) => {
@@ -164,7 +164,7 @@ export class CreateComponent implements OnInit {
         .subscribe(
           {
             next: ( userCreated ) => {
-              this.router.navigateByUrl( `/user/show/${ userCreated.id }` )
+              this.router.navigate( [ `../show`, userCreated.id ], { relativeTo: this.activatedRoute } )
               this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS )
             },
             error: ( { error } ) => {

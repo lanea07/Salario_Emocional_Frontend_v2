@@ -127,7 +127,7 @@ export class CreateComponent {
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/benefit/show/${ this.benefit?.id }` )
+              this.router.navigate( [ `../show`, this.benefit?.id ], { relativeTo: this.activatedRoute } )
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS )
             },
             error: ( { error } ) => {
@@ -142,7 +142,7 @@ export class CreateComponent {
         .subscribe(
           {
             next: ( { id } ) => {
-              this.router.navigateByUrl( `/benefit/show/${ id }` )
+              this.router.navigate( [ `../show`, id ], { relativeTo: this.activatedRoute } )
               this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS );
             },
             error: ( { error } ) => {

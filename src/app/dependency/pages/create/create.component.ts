@@ -53,7 +53,7 @@ export class CreateComponent implements OnInit {
         this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependencies[ 0 ] ) ];
       },
       error: ( { error } ) => {
-        this.router.navigateByUrl( 'dependency' );
+        this.router.navigate( [ 'dependency' ] );
         this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       }
     } );
@@ -96,7 +96,7 @@ export class CreateComponent implements OnInit {
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/dependency/show/${ this.dependency?.id }` )
+              this.router.navigate( [ `../show`, this.dependency?.id ], { relativeTo: this.activatedRoute } )
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS, 'Actualizado' );
             },
             error: ( { error } ) => {
@@ -113,7 +113,7 @@ export class CreateComponent implements OnInit {
         .subscribe(
           {
             next: dependencyCreated => {
-              this.router.navigateByUrl( `/dependency/show/${ dependencyCreated.id }` )
+              this.router.navigate( [ `../show`, dependencyCreated.id ], { relativeTo: this.activatedRoute } )
               this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS, 'Creado' )
             },
             error: ( { error } ) => {
