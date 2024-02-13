@@ -20,7 +20,7 @@ export class ShowComponent implements OnInit {
   benefitUser?: BenefitUser;
 
   constructor (
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private as: AlertService,
     private benefitUserService: BenefitUserService,
     private router: Router,
@@ -38,7 +38,7 @@ export class ShowComponent implements OnInit {
             this.loaded = true;
           },
           error: err => {
-            this.router.navigateByUrl( 'benefit-employee/index' );
+            this.router.navigate( [ 'benefit-employee', 'index' ], { relativeTo: this.activatedRoute } );
             this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
           }
         }
@@ -66,7 +66,7 @@ export class ShowComponent implements OnInit {
           .subscribe( {
             next: resp => {
               this.as.subscriptionAlert( subscriptionMessageTitle.ELIMINADO, subscriptionMessageIcon.SUCCESS );
-              this.router.navigateByUrl( '/benefit-employee/index' );
+              this.router.navigate( [ 'benefit-employee', 'index' ] );
             },
             error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
           } )

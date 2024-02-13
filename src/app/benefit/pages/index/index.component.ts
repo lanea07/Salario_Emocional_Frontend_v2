@@ -44,7 +44,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
             callback( { data: benefits } );
           },
           error: ( err ) => {
-            this.router.navigateByUrl( '/basic/benefit-employee' );
+            this.router.navigate( [ 'basic', 'benefit-employee' ] );
             this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
           }
         } );

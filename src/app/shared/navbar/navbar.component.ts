@@ -36,18 +36,8 @@ export class NavbarComponent implements OnInit {
   logout () {
     this.authService.logout()
       .subscribe( resp => {
-        this.router.navigateByUrl( '/login' );
+        this.router.navigate( [ 'login' ] );
       } );
   }
-
-  // addClass ( event: any ): void {
-  //   event.target.className = event.target.className.replace( ' btn-outline-light', '' );
-  //   event.target.className += ' btn-outline-danger';
-  // }
-
-  // removeClass ( event: any ): void {
-  //   event.target.className = event.target.className.replace( ' btn-outline-danger', '' );
-  //   event.target.className += ' btn-outline-light';
-  // }
 
 }

@@ -44,7 +44,7 @@ export class MyTeamRequestComponent implements OnInit, OnDestroy {
                 callback( { data: benefitUser } );
               },
               error: ( err ) => {
-                this.router.navigateByUrl( '/basic/benefit-employee' );
+                this.router.navigate( [ 'basic', 'benefit-employee' ] );
                 this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
               }
             } );
@@ -143,7 +143,7 @@ export class MyTeamRequestComponent implements OnInit, OnDestroy {
 
   onCaptureEvent ( event: DropdownComponentEventType ) {
     if ( event.cmd === 'view' ) {
-      return this.router.navigate( [ "/benefit-employee/show/" + event.data.id ] );
+      return this.router.navigate( [ "../show", event.data.id ], { relativeTo: this.activatedRoute } );
     }
     this.benefitUserService.decideBenefitUser( event )
       .subscribe( {

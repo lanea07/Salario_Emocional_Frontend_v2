@@ -79,7 +79,7 @@ export class CreateComponent {
           this.createForm.get( 'time_hours' )?.setValue( extractBenefitDetail.time_hours );
         },
         error: ( { error } ) => {
-          this.router.navigateByUrl( '/basic/benefit-employee' );
+          this.router.navigate( [ 'basic', 'benefit-employee' ] );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
@@ -102,7 +102,7 @@ export class CreateComponent {
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/benefit-detail/show/${ this.benefitDetail?.id }` )
+              this.router.navigate( [ `../show`, this.benefitDetail?.id ], { relativeTo: this.activatedRoute } )
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
             },
             error: ( { error } ) => {
@@ -117,7 +117,7 @@ export class CreateComponent {
       this.benefitDetailService.create( this.createForm.value )
         .subscribe( {
           next: ( { id } ) => {
-            this.router.navigateByUrl( `/benefit-detail/show/${ id }` );
+            this.router.navigate( [ `../show`, id ], { relativeTo: this.activatedRoute } );
             this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS );
           },
           error: ( { error } ) => {

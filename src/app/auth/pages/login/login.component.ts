@@ -132,7 +132,7 @@ export class LoginComponent {
     this.loging = true;
     this.authService.login( email, password, device_name )
       .subscribe( {
-        next: ( resp ) => this.router.navigateByUrl( '/basic' ),
+        next: ( resp ) => this.router.navigate( [ 'basic' ] ),
         error: ( { error } ) => {
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
           this.loging = false;
