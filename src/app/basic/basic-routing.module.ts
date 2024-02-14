@@ -9,6 +9,7 @@ const routes: Routes = [
     component: MainContainerComponent,
     children: [
       { path: 'benefit-employee', loadChildren: () => import( '../benefit-user/benefit-user.module' ).then( m => m.BenefitEmployeeModule ), canMatch: [ authGuard ], title: 'Beneficios de Empleado' },
+      { path: 'benefit', loadChildren: () => import( '../benefit/benefit.module' ).then( m => m.BenefitModule ), canMatch: [ authGuard ], title: 'Beneficios' },
       { path: 'user-preferences', loadChildren: () => import( '../user-preferences/user-preferences.module' ).then( m => m.UserPreferencesModule ), canMatch: [ authGuard ], title: 'Preferencias' },
       { path: '**', redirectTo: 'benefit-employee' },
     ]

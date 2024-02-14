@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component( {
   selector: 'benefitdetail-show',
@@ -17,10 +18,12 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 export class ShowComponent {
 
   benefitDetail?: BenefitDetail;
+  isAdmin!: boolean;
   loaded: boolean = false;
 
   constructor (
     public activatedRoute: ActivatedRoute,
+    private authService: AuthService,
     private as: AlertService,
     private benefitDetailService: BenefitDetailService,
     private router: Router,
@@ -40,6 +43,14 @@ export class ShowComponent {
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
+      } );
+
+    this.authService.validarAdmin()
+      .subscribe( {
+        next: ( isAdmin: any ) => {
+          this.isAdmin = isAdmin.admin;
+        },
+        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } );
   }
 
