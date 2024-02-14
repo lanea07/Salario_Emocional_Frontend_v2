@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
@@ -16,7 +16,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
   templateUrl: './my-team-request.component.html',
   styles: []
 } )
-export class MyTeamRequestComponent implements OnInit, OnDestroy {
+export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @ViewChild( 'dropdownComponent' ) dropdownComponent!: TemplateRef<DropdownComponent>;
   @ViewChild( DataTableDirective, { static: false } )

@@ -75,11 +75,7 @@ export class AuthService {
     const headers = new HttpHeaders()
       .append( 'Authorization', `Bearer ${ token }` );
 
-    return this.http.post( url, [], { headers, withCredentials: true } )
-      .pipe(
-        map( resp => resp ),
-        catchError( err => { return of( false ) } )
-      );
+    return this.http.post<any>( url, [], { headers, withCredentials: true } );
   }
 
   validarRequirePassChange (): Observable<boolean> {
