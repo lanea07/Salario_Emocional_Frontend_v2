@@ -22,7 +22,7 @@ export class NavigationService {
     if ( this.history.length > 0 ) {
       this.location.back();
     } else {
-      this.router.navigateByUrl( "/" );
+      this.router.navigate( [ '/' ] );
     }
   }
 }

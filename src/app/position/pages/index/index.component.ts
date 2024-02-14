@@ -43,7 +43,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
             callback( { data: positions } );
           },
           error: ( err ) => {
-            this.router.navigateByUrl( '/basic/benefit-employee' );
+            this.router.navigate( [ 'basic', 'benefit-employee' ] );
             this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
           }
         } );
@@ -90,7 +90,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
   ngAfterViewInit (): void {
     this.renderer.listen( 'document', 'click', ( event ) => {
       if ( event.target.hasAttribute( "position_id" ) ) {
-        this.router.navigate( [ "../show/", event.target.getAttribute( "position_id" ) ], { relativeTo: this.activatedRoute } );
+        this.router.navigate( [ "../show", event.target.getAttribute( "position_id" ) ], { relativeTo: this.activatedRoute } );
       }
     } );
   }
