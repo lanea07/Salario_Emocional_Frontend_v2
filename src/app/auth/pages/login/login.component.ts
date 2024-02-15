@@ -3,10 +3,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import Swal from 'sweetalert2';
 
-import { AuthService } from '../../services/auth.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component( {
   selector: 'auth-login',

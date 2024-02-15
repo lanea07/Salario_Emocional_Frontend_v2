@@ -7,6 +7,7 @@ export interface AuthResponse {
   can: Can;
   id: number;
   user: User;
+  simulated?: boolean;
 }
 
 export interface Errors {

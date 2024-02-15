@@ -12,6 +12,7 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 export class NavbarComponent implements OnInit {
 
   isAdmin: boolean = false;
+  isSimulated: boolean = false;
   user?: User;
 
   constructor (
@@ -23,6 +24,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit (): void {
+    this.isSimulated = Boolean( localStorage.getItem( 'simulated' ) );
     this.authService.validarAdmin()
       .subscribe( {
         next: ( isAdmin: any ) => {
