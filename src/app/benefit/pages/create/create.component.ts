@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/f
 import { ActivatedRoute, Router } from '@angular/router';
 import { EMPTY, switchMap } from 'rxjs';
 
-import Swal from 'sweetalert2';
-
 import { BenefitDetail } from 'src/app/benefit-detail/interfaces/benefit-detail.interface';
 import { BenefitDetailService } from 'src/app/benefit-detail/services/benefit-detail.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
@@ -25,6 +23,7 @@ export class CreateComponent {
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
     filePoliticas: [],
+    valid_id: [ '', Validators.required ],
   } );
   disableSubmitBtn: boolean = false;
   filePoliticas: string = "";
@@ -56,9 +55,7 @@ export class CreateComponent {
     private validatorService: ValidatorService
   ) { }
 
-
   ngOnInit () {
-
     this.benefitDetailService.index()
       .pipe(
         switchMap( ( benefitDetails: BenefitDetail[] ) => {
@@ -91,13 +88,13 @@ export class CreateComponent {
           } else {
             this.politicsInput = true;
           }
+          this.createForm.get( 'valid_id' )?.setValue( extractBenefit.valid_id );
         },
         error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } );
   }
 
   campoEsValido ( campo: string ) {
-
     try {
       return this.createForm.controls[ campo ].errors
         && this.createForm.controls[ campo ].touched;
@@ -115,12 +112,11 @@ export class CreateComponent {
       this.createForm.markAllAsTouched();
       return;
     }
-
     const formData = new FormData();
     formData.append( 'benefitDetailFormGroup', JSON.stringify( this.createForm.get( 'benefitDetailFormGroup' )!.value ) );
     formData.append( 'name', this.createForm.get( 'name' )!.value );
     formData.append( 'filePoliticas', this.createForm.get( 'filePoliticas' )!.value );
-
+    formData.append( 'valid_id', this.createForm.get( 'valid_id' )!.value );
     if ( this.benefit?.id ) {
       formData.append( '_method', 'PUT' );
       this.benefitService.update( this.benefit.id, formData )
@@ -135,9 +131,7 @@ export class CreateComponent {
               this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
             }
           } );
-
     } else {
-
       this.benefitService.create( formData )
         .subscribe(
           {
@@ -168,20 +162,17 @@ export class CreateComponent {
   atLeastOneCheckboxCheckedValidator ( minRequired = 1 ): ValidationErrors {
     return function validate ( formGroup: FormGroup ) {
       let checked = 0;
-
       Object.keys( formGroup.controls ).forEach( key => {
         const control = formGroup.controls[ key ];
         if ( control.value ) {
           checked++;
         }
       } );
-
       if ( checked < minRequired ) {
         return {
           requireCheckboxToBeChecked: true,
         };
       }
-
       return null;
     };
   }
