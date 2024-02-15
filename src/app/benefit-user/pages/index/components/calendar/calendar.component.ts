@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { CalendarOptions } from '@fullcalendar/core';
@@ -21,9 +21,9 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 } )
 export class CalendarComponent implements OnChanges, AfterViewInit {
 
-  @ViewChild( 'calendar' ) calendar!: FullCalendarComponent;
   @Input() data: BenefitUserElement[] = [];
   @Input() year: number = new Date().getFullYear().valueOf();
+  @ViewChild( 'calendar' ) calendar!: FullCalendarComponent;
   isAdmin: boolean = false;
   modalData?: any;
   visible: boolean = false;
@@ -96,6 +96,27 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
       detail: this.calendar
     } );
     this.elementRef.nativeElement.dispatchEvent( event );
+    this.elementRef.nativeElement.getElementsByClassName( 'fc-header-toolbar' )[ 0 ].classList
+      .add(
+        'd-flex',
+        'flex-column',
+        'flex-md-row',
+      );
+    let elements: HTMLCollection[] = this.elementRef.nativeElement.getElementsByClassName( 'fc-button-group' )
+    Object.values( elements ).forEach( ( element: any ) => {
+      element.classList
+        .add(
+          'd-flex',
+          'flex-wrap',
+        );
+    } );
+    elements = this.elementRef.nativeElement.getElementsByClassName( 'fc-button' )
+    Object.values( elements ).forEach( ( element: any ) => {
+      element.classList
+        .add(
+          'rounded-0',
+        );
+    } );
   }
 
   showModal ( arg: any ) {
