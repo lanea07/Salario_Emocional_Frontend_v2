@@ -70,40 +70,13 @@ export class MyPendingBenefitsComponent implements OnInit {
           } );
       },
       columns: this.columns,
-      responsive: [
+      columnDefs: [
         {
-          details: [
-            {
-              type: 'inline',
-              target: 'tr',
-              renderer: function ( api: any, rowIdx: any, columns: any ) {
-                let data = columns.map( ( col: any, i: any ) => {
-                  return col.hidden ?
-                    '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td>' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>' :
-                    '';
-                } ).join( '' );
-                let table: any = document.createElement( 'table' );
-                table.innerHTML = data;
-                table.classList.add( 'table' );
-                table.classList.add( 'table-hover' );
-                return data ? table : false;
-              }
-            }
-          ]
+          className: 'all',
+          targets: [ -1 ]
         }
       ],
+      responsive: true,
       language: es_CO
     }
   }
