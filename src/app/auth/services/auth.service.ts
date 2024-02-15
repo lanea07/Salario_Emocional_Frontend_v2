@@ -95,4 +95,30 @@ export class AuthService {
 
     return this.http.post<boolean>( url, formValues, { headers, withCredentials: true } )
   }
+
+  loginAs ( user_id: number ) {
+    const url = `${ this.baseUrl }/login-as`;
+    const device_name = 'PC';
+    const body = { user_id, device_name };
+    const token = localStorage.getItem( 'token' );
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ token }` );
+
+    return this.getCookie().pipe(
+      mergeMap( () => {
+        return this.http.post<AuthResponse>( url, body, { headers, withCredentials: true } )
+          .pipe(
+            tap( resp => {
+              if ( resp.token ) {
+                localStorage.setItem( 'token', resp.token! );
+                localStorage.setItem( 'user', JSON.stringify( resp.user! ) );
+                localStorage.setItem( 'uid', resp.id!.toString() );
+                localStorage.setItem( 'simulated', resp.simulated!.toString() );
+              }
+            } )
+          );
+      } )
+    )
+  }
 }

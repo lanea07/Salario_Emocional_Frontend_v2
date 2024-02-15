@@ -27,7 +27,7 @@
       <ul class="navbar-nav mx-lg-1">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            {{ user?.name }}
+            {{ isSimulated ? user?.name + ' (Simulado)' : user?.name }}
           </a>
           <ul class="dropdown-menu">
             <li><a routerLink="/basic/user-preferences/index" class="dropdown-item">Mi Perfil</a></li>
