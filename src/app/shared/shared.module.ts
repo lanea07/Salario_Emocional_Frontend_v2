@@ -8,6 +8,7 @@ import { MainContainerComponent } from './main-container/main-container.componen
 import { NavbarComponent } from './navbar/navbar.component';
 import { TotalBancoHorasPipe } from './pipes/TotalBancoHoras.pipe';
 import { VacationsDatePipe } from './pipes/vacations-date.pipe';
+import { PluckJoinPipe } from './pipes/pluck-join.pipe';
 
 @NgModule( {
   declarations: [
@@ -15,6 +16,7 @@ import { VacationsDatePipe } from './pipes/vacations-date.pipe';
     BreadcrumbComponent,
     MainContainerComponent,
     NavbarComponent,
+    PluckJoinPipe,
     TotalBancoHorasPipe,
     VacationsDatePipe,
   ],
@@ -27,6 +29,7 @@ import { VacationsDatePipe } from './pipes/vacations-date.pipe';
     BreadcrumbComponent,
     MainContainerComponent,
     NavbarComponent,
+    PluckJoinPipe,
     TotalBancoHorasPipe,
     VacationsDatePipe,
   ]

@@ -40,7 +40,7 @@ export class ShowComponent {
           this.loaded = true;
         },
         error: ( { error } ) => {
-          this.router.navigateByUrl( 'benefit-employee' );
+          this.router.navigate( [ 'basic', 'benefit-employee' ] );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
         }
       } );
@@ -66,7 +66,7 @@ export class ShowComponent {
         this.dependencyService.destroy( this.dependency?.id )
           .subscribe( {
             next: ( resp ) => {
-              this.router.navigateByUrl( 'dependency/index' );
+              this.router.navigate( [ 'dependency', 'index' ] );
               this.as.subscriptionAlert( subscriptionMessageTitle.ELIMINADO, subscriptionMessageIcon.SUCCESS )
             },
             error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )

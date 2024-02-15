@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
@@ -16,7 +16,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
   templateUrl: './my-team-request.component.html',
   styles: []
 } )
-export class MyTeamRequestComponent implements OnInit, OnDestroy {
+export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @ViewChild( 'dropdownComponent' ) dropdownComponent!: TemplateRef<DropdownComponent>;
   @ViewChild( DataTableDirective, { static: false } )
@@ -44,7 +44,7 @@ export class MyTeamRequestComponent implements OnInit, OnDestroy {
                 callback( { data: benefitUser } );
               },
               error: ( err ) => {
-                this.router.navigateByUrl( 'benefit-employee' );
+                this.router.navigate( [ 'basic', 'benefit-employee' ] );
                 this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
               }
             } );
@@ -143,7 +143,7 @@ export class MyTeamRequestComponent implements OnInit, OnDestroy {
 
   onCaptureEvent ( event: DropdownComponentEventType ) {
     if ( event.cmd === 'view' ) {
-      return this.router.navigate( [ "/benefit-employee/show/" + event.data.id ] );
+      return this.router.navigate( [ "../show", event.data.id ], { relativeTo: this.activatedRoute } );
     }
     this.benefitUserService.decideBenefitUser( event )
       .subscribe( {

@@ -92,7 +92,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
   ngAfterViewInit (): void {
     this.renderer.listen( 'document', 'click', ( event ) => {
       if ( event.target.hasAttribute( "dependency_id" ) ) {
-        this.router.navigate( [ "../show/", event.target.getAttribute( "dependency_id" ) ], { relativeTo: this.activatedRoute } );
+        this.router.navigate( [ "../show", event.target.getAttribute( "dependency_id" ) ], { relativeTo: this.activatedRoute } );
       }
     } );
   }

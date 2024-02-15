@@ -53,7 +53,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
               callback( { data: benefitDetails } );
             },
             error: ( err ) => {
-              this.router.navigateByUrl( 'benefit-employee' );
+              this.router.navigate( [ 'basic', 'benefit-employee' ] );
               this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
             }
           } );
@@ -100,7 +100,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
   ngAfterViewInit (): void {
     this.renderer.listen( 'document', 'click', ( event ) => {
       if ( event.target.hasAttribute( "benefit_detail_id" ) ) {
-        this.router.navigate( [ "../show/", event.target.getAttribute( "benefit_detail_id" ) ], { relativeTo: this.activatedRoute } );
+        this.router.navigate( [ "../show", event.target.getAttribute( "benefit_detail_id" ) ], { relativeTo: this.activatedRoute } );
       }
       if ( event.target.hasAttribute( "benefit_detail_options_id" ) ) {
         this.router.navigate( [ "../show", event.target.getAttribute( "benefit_detail_options_id" ) ], { relativeTo: this.activatedRoute } );

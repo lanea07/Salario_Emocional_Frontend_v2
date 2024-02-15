@@ -44,7 +44,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
               callback( { data: roles } );
             },
             error: ( err ) => {
-              this.router.navigateByUrl( 'benefit-employee' );
+              this.router.navigate( [ 'basic', 'benefit-employee' ] );
               this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
             }
           } );
@@ -91,7 +91,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
   ngAfterViewInit (): void {
     this.renderer.listen( 'document', 'click', ( event ) => {
       if ( event.target.hasAttribute( "role_id" ) ) {
-        this.router.navigate( [ "../show/", event.target.getAttribute( "role_id" ) ], { relativeTo: this.activatedRoute } );
+        this.router.navigate( [ "../show", event.target.getAttribute( "role_id" ) ], { relativeTo: this.activatedRoute } );
       }
     } );
   }

@@ -119,7 +119,7 @@ export class LoginComponent {
   ) {
     this.authService.validarToken()
       .subscribe( {
-        next: ( resp ) => resp ? this.router.navigate( [ 'benefit-employee' ] ) : this.showScreen = true
+        next: ( resp ) => resp ? this.router.navigate( [ 'basic' ] ) : this.showScreen = true
       } );
   }
 
@@ -132,7 +132,7 @@ export class LoginComponent {
     this.loging = true;
     this.authService.login( email, password, device_name )
       .subscribe( {
-        next: ( resp ) => this.router.navigateByUrl( '/benefit-employee' ),
+        next: ( resp ) => this.router.navigate( [ 'basic' ] ),
         error: ( { error } ) => {
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
           this.loging = false;

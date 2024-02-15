@@ -59,7 +59,7 @@ export class CreateComponent {
           this.createForm.get( 'name' )?.setValue( extractRoleDetail.name );
         },
         error: ( { error } ) => {
-          this.router.navigateByUrl( 'benefit-employee' );
+          this.router.navigate( [ 'basic', 'benefit-employee' ] );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
@@ -82,7 +82,7 @@ export class CreateComponent {
         .subscribe(
           {
             next: () => {
-              this.router.navigateByUrl( `/role/show/${ this.role?.id }` )
+              this.router.navigate( [ `../show`, this.role?.id ], { relativeTo: this.activatedRoute } )
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
             },
             error: ( { error } ) => {
@@ -97,7 +97,7 @@ export class CreateComponent {
         .subscribe(
           {
             next: ( { id } ) => {
-              this.router.navigateByUrl( `/role/show/${ id }` );
+              this.router.navigate( [ `../show`, id ], { relativeTo: this.activatedRoute } );
               this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS );
             },
             error: ( { error } ) => {

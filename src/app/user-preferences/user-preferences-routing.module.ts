@@ -5,7 +5,6 @@ import { MainContainerComponent } from '../shared/main-container/main-container.
 
 const routes: Routes = [ {
   path: '',
-  component: MainContainerComponent,
   children: [
     { path: 'index', component: IndexComponent, title: 'Mis Preferencias' },
   ]
