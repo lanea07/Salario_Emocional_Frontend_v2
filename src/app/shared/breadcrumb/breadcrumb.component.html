@@ -1,12 +1,14 @@
 <div class="py-2 bg-transparent">
-    <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>';">
-        <ol class="breadcrumb">
-            <li *ngFor="let breadcrumb of breadcrumbs" class="breadcrumb-item">
-                <small>
-                    <a class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                        routerLink="{{ breadcrumb.url }}">{{ breadcrumb.displayName }}</a>
-                </small>
-            </li>
-        </ol>
-    </nav>
+  <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>';">
+    <ol class="breadcrumb">
+      @for (breadcrumb of breadcrumbs; track breadcrumb) {
+        <li class="breadcrumb-item">
+          <small>
+            <a class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+            routerLink="{{ breadcrumb.url }}">{{ breadcrumb.displayName }}</a>
+          </small>
+        </li>
+      }
+    </ol>
+  </nav>
 </div>
