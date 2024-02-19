@@ -4,21 +4,23 @@
 
       <div class="mb-3">
         <p-panel header="Información Básica">
-        <div class="mb-3 form-floating">
+          <div class="mb-3 form-floating">
             <input [ngClass]="{'invalid': campoEsValido('name')}" class="form-control" type="text" formControlName="name" id="name"
               placeholder="Nombre Completo">
-            <label class="form-label" for="name"><i class="fa-solid fa-briefcase me-1"></i>Nombre del Cargo</label>
-            <small *ngIf="campoEsValido('name')" class="text-danger">{{ positionNameErrors }}</small>
+              <label class="form-label" for="name"><i class="fa-solid fa-briefcase me-1"></i>Nombre del Cargo</label>
+              @if (campoEsValido('name')) {
+                <small class="text-danger">{{ positionNameErrors }}</small>
+              }
             </div>
-            </p-panel>
-      </div>
+          </p-panel>
+        </div>
 
-      <div class="mb-3">
-        <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
-          {{ ( position?.id ) ? 'Actualizar' : 'Crear' }}
-        </button>
-      </div>
+        <div class="mb-3">
+          <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
+            {{ ( position?.id ) ? 'Actualizar' : 'Crear' }}
+          </button>
+        </div>
 
-    </form>
+      </form>
+    </div>
   </div>
-</div>

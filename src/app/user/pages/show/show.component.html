@@ -3,7 +3,7 @@
     <div class="btn-group float-end mt-5 mb-5">
       <button backButton class="btn btn-outline-secondary">Volver</button>
       <a [routerLink]="['../../edit',user?.id]" [relativeTo]="activatedRoute" class="btn btn-warning" aria-current="page"
-        [ngClass]="{'disabled': !loaded}">Editar</a>
+      [ngClass]="{'disabled': !loaded}">Editar</a>
     </div>
   </div>
 </div>
@@ -33,25 +33,34 @@
         </tr>
         <tr>
           <th class="text-end">Jefe</th>
-          <td *ngIf="!user?.parent else parent">No Registra</td>
-          </tr>
+          @if (!user?.parent) {
+            <td>No Registra</td>
+          } @else {
+            <td>
+              <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              [routerLink]="['../../show', user?.parent?.id ]" [relativeTo]="activatedRoute">{{ user?.parent?.name }}</a>
+            </td>
+          }
+        </tr>
         <tr>
           <td colspan="2">
             <h5 class="mt-2">Preferencias</h5>
             <table class="table table-hover table-borderless">
               <tbody>
-                <tr *ngFor="let preference of userPreferences">
-                  <th>{{ preference.name }}</th>
-                  <td>{{ preference.values }}</td>
-                </tr>
-                </tbody>
-                </table>
+                @for (preference of userPreferences; track preference) {
+                  <tr>
+                    <th>{{ preference.name }}</th>
+                    <td>{{ preference.values }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
           </td>
-          </tr>
-          </tbody>
-          </table>
-          </div>
-          </div>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 
 
@@ -59,6 +68,6 @@
 <ng-template #parent>
   <td>
     <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-      [routerLink]="['../../show', user?.parent?.id ]" [relativeTo]="activatedRoute">{{ user?.parent?.name }}</a>
+    [routerLink]="['../../show', user?.parent?.id ]" [relativeTo]="activatedRoute">{{ user?.parent?.name }}</a>
   </td>
 </ng-template>

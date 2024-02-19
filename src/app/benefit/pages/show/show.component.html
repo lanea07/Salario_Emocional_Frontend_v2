@@ -2,9 +2,11 @@
   <div class="col">
     <div class="btn-group float-end mt-5 mb-5">
       <button backButton class="btn btn-outline-secondary">Volver</button>
-      <a *ngIf="isAdmin" [routerLink]="['../../edit',benefit?.id]" [relativeTo]="activatedRoute" class="btn btn-warning"
-        aria-current="page"
+      @if (isAdmin) {
+        <a [routerLink]="['../../edit',benefit?.id]" [relativeTo]="activatedRoute" class="btn btn-warning"
+          aria-current="page"
         [ngClass]="{'disabled': !loaded}">Editar</a>
+      }
     </div>
   </div>
 </div>
@@ -15,52 +17,61 @@
     <div class="row px-5">
 
       <div>
-        <div *ngIf="!loaded">
-          <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-        </div>
-        {{ benefit?.name }}<span *ngIf="!benefit?.valid_id && loaded" class='badge rounded-pill text-bg-danger ms-1'>Inactivo</span>
-      </div>
-      <span class="form-text">Nombre</span>
-      <div *ngIf="filePoliticas" class="col-2">
+        @if (!loaded) {
+          <div>
+            <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+          </div>
+        }
+        {{ benefit?.name }}@if (!benefit?.valid_id && loaded) {
+        <span class='badge rounded-pill text-bg-danger ms-1'>Inactivo</span>
+      }
+    </div>
+    <span class="form-text">Nombre</span>
+    @if (filePoliticas) {
+      <div class="col-2">
         <p><a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-            href="{{filePoliticas}}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Política</a>
+          href="{{filePoliticas}}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Política</a>
         </p>
       </div>
+    }
 
-    </div>
+  </div>
 
-    <div class="row px-5">
+  <div class="row px-5">
 
-      <div class="col-12">
+    <div class="col-12">
 
-        <div *ngIf="!loaded else benefitDetail">
+      @if (!loaded) {
+        <div>
           <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
         </div>
-
-      </div>
+      } @else {
+        <table class="table table-hover table-sm">
+          <thead class="bg-dark text-light">
+            <tr>
+              <th>Posibles configuraciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (benefit_detail of benefit?.benefit_detail; track benefit_detail) {
+              <tr>
+                <td>
+                  <p>{{ benefit_detail.name }}</p>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
 
     </div>
 
   </div>
+
+</div>
 </div>
 
 
 
 <!-- Templates -->
 
-<ng-template #benefitDetail>
-  <table class="table table-hover table-sm">
-    <thead class="bg-dark text-light">
-      <tr>
-        <th>Posibles configuraciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let benefit_detail of benefit?.benefit_detail">
-        <td>
-          <p>{{ benefit_detail.name }}</p>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</ng-template>

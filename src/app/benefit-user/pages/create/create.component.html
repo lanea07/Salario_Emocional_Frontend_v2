@@ -11,12 +11,16 @@
               <div class="p-inputgroup">
                 <p-dropdown #benefit class="w-100" styleClass="w-100" optionLabel="name" optionValue="id"
                   formControlName="benefit_id" [options]="benefits" placeholder="-- Seleccione Beneficio --"
-                  (onChange)="fillBenefitDetail($event)"></p-dropdown>
-                <span *ngIf="userAndBenefitSpinner" class="p-inputgroup-addon">
-                  <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-                </span>
+                (onChange)="fillBenefitDetail($event)"></p-dropdown>
+                @if (userAndBenefitSpinner) {
+                  <span class="p-inputgroup-addon">
+                    <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+                  </span>
+                }
               </div>
-              <small *ngIf="campoEsValido('benefit_id')" class="text-danger">{{ benefitIdErrors }}</small>
+              @if (campoEsValido('benefit_id')) {
+                <small class="text-danger">{{ benefitIdErrors }}</small>
+              }
             </div>
 
             <!-- Detalles - Beneficios -->
@@ -25,42 +29,46 @@
               <div class="p-inputgroup">
                 <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="benefit_detail_id"
                   [options]="benefit_details" placeholder="-- Seleccione Detalle --"
-                  (onChange)="validateBenefitDetail($event)"></p-dropdown>
-                <span *ngIf="!benefitDetailSpinner" class="p-inputgroup-addon">
-                  <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-                </span>
+                (onChange)="validateBenefitDetail($event)"></p-dropdown>
+                @if (!benefitDetailSpinner) {
+                  <span class="p-inputgroup-addon">
+                    <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+                  </span>
+                }
               </div>
-              <small *ngIf="campoEsValido('benefit_detail_id')" class="text-danger">{{ benefitDetailIdErrors }}</small>
-              </div>
+              @if (campoEsValido('benefit_detail_id')) {
+                <small class="text-danger">{{ benefitDetailIdErrors }}</small>
+              }
+            </div>
 
             <div class="row mb-3">
               <label for="benefit_detail_id">Selecciona una fecha</label>
               <p-calendar styleClass="w-100" #calendar [showTime]="true" formControlName="rangeDates" selectionMode="single"
                 [readonlyInput]="true" [disabledDays]="disabledDays" [numberOfMonths]="numberOfMonths" appendTo="body"
-                [baseZIndex]="2000"></p-calendar>
-              </div>
-              
-              <div class="text-end text-body-tertiary">
-                @if (user?.parent?.name ) {
-                  <small>Tu beneficio será decidido por: {{ user?.parent?.name }}</small>
-                }
-                @else {
-                  <small>No tienes un colaborador superior asignado, tu beneficio será aprobado automaticamente</small>
-                }
+              [baseZIndex]="2000"></p-calendar>
             </div>
+
+            <div class="text-end text-body-tertiary">
+              @if (user?.parent?.name ) {
+                <small>Tu beneficio será decidido por: {{ user?.parent?.name }}</small>
+              }
+              @else {
+              <small>No tienes un colaborador superior asignado, tu beneficio será aprobado automaticamente</small>
+            }
           </div>
-        </p-panel>
-      </div>
+        </div>
+      </p-panel>
+    </div>
 
-      <input type="hidden" formControlName="benefit_begin_time" />
-      <input type="hidden" formControlName="benefit_end_time" />
-      <input type="hidden" formControlName="user_id" />
+    <input type="hidden" formControlName="benefit_begin_time" />
+    <input type="hidden" formControlName="benefit_end_time" />
+    <input type="hidden" formControlName="user_id" />
 
-      <div class="mb-3">
-        <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
-          {{ currentUserBenefits?.id ? "Actualizar" : "Crear" }}
-        </button>
-      </div>
-    </form>
-  </div>
+    <div class="mb-3">
+      <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
+        {{ currentUserBenefits?.id ? "Actualizar" : "Crear" }}
+      </button>
+    </div>
+  </form>
+</div>
 </div>

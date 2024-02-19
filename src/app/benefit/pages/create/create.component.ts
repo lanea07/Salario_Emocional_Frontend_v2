@@ -27,7 +27,6 @@ export class CreateComponent {
   } );
   disableSubmitBtn: boolean = false;
   filePoliticas: string = "";
-  loaded: boolean = false;
   politicsInput: boolean = true;
 
   get benefitDetailFormGroup (): FormGroup | any {
@@ -61,7 +60,6 @@ export class CreateComponent {
         switchMap( ( benefitDetails: BenefitDetail[] ) => {
           this.benefitDetails = benefitDetails;
           this.createForm.addControl( "benefitDetailFormGroup", this.buildBenefitDetailFormGroup( this.benefitDetails ) );
-          this.loaded = true;
           return this.activatedRoute.params;
         } ),
         switchMap( ( { id } ) => {
