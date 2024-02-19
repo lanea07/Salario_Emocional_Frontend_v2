@@ -41,7 +41,7 @@ export class ViewAllBenefitUserComponent implements OnInit {
   approvedBenefits: BenefitUserElement[] = [];
   benefits: Benefit[] = [];
   dependencies: Dependency[] = [];
-  dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   loaded: boolean = false;
   pendingBenefits: BenefitUserElement[] = [];
   rejectedBenefits: BenefitUserElement[] = [];
@@ -122,6 +122,7 @@ export class ViewAllBenefitUserComponent implements OnInit {
       return true;
     } );
     this.dtOptions = {
+      autoWidth: true,
       columns: this.columns,
       columnDefs: [
         {
@@ -129,7 +130,21 @@ export class ViewAllBenefitUserComponent implements OnInit {
           targets: [ -1 ]
         }
       ],
-      responsive: true
+      responsive: true,
+      dom: 'r<"top d-flex flex-column flex-xs-column flex-md-column flex-lg-row justify-content-between"<"mx-2"f><"mx-2"l><"mx-2 my-1 d-flex justify-content-center regexSearch"><"d-flex flex-grow-1 justify-content-center justify-content-md-end"p>><t><"bottom d-flex flex-column flex-xs-column flex-md-column flex-lg-column flex-xl-row justify-content-start"B<"mx-2"l><"mx-2 flex-grow-1"><"d-none d-sm-block"i>>',
+      initComplete: function ( settings: any, json: any ) {
+        $( '.dt-buttons > button' ).removeClass( 'dt-button' );
+      },
+      buttons: [
+        {
+          text: 'Ajustar',
+          key: '1',
+          className: 'btn btn-sm btn-primary',
+          action: function ( e: any, dt: any, node: any, config: any ) {
+            dt.columns.adjust().draw();
+          }
+        }
+      ]
     };
   }
 
