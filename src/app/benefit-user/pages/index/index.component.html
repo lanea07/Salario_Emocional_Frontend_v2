@@ -29,22 +29,24 @@
     </p-tabView>
   </p-tabPanel>
   <p-tabPanel header="Mi Equipo">
-    <p-tabView (onChange)="renderCalendars()">
-      <p-tabPanel header="Beneficios Redimidos">
-        <ng-template pTemplate="content">
-          <my-team [year]="viewBenefitUser.get('years')!.value"></my-team>
-        </ng-template>
-      </p-tabPanel>
-      <p-tabPanel header="Aprobaciones Pendientes">
-        <ng-template pTemplate="content">
-          <my-team-request></my-team-request>
-        </ng-template>
-      </p-tabPanel>
-      <p-tabPanel header="Mis Colaboradores">
-        <ng-template pTemplate="content">
-          <my-collaborators-benefits [year]="viewBenefitUser.get('years')!.value"></my-collaborators-benefits>
-        </ng-template>
-      </p-tabPanel>
-    </p-tabView>
+    <ng-template pTemplate="content">
+      <p-tabView (onChange)="renderCalendars()">
+        <p-tabPanel header="Beneficios Redimidos">
+          <ng-template pTemplate="content">
+            <my-team [year]="viewBenefitUser.get('years')!.value"></my-team>
+          </ng-template>
+        </p-tabPanel>
+        <p-tabPanel header="Aprobaciones Pendientes">
+          <ng-template pTemplate="content">
+            <my-team-request></my-team-request>
+          </ng-template>
+        </p-tabPanel>
+        <p-tabPanel header="Mis Colaboradores">
+          <ng-template pTemplate="content">
+            <my-collaborators-benefits [year]="viewBenefitUser.get('years')!.value"></my-collaborators-benefits>
+          </ng-template>
+        </p-tabPanel>
+      </p-tabView>
+    </ng-template>
   </p-tabPanel>
 </p-tabView>

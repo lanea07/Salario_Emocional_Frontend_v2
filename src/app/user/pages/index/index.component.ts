@@ -26,7 +26,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
 
   isAdmin: any;
   dtElement!: DataTableDirective;
-  dtOptions: ADTSettings = {};
+  dtOptions: any = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
 
   constructor (
@@ -54,6 +54,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
                 }
               } );
         },
+        autowidth: true,
         columns: [
           { title: 'Nombre', data: 'name' },
           { title: 'Correo', data: 'email' },
@@ -91,6 +92,21 @@ export class IndexComponent implements OnInit, AfterViewInit {
           }
         ],
         responsive: true,
+        dom: 'r<"top d-flex flex-column flex-xs-column flex-md-column flex-lg-row justify-content-between"<"mx-2"f><"mx-2"l><"mx-2 my-1 d-flex justify-content-center regexSearch"><"d-flex flex-grow-1 justify-content-center justify-content-md-end"p>><t><"bottom d-flex flex-column flex-xs-column flex-md-column flex-lg-column flex-xl-row justify-content-start"B<"mx-2"l><"mx-2 flex-grow-1"><"d-none d-sm-block"i>>',
+        initComplete: function ( settings: any, json: any ) {
+          $( '.dt-buttons > button' ).removeClass( 'dt-button' );
+        },
+        buttons: [
+          {
+            text: 'Actualizar',
+            key: '1',
+            className: 'btn btn-sm btn-primary',
+            action: function ( e: any, dt: any, node: any, config: any ) {
+              dt.columns.adjust().draw();
+              dt.ajax.reload();
+            }
+          }
+        ]
       }
     } );
   }
