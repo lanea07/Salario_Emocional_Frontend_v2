@@ -6,7 +6,7 @@ import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { BenefitService } from '../../services/benefit.service';
 import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
-import { Subject } from 'rxjs';
+import { Subject, map } from 'rxjs';
 
 @Component( {
   selector: 'benefit-index',
@@ -20,7 +20,7 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild( DataTableDirective, { static: false } )
 
   dtElement!: DataTableDirective;
-  dtOptions: ADTSettings = {};
+  dtOptions: any = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
 
   constructor (
@@ -46,8 +46,15 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
             }
           } );
         },
+        autoWidth: true,
         columns: [
           { title: 'Nombre', data: 'name' },
+          {
+            title: 'Configuraciones',
+            data: function ( data: any, type: any, full: any ) {
+              return data.benefit_detail.map( ( detail: any ) => detail.name ).join( '<br>' );
+            }
+          },
           {
             title: 'Opciones',
             data: null,
@@ -69,7 +76,22 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
           if ( !data.valid_id ) {
             $( row ).addClass( 'invalid-user' );
           };
-        }
+        },
+        dom: 'r<"top d-flex flex-column flex-xs-column flex-md-column flex-lg-row justify-content-between"<"mx-2"f><"mx-2"l><"mx-2 my-1 d-flex justify-content-center regexSearch"><"d-flex flex-grow-1 justify-content-center justify-content-md-end"p>><t><"bottom d-flex flex-column flex-xs-column flex-md-column flex-lg-column flex-xl-row justify-content-start"B<"mx-2"l><"mx-2 flex-grow-1"><"d-none d-sm-block"i>>',
+        initComplete: function ( settings: any, json: any ) {
+          $( '.dt-buttons > button' ).removeClass( 'dt-button' );
+        },
+        buttons: [
+          {
+            text: 'Actualizar',
+            key: '1',
+            className: 'btn btn-sm btn-primary',
+            action: function ( e: any, dt: any, node: any, config: any ) {
+              dt.columns.adjust().draw();
+              dt.ajax.reload();
+            }
+          }
+        ]
       }
     } );
   }

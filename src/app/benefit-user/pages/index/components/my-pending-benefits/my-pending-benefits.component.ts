@@ -1,9 +1,10 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../../../shared/Datatables-langs/es-CO.json';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Component( {
   selector: 'my-pending-benefits',
@@ -12,6 +13,9 @@ import { BenefitUserService } from '../../../../services/benefit-user.service';
   ]
 } )
 export class MyPendingBenefitsComponent implements OnInit {
+
+  @ViewChild( DataTableDirective, { static: false } ) datatableElement!: DataTableDirective;
+
 
   columns = [
     { title: 'Beneficio', data: 'benefits.name' },
@@ -45,7 +49,7 @@ export class MyPendingBenefitsComponent implements OnInit {
       }
     }
   ];
-  dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
 
   constructor (
     private activatedRoute: ActivatedRoute,
@@ -69,6 +73,7 @@ export class MyPendingBenefitsComponent implements OnInit {
             }
           } );
       },
+      autoWidth: true,
       columns: this.columns,
       columnDefs: [
         {
@@ -77,7 +82,22 @@ export class MyPendingBenefitsComponent implements OnInit {
         }
       ],
       responsive: true,
-      language: es_CO
+      language: es_CO,
+      dom: 'r<"top d-flex flex-column flex-xs-column flex-md-column flex-lg-row justify-content-between"<"mx-2"f><"mx-2"l><"mx-2 my-1 d-flex justify-content-center regexSearch"><"d-flex flex-grow-1 justify-content-center justify-content-md-end"p>><t><"bottom d-flex flex-column flex-xs-column flex-md-column flex-lg-column flex-xl-row justify-content-start"B<"mx-2"l><"mx-2 flex-grow-1"><"d-none d-sm-block"i>>',
+      initComplete: function ( settings: any, json: any ) {
+        $( '.dt-buttons > button' ).removeClass( 'dt-button' );
+      },
+      buttons: [
+        {
+          text: 'Actualizar',
+          key: '1',
+          className: 'btn btn-sm btn-primary',
+          action: function ( e: any, dt: any, node: any, config: any ) {
+            dt.columns.adjust().draw();
+            dt.ajax.reload();
+          }
+        }
+      ]
     }
   }
 
@@ -88,5 +108,4 @@ export class MyPendingBenefitsComponent implements OnInit {
       }
     } );
   }
-
 }
