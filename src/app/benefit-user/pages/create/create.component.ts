@@ -2,19 +2,19 @@ import { formatDate } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, forkJoin, of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { addHours } from 'date-fns';
 import { PrimeNGConfig } from 'primeng/api';
 import { Calendar } from 'primeng/calendar';
 import { Dropdown } from 'primeng/dropdown';
 
+import { UserService } from 'src/app/user/services/user.service';
 import { BenefitDetail } from '../../../benefit-detail/interfaces/benefit-detail.interface';
 import { Benefit } from '../../../benefit/interfaces/benefit.interface';
 import { BenefitService } from '../../../benefit/services/benefit.service';
 import { Dependency } from '../../../dependency/interfaces/dependency.interface';
-import { DependencyService } from '../../../dependency/services/dependency.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from '../../../shared/services/alert-service.service';
 import { User } from '../../../user/interfaces/user.interface';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
@@ -60,6 +60,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
   nodes!: any[];
   numberOfMonths: number = 1;
   selectedBenefitDetail?: BenefitDetail;
+  user?: User;
   users?: User[];
   userAndBenefitSpinner: boolean = true;
 
@@ -93,10 +94,10 @@ export class CreateComponent implements OnInit, AfterViewInit {
     private benefitService: BenefitService,
     private benefitUserService: BenefitUserService,
     private changeDetectorRef: ChangeDetectorRef,
-    private dependencyService: DependencyService,
     private fb: FormBuilder,
     private pgConfig: PrimeNGConfig,
     private router: Router,
+    private userService: UserService,
   ) {
     this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
   }
@@ -106,19 +107,20 @@ export class CreateComponent implements OnInit, AfterViewInit {
 
     combineLatest( {
       benefits: this.benefitService.indexAvailable(),
-      user: this.router.url.includes( 'edit' ) ? this.activatedRoute.params.pipe(
+      benefitUser: this.router.url.includes( 'edit' ) ? this.activatedRoute.params.pipe(
         switchMap( ( { id } ) => this.benefitUserService.show( id ) )
       ) : of( undefined ),
+      user: this.userService.show( this.createForm.get( 'user_id' )?.value )
     } )
       .subscribe( {
-        next: ( { benefits, user } ) => {
+        next: ( { benefits, benefitUser, user } ) => {
+          this.user = Object.values( user )[ 0 ];
           this.createForm.get( 'selectedNodes' )?.enable();
           this.benefits = benefits;
           this.createForm.get( 'benefit_id' )?.enable();
           this.userAndBenefitSpinner = false;
-          if ( user ) {
-            this.currentUserBenefits = Object.values( user )[ 0 ];
-
+          if ( benefitUser ) {
+            this.currentUserBenefits = Object.values( benefitUser )[ 0 ];
             let simulatedEvent = {
               originalEvent: {
                 target: {
@@ -127,8 +129,6 @@ export class CreateComponent implements OnInit, AfterViewInit {
               },
               value: this.currentUserBenefits?.benefit_user[ 0 ].benefits.id
             }
-
-            // this.fillBenefitDetail( this.currentUserBenefits?.benefit_user[ 0 ].benefits.id );
             this.fillBenefitDetail( simulatedEvent );
             this.createForm.get( 'benefit_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
             this.createForm.get( 'rangeDates' )?.setValue( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ) );
@@ -140,12 +140,10 @@ export class CreateComponent implements OnInit, AfterViewInit {
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
-
     this.createForm.get( 'benefit_detail_id' )!.valueChanges
       .subscribe( currentBenefitDetail => {
         this.selectedBenefitDetail = this.benefit_details?.find( benefits => benefits.id === Number.parseInt( currentBenefitDetail || 0 ) );
       } );
-
   }
 
   ngAfterViewInit (): void {
@@ -168,6 +166,8 @@ export class CreateComponent implements OnInit, AfterViewInit {
       return;
     }
 
+
+    // TODO: Set correct time for all benefits here, specifically Mis Vacaciones, Mi Viernes, Mi Cumpleaños
     let date = this.createForm.get( 'rangeDates' )?.value;
     if ( this.benefit.containerViewChild?.nativeElement.innerText === 'Mis Vacaciones' ) {
       let initialDate = new Date( date[ 0 ] );
@@ -181,7 +181,6 @@ export class CreateComponent implements OnInit, AfterViewInit {
       this.createForm.get( 'benefit_begin_time' )?.setValue( formatDate( new Date( date ), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
       this.createForm.get( 'benefit_end_time' )?.setValue( formatDate( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ).toString(), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
     }
-
 
     if ( this.currentUserBenefits?.id ) {
       this.benefitUserService.update( this.currentUserBenefits!.benefit_user[ 0 ].id, this.createForm.getRawValue() )
@@ -197,7 +196,8 @@ export class CreateComponent implements OnInit, AfterViewInit {
               this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
             }
           } );
-    } else {
+    }
+    else {
       this.benefitUserService.create( this.createForm.value )
         .subscribe( {
           next: () => {
@@ -213,21 +213,6 @@ export class CreateComponent implements OnInit, AfterViewInit {
         } );
     }
     this.disableSubmitBtn = true;
-  }
-
-  fillColaboradores ( event: any ) {
-    let dependencies = this.dependencyService.flattenDependency( { ...this.dependencies[ 0 ] } )
-    let dependency = dependencies.find( ( dependency: Dependency ) => {
-      return dependency.name === event.node.label;
-    } );
-    this.createForm.get( 'user_id' )?.reset( '' );
-    this.users = dependency!.users;
-    this.users.length > 0 ? this.createForm.get( 'user_id' )?.enable() : this.createForm.get( 'user_id' )?.disable();
-  }
-
-  emptyColaboradores () {
-    this.users = [];
-    this.createForm.get( 'user_id' )?.disable();
   }
 
   fillBenefitDetail ( event: any ) {
