@@ -1,9 +1,12 @@
 <!-- div for login -->
-<div *ngIf="loging" class="loginAnimation d-flex align-items-center justify-content-center" [@fadeInOut]>
+@if (loging) {
+<div class="loginAnimation d-flex align-items-center justify-content-center" [@fadeInOut]>
   <span class="loader-lock"></span>
 </div>
+}
 
-<form autocomplete="off" [formGroup]="loginForm" (ngSubmit)="login()" *ngIf="showScreen">
+@if (showScreen) {
+<form autocomplete="off" [formGroup]="loginForm" (ngSubmit)="login()">
   <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -15,16 +18,18 @@
 
                 <div class="form-outline form-white mb-4">
                   <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Correo"
-                    formControlName="email" required/>
-                    <small *ngIf="campoEsValido('email')" class="text-danger">{{ benefitIdErrors }}</small>
-
+                    formControlName="email" required />
+                    @if (campoEsValido('email')) {
+                      <small class="text-danger">{{ userIdErrors }}</small>
+                    }
                 </div>
 
                 <div class="form-outline form-white mb-4">
                   <input type="password" id="password" name="password" class="form-control form-control-lg"
-                    placeholder="Contraseña" formControlName="password" required/>
-                    <small *ngIf="campoEsValido('password')" class="text-danger">{{ benefitIdErrors }}</small>
-
+                    placeholder="Contraseña" formControlName="password" required />
+                    @if (campoEsValido('password')) {
+                      <small class="text-danger">{{ passwordErrors }}</small>
+                    }
                 </div>
 
                 <input type="hidden" id="device_name" formControlName="device_name" />
@@ -39,3 +44,4 @@
     </div>
   </section>
 </form>
+}

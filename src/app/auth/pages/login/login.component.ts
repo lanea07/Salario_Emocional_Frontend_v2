@@ -102,7 +102,7 @@ export class LoginComponent {
     return '';
   }
 
-  get benefitIdErrors (): string {
+  get passwordErrors (): string {
     const errors = this.loginForm.get( 'password' )?.errors;
     if ( errors![ 'required' ] ) {
       return 'El campo es obligatorio';

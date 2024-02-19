@@ -3,20 +3,22 @@
     <div class="btn-group float-end mt-5 mb-5">
       <button backButton class="btn btn-outline-secondary">Volver</button>
       <a [routerLink]="['../../edit', dependency?.id]" [relativeTo]="activatedRoute" class="btn btn-warning"
-        aria-current="page" [ngClass]="{'disabled': !loaded}">Editar</a>
+      aria-current="page" [ngClass]="{'disabled': !loaded}">Editar</a>
       <a class="btn btn-outline-danger" (click)="destroy()" [ngClass]="{'disabled': !loaded}">Eliminar</a>
     </div>
   </div>
-  </div>
+</div>
 
 <div class="row">
   <div class="col">
 
     <div class="row px-5">
       <div class="col-xs-12 col-md-4 d-flex flex-column my-2">
-        <div *ngIf="!loaded">
-          <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-        </div>
+        @if (!loaded) {
+          <div>
+            <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+          </div>
+        }
         {{ dependency?.name }}
         <span class="form-text">Nombre</span>
       </div>
