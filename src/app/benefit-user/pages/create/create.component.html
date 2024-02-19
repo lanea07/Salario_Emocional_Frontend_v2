@@ -29,17 +29,27 @@
                 <span *ngIf="!benefitDetailSpinner" class="p-inputgroup-addon">
                   <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
                 </span>
-                </div>
-                <small *ngIf="campoEsValido('benefit_detail_id')" class="text-danger">{{ benefitDetailIdErrors }}</small>
-                </div>
+              </div>
+              <small *ngIf="campoEsValido('benefit_detail_id')" class="text-danger">{{ benefitDetailIdErrors }}</small>
+              </div>
 
             <div class="row mb-3">
               <label for="benefit_detail_id">Selecciona una fecha</label>
               <p-calendar styleClass="w-100" #calendar [showTime]="true" formControlName="rangeDates" selectionMode="single"
-                [readonlyInput]="true" [disabledDays]="disabledDays" [numberOfMonths]="numberOfMonths" appendTo="body" [baseZIndex]="2000"></p-calendar>
+                [readonlyInput]="true" [disabledDays]="disabledDays" [numberOfMonths]="numberOfMonths" appendTo="body"
+                [baseZIndex]="2000"></p-calendar>
+              </div>
+              
+              <div class="text-end text-body-tertiary">
+                @if (user?.parent?.name ) {
+                  <small>Tu beneficio será decidido por: {{ user?.parent?.name }}</small>
+                }
+                @else {
+                  <small>No tienes un colaborador superior asignado, tu beneficio será aprobado automaticamente</small>
+                }
             </div>
           </div>
-          </p-panel>
+        </p-panel>
       </div>
 
       <input type="hidden" formControlName="benefit_begin_time" />
