@@ -7,7 +7,7 @@
 
             <!-- Beneficios -->
             <div class="row mb-3">
-              <label for="benefit_id">Selecciona un beneficio</label>
+              <label for="benefit_id">Selecciona un beneficio *</label>
               <div class="p-inputgroup">
                 <p-dropdown #benefit class="w-100" styleClass="w-100" optionLabel="name" optionValue="id"
                   formControlName="benefit_id" [options]="benefits" placeholder="-- Seleccione Beneficio --"
@@ -25,7 +25,7 @@
 
             <!-- Detalles - Beneficios -->
             <div class="row mb-3">
-              <label for="benefit_detail_id">Selecciona un Detalle</label>
+              <label for="benefit_detail_id">Selecciona un Detalle *</label>
               <div class="p-inputgroup">
                 <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="benefit_detail_id"
                   [options]="benefit_details" placeholder="-- Seleccione Detalle --" (onChange)="enableCalendar()"></p-dropdown>
@@ -41,10 +41,16 @@
             </div>
 
             <div class="row mb-3">
-              <label for="benefit_detail_id">Selecciona una fecha</label>
+              <label for="benefit_detail_id">Selecciona una fecha *</label>
               <p-calendar styleClass="w-100" #calendar [showTime]="true" formControlName="rangeDates" selectionMode="single"
                 [readonlyInput]="true" [disabledDays]="disabledDays" [numberOfMonths]="numberOfMonths" appendTo="body"
               [baseZIndex]="2000" [hideOnDateTimeSelect]="false"></p-calendar>
+            </div>
+
+            <div class="mb-3">
+              <label for="request_comment" class="text-body-tertiary">Comentarios</label>
+              <textarea class="w-100" styleClass="w-100" pInputTextarea formControlName="request_comment" id="request_comment"
+                [autoResize]="true" rows="1"></textarea>
             </div>
 
             <div class="text-end text-body-tertiary">

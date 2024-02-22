@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { TabViewModule } from 'primeng/tabview';
@@ -17,6 +18,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
     CalendarModule,
     DialogModule,
     DropdownModule,
+    InputTextareaModule, 
     InputTextModule,
     PanelModule,
     TabViewModule,
@@ -26,6 +28,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
     CalendarModule,
     DialogModule,
     DropdownModule,
+    InputTextareaModule,
     InputTextModule,
     PanelModule,
     TabViewModule,

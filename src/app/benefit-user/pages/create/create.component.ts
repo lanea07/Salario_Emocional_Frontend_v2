@@ -50,7 +50,8 @@ export class CreateComponent implements OnInit, AfterViewInit {
     benefit_end_time: [ '' ],
     benefit_id: [ { value: '', disabled: true }, Validators.required ],
     user_id: [ '', Validators.required ],
-    rangeDates: [ { value: '', disabled: true } ],
+    rangeDates: [ { value: '', disabled: true }, Validators.required ],
+    request_comment: [ '' ],
   } );
   currentUserBenefits?: BenefitUser;
   date!: { year: number, month: number };
