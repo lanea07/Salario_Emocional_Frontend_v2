@@ -165,12 +165,9 @@ export class CreateComponent implements OnInit, AfterViewInit {
       this.createForm.markAllAsTouched();
       return;
     }
-
-
-    // TODO: Set correct time for all benefits here, specifically Mis Vacaciones, Mi Viernes, Mi Cumpleaños
     let date = this.createForm.get( 'rangeDates' )?.value;
     let permissionName = this.benefit.containerViewChild?.nativeElement.innerText;
-    if ( permissionName === 'Mis Vacaciones' ) {
+    if ( permissionName === 'Mis Vacaciones' || permissionName === 'Permiso Especial' ) {
       let initialDate = new Date( date[ 0 ] );
       let finalDate = new Date( date[ 1 ] );
       finalDate.setDate( finalDate.getDate() + 1 );
