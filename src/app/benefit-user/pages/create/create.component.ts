@@ -50,7 +50,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
     benefit_end_time: [ '' ],
     benefit_id: [ { value: '', disabled: true }, Validators.required ],
     user_id: [ '', Validators.required ],
-    rangeDates: [ '' ],
+    rangeDates: [ { value: '', disabled: true } ],
   } );
   currentUserBenefits?: BenefitUser;
   date!: { year: number, month: number };
@@ -169,7 +169,8 @@ export class CreateComponent implements OnInit, AfterViewInit {
 
     // TODO: Set correct time for all benefits here, specifically Mis Vacaciones, Mi Viernes, Mi Cumpleaños
     let date = this.createForm.get( 'rangeDates' )?.value;
-    if ( this.benefit.containerViewChild?.nativeElement.innerText === 'Mis Vacaciones' ) {
+    let permissionName = this.benefit.containerViewChild?.nativeElement.innerText;
+    if ( permissionName === 'Mis Vacaciones' ) {
       let initialDate = new Date( date[ 0 ] );
       let finalDate = new Date( date[ 1 ] );
       finalDate.setDate( finalDate.getDate() + 1 );
@@ -218,6 +219,8 @@ export class CreateComponent implements OnInit, AfterViewInit {
   fillBenefitDetail ( event: any ) {
     this.createForm.get( 'benefit_detail_id' )!.reset( '' );
     this.createForm.get( 'benefit_detail_id' )!.disable();
+    this.createForm.get( 'rangeDates' )!.reset( '' );
+    this.createForm.get( 'rangeDates' )!.disable();
     this.benefitDetailSpinner = false;
     this.benefitService.show( event.value || event )
       .subscribe(
@@ -230,6 +233,15 @@ export class CreateComponent implements OnInit, AfterViewInit {
             if ( this.router.url.includes( 'edit' ) ) {
               this.createForm.get( 'benefit_detail_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefit_detail.id );
               this.benefitDetailSpinner = true;
+              this.createForm.get( 'rangeDates' )!.enable();
+              let simulatedEvent = {
+                originalEvent: {
+                  target: {
+                    textContent: this.currentUserBenefits?.benefit_user[ 0 ].benefits.name
+                  }
+                }
+              };
+              this.setCalendar( simulatedEvent );
             }
             this.createForm.get( 'benefit_detail_id' )!.enable();
           },
@@ -238,14 +250,22 @@ export class CreateComponent implements OnInit, AfterViewInit {
           }
         }
       );
-    if ( event.originalEvent && event.originalEvent.target.textContent == "Mi Viernes" ) {
+    this.setCalendar( event );
+  }
+
+  setCalendar ( event: any ) {
+    this.createForm.get( 'rangeDates' )!.reset( '' );
+    let permissionName = event.originalEvent.target.textContent;
+    if ( event.originalEvent && permissionName == "Mi Viernes" ) {
       this.disabledDays = [ 0, 1, 2, 3, 4, 6 ];
       this.calendar.currentHour = 13;
       this.calendar.currentMinute = 0;
     } else {
       this.disabledDays = [];
+      this.calendar.currentHour = 7;
+      this.calendar.currentMinute = 0;
     }
-    if ( event.originalEvent && event.originalEvent.target.textContent == "Mis Vacaciones" ) {
+    if ( event.originalEvent && ( permissionName == "Mis Vacaciones" || permissionName == "Permiso Especial" ) ) {
       this.calendar.selectionMode = 'range'
       this.numberOfMonths = 2;
     }
@@ -253,19 +273,11 @@ export class CreateComponent implements OnInit, AfterViewInit {
       this.calendar.selectionMode = 'single'
       this.numberOfMonths = 1;
     }
-    this.calendar.updateUI();
-    this.createForm.get( 'rangeDates' )?.reset( '' );
-    this.calendar.clear();
-  }
-
-  validateBenefitDetail ( event: any ) {
-    if ( event.originalEvent && event.originalEvent.target.textContent == "Mañana" ) {
-      this.calendar.currentHour = 7;
-    } else if ( event.originalEvent && event.originalEvent.target.textContent == "Tarde" ) {
-      this.calendar.currentHour = 13;
-    }
-    this.calendar.currentMinute = 0;
     this.calendar.updateTime();
+    this.calendar.updateUI();
   }
 
+  enableCalendar () {
+    this.createForm.get( 'rangeDates' )!.enable();
+  }
 }

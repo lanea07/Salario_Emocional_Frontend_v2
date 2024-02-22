@@ -28,8 +28,7 @@
               <label for="benefit_detail_id">Selecciona un Detalle</label>
               <div class="p-inputgroup">
                 <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="benefit_detail_id"
-                  [options]="benefit_details" placeholder="-- Seleccione Detalle --"
-                (onChange)="validateBenefitDetail($event)"></p-dropdown>
+                  [options]="benefit_details" placeholder="-- Seleccione Detalle --" (onChange)="enableCalendar()"></p-dropdown>
                 @if (!benefitDetailSpinner) {
                   <span class="p-inputgroup-addon">
                     <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
@@ -45,7 +44,7 @@
               <label for="benefit_detail_id">Selecciona una fecha</label>
               <p-calendar styleClass="w-100" #calendar [showTime]="true" formControlName="rangeDates" selectionMode="single"
                 [readonlyInput]="true" [disabledDays]="disabledDays" [numberOfMonths]="numberOfMonths" appendTo="body"
-              [baseZIndex]="2000"></p-calendar>
+              [baseZIndex]="2000" [hideOnDateTimeSelect]="false"></p-calendar>
             </div>
 
             <div class="text-end text-body-tertiary">
