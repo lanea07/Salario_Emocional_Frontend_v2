@@ -71,7 +71,7 @@ export class UpdatePasswordComponent {
     private fb: FormBuilder,
   ) { }
 
-  campoEsValido ( campo: string ) {
+  isValidField ( campo: string ) {
     return this.passwordForm.controls[ campo ].errors
       && this.passwordForm.controls[ campo ].touched;
   }

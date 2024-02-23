@@ -98,8 +98,8 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
             key: '1',
             className: 'btn btn-sm btn-primary',
             action: function ( e: any, dt: any, node: any, config: any ) {
-              dt.columns.adjust().draw();
               dt.ajax.reload();
+              dt.columns.adjust().draw();
             }
           }
         ]
@@ -114,6 +114,7 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
               dtInstance.destroy();
               // Call the dtTrigger to rerender again
               this.dtTrigger.next( this.dtOptions );
+              dtInstance.columns.adjust().draw();
             } );
           }
         },

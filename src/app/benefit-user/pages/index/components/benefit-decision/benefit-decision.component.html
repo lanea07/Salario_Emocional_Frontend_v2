@@ -15,15 +15,15 @@
             </tr>
             <tr>
                 <th>Fecha de creación</th>
-                <td>{{ benefitUser?.created_at }}</td>
+                <td>{{ benefitUser?.created_at | date:'short' }}</td>
             </tr>
             <tr>
                 <th>Fecha de redención</th>
-                <td>{{ benefitUser?.benefit_begin_time }}</td>
+                <td>{{ benefitUser?.benefit_begin_time | date:'short' }}</td>
             </tr>
             <tr>
                 <th>Finalización</th>
-                <td>{{ benefitUser?.benefit_end_time }}</td>
+                <td>{{ benefitUser?.benefit_end_time | date:'short' }}</td>
             </tr>
             <tr>
                 <th>Observaciones</th>
@@ -33,7 +33,28 @@
     </table>
 </div>
 
-<div class="btn-group" role="group" aria-label="Decide Benefit">
-    <button class="btn btn-success" (click)="decideBenefit('accept')">Aceptar</button>
-    <button class="btn btn-danger" (click)="decideBenefit('reject')">Rechazar</button>
-</div>
+<form [formGroup]="decisionForm" (ngSubmit)="decideBenefit()">
+    <div class="mb-3">
+        <label for="decision_comment" class="text-body-secondary">Comentarios</label>
+        <textarea class="w-100" styleClass="w-100" pInputTextarea formControlName="decision_comment"
+            id="decision_comment" [autoResize]="true" rows="1"></textarea>
+    </div>
+    <div class="mb-3">
+        <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" formControlName="cmd" id="btnradio1" autocomplete="off"
+                value="approve">
+            <label class="btn btn-outline-success" for="btnradio1">Aprobar</label>
+
+            <input type="radio" class="btn-check" formControlName="cmd" id="btnradio2" autocomplete="off"
+                value="reject">
+            <label class="btn btn-outline-danger" for="btnradio2">Rechazar</label>
+        </div>
+        @if (isValidField('cmd')) {
+        <small class="text-danger ms-3">El campo es requerido</small>
+        }
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </div>
+</form>

@@ -32,7 +32,7 @@ export class ProfileInformationComponent {
     this.profileForm.controls[ 'email' ].disable();
   }
 
-  campoEsValido ( campo: string ) {
+  isValidField ( campo: string ) {
     return this.profileForm.controls[ campo ].errors
       && this.profileForm.controls[ campo ].touched;
   }

@@ -18,7 +18,7 @@
                   </span>
                 }
               </div>
-              @if (campoEsValido('benefit_id')) {
+              @if (isValidField('benefit_id')) {
                 <small class="text-danger">{{ benefitIdErrors }}</small>
               }
             </div>
@@ -35,7 +35,7 @@
                   </span>
                 }
               </div>
-              @if (campoEsValido('benefit_detail_id')) {
+              @if (isValidField('benefit_detail_id')) {
                 <small class="text-danger">{{ benefitDetailIdErrors }}</small>
               }
             </div>

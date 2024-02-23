@@ -156,7 +156,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  campoEsValido ( campo: string ) {
+  isValidField ( campo: string ) {
     return this.createForm.controls[ campo ].errors
       && this.createForm.controls[ campo ].touched;
   }
@@ -192,6 +192,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
               this.disableSubmitBtn = false;
               this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
               this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
+              this.router.navigate( [ '../../', 'show', this.currentUserBenefits!.benefit_user[ 0 ].id ], { relativeTo: this.activatedRoute } );
             },
             error: ( { error } ) => {
               this.disableSubmitBtn = false;
@@ -233,6 +234,8 @@ export class CreateComponent implements OnInit, AfterViewInit {
             }
             if ( this.router.url.includes( 'edit' ) ) {
               this.createForm.get( 'benefit_detail_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefit_detail.id );
+              this.createForm.get( 'request_comment' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].request_comment );
+              this.createForm.get( 'request_comment' )?.disable();
               this.benefitDetailSpinner = true;
               this.createForm.get( 'rangeDates' )!.enable();
               let simulatedEvent = {

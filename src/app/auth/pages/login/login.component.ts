@@ -144,7 +144,7 @@ export class LoginComponent {
       .subscribe();
   }
 
-  campoEsValido ( campo: string ) {
+  isValidField ( campo: string ) {
     return this.loginForm.controls[ campo ].errors
       && this.loginForm.controls[ campo ].touched;
   }

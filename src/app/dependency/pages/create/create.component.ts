@@ -78,7 +78,7 @@ export class CreateComponent implements OnInit {
 
   }
 
-  campoEsValido ( campo: string ) {
+  isValidField ( campo: string ) {
     return this.createForm.controls[ campo ].errors
       && this.createForm.controls[ campo ].touched;
   }

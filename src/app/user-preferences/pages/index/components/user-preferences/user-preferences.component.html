@@ -18,7 +18,7 @@
             {{ preference.name }}
           </div>
           <div class="col-8">
-            <select [ngClass]="{'invalid': campoEsValido(preference.name)}" class="form-select"
+            <select [ngClass]="{'invalid': isValidField(preference.name)}" class="form-select"
               aria-label="Default select example" id="{{preference.name}}" name="{{preference.name}}"
               formControlName="{{preference.name}}">
               <option value="" selected>--- Seleccione una opción ---</option>
