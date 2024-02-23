@@ -14,6 +14,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { BenefitDecisionComponent } from '../benefit-decision/benefit-decision.component';
 import { Dropdown } from 'primeng/dropdown';
 import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'my-team-request',
@@ -29,6 +30,7 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
   dtElement!: DataTableDirective;
   dtOptions: any = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
+  loader = this.lbs.useRef();
   ref: DynamicDialogRef | undefined;
 
   constructor (
@@ -36,6 +38,7 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
     private as: AlertService,
     private benefitUserService: BenefitUserService,
     private dialogService: DialogService,
+    private lbs: LoadingBarService,
     private messagingService: MessagingService,
     private renderer: Renderer2,
     private router: Router,
@@ -46,10 +49,12 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
       const self = this;
       this.dtOptions = {
         ajax: ( dataTablesParameters: any, callback: any ) => {
+          this.loader.start();
           this.benefitUserService.indexCollaboratorsNonApproved()
             .subscribe( {
               next: ( benefitUser ) => {
                 callback( { data: benefitUser } );
+                this.loader.complete();
               },
               error: ( err ) => {
                 this.router.navigate( [ 'basic', 'benefit-employee' ] );

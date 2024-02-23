@@ -7,6 +7,7 @@ import { BenefitService } from '../../services/benefit.service';
 import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject, map } from 'rxjs';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'benefit-index',
@@ -22,10 +23,12 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
   dtElement!: DataTableDirective;
   dtOptions: any = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
+  loader = this.lbs.useRef();
 
   constructor (
     public activatedRoute: ActivatedRoute,
     private as: AlertService,
+    private lbs: LoadingBarService,
     private benefitService: BenefitService,
     private renderer: Renderer2,
     private router: Router,
@@ -36,9 +39,11 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
       const self = this;
       this.dtOptions = {
         ajax: ( dataTablesParameters: any, callback: any ) => {
+          this.loader.start();
           this.benefitService.index().subscribe( {
             next: ( benefits ) => {
               callback( { data: benefits } );
+              this.loader.complete();
             },
             error: ( err ) => {
               this.router.navigate( [ 'basic', 'benefit-employee' ] );
