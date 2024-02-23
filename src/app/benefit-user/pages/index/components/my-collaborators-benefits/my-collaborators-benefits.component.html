@@ -1,7 +1,8 @@
 <div class="row mb-3 d-flex flex-row">
     <div class="col-11">
         <form [formGroup]="formGroup">
-            <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="user_id"
+            <p-dropdown [filter]="true" class="w-100" styleClass="w-100" optionLabel="name" optionValue="id"
+                formControlName="user_id"
                 [options]="collaborators" placeholder="-- Seleccione Colaborador --"
                 (onChange)="fillBenefits()"></p-dropdown>
         </form>
@@ -33,5 +34,8 @@
     <mis-vacaciones [data]="misVacaciones"></mis-vacaciones>
 </div>
 <div class="row mb-3">
+    <permiso-especial [data]="permisoEspecial"></permiso-especial>
+    </div>
+    <div class="row mb-3">
     <calendar-component [year]="year" [data]="calendarData"></calendar-component>
 </div>
