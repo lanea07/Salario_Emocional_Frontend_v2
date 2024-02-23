@@ -8,6 +8,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'user-index',
@@ -28,11 +29,13 @@ export class IndexComponent implements OnInit, AfterViewInit {
   dtElement!: DataTableDirective;
   dtOptions: any = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
+  loader = this.lbs.useRef();
 
   constructor (
     public activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private as: AlertService,
+    private lbs: LoadingBarService,
     private renderer: Renderer2,
     private router: Router,
     private userService: UserService,
@@ -43,11 +46,13 @@ export class IndexComponent implements OnInit, AfterViewInit {
       const self = this;
       this.dtOptions = {
         ajax: ( dataTablesParameters: any, callback: any ) => {
+          this.loader.start();
           this.userService.index()
             .subscribe(
               {
                 next: users => {
                   callback( { data: users } );
+                  this.loader.complete();
                 },
                 error: err => {
                   this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );

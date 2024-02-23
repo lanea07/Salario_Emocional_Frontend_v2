@@ -9,6 +9,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { TotalBancoHorasPipe } from './pipes/TotalBancoHoras.pipe';
 import { VacationsDatePipe } from './pipes/vacations-date.pipe';
 import { PluckJoinPipe } from './pipes/pluck-join.pipe';
+import { LoadingBarModule } from '@ngx-loading-bar/core';
+import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 
 @NgModule( {
   declarations: [
@@ -22,6 +24,8 @@ import { PluckJoinPipe } from './pipes/pluck-join.pipe';
   ],
   imports: [
     CommonModule,
+    LoadingBarModule,
+    LoadingBarRouterModule,
     RouterModule,
   ],
   exports: [

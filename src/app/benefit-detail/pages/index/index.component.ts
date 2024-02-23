@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'benefitdetail-index',
@@ -35,11 +36,13 @@ export class IndexComponent implements OnInit, AfterViewInit {
       }
     } ];
   dtOptions: any;
+  loader = this.lbs.useRef();
 
   constructor (
     private activatedRoute: ActivatedRoute,
     private as: AlertService,
     private benefitDetailService: BenefitDetailService,
+    private lbs: LoadingBarService,
     private renderer: Renderer2,
     private router: Router,
   ) { }
@@ -47,10 +50,12 @@ export class IndexComponent implements OnInit, AfterViewInit {
   ngOnInit (): void {
     this.dtOptions = {
       ajax: ( dataTablesParameters: any, callback: any ) => {
+        this.loader.start();
         this.benefitDetailService.index()
           .subscribe( {
             next: ( benefitDetails ) => {
               callback( { data: benefitDetails } );
+              this.loader.complete();
             },
             error: ( err ) => {
               this.router.navigate( [ 'basic', 'benefit-employee' ] );
