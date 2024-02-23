@@ -26,7 +26,8 @@
       </ul>
       <ul class="navbar-nav mx-lg-1">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a [ngClass]="{'text-bg-danger badge rounded-pill': isSimulated}" class="nav-link dropdown-toggle" href="#"
+            role="button" data-bs-toggle="dropdown" aria-expanded="false">
             {{ isSimulated ? user?.name + ' (Simulado)' : user?.name }}
           </a>
           <ul class="dropdown-menu">
