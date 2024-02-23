@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { DependencyService } from '../../services/dependency.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'user-index',
@@ -25,11 +26,13 @@ export class IndexComponent implements OnInit, AfterViewInit {
       }
     } ];
   dtOptions: any;
+  loader = this.lbs.useRef();
   nodes: any[] = [];
 
   constructor (
     private activatedRoute: ActivatedRoute,
     private as: AlertService,
+    private lbs: LoadingBarService,
     private dependencyService: DependencyService,
     private renderer: Renderer2,
     private router: Router,
@@ -38,12 +41,14 @@ export class IndexComponent implements OnInit, AfterViewInit {
   ngOnInit (): void {
     this.dtOptions = {
       ajax: ( dataTablesParameters: any, callback: any ) => {
+        this.loader.start();
         this.dependencyService.index()
           .subscribe(
             {
               next: dependency => {
                 callback( { data: this.dependencyService.flattenDependency( dependency[ 0 ] ) } );
                 this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependency[ 0 ] ) ];
+                this.loader.complete();
               },
               error: err => {
                 this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );

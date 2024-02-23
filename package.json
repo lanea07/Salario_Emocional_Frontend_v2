@@ -27,6 +27,8 @@
     "@fullcalendar/multimonth": "^6.1.10",
     "@fullcalendar/timegrid": "^6.1.10",
     "@ngx-env/builder": "^17.1.2",
+    "@ngx-loading-bar/core": "^6.0.2",
+    "@ngx-loading-bar/router": "^6.0.2",
     "@popperjs/core": "^2.11.6",
     "@types/node": "^20.11.16",
     "angular-datatables": "^17.0.0",

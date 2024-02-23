@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { RoleService } from '../../services/role.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'role-index',
@@ -26,22 +27,27 @@ export class IndexComponent implements OnInit, AfterViewInit {
       }
     } ];
   dtOptions: any;
+  loader = this.lbs.useRef();
 
   constructor (
     private activatedRoute: ActivatedRoute,
     private as: AlertService,
+    private lbs: LoadingBarService,
     private renderer: Renderer2,
     private roleService: RoleService,
     private router: Router,
   ) { }
 
   ngOnInit (): void {
+    const self = this;
     this.dtOptions = {
       ajax: ( dataTablesParameters: any, callback: any ) => {
+        this.loader.start()
         this.roleService.index()
           .subscribe( {
             next: ( roles ) => {
               callback( { data: roles } );
+              this.loader.complete();
             },
             error: ( err ) => {
               this.router.navigate( [ 'basic', 'benefit-employee' ] );
