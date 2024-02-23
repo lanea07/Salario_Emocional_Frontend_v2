@@ -49,7 +49,7 @@ export class PassChangeComponent {
       } );
   }
 
-  campoEsValido ( campo: string ) {
+  isValidField ( campo: string ) {
     return this.miFormulario.get( campo )?.invalid
       && this.miFormulario.get( campo )?.touched;
   }

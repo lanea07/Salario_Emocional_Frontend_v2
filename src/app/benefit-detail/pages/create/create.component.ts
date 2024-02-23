@@ -86,7 +86,7 @@ export class CreateComponent {
 
   }
 
-  campoEsValido ( campo: string ) {
+  isValidField ( campo: string ) {
     return this.createForm.controls[ campo ].errors
       && this.createForm.controls[ campo ].touched;
   }

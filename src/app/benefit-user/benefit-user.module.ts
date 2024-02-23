@@ -27,9 +27,11 @@ import { TrabajoHibridoComponent } from './pages/index/components/trabajo-hibrid
 import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
 import { SharedModule } from '../shared/shared.module';
+import { BenefitDecisionComponent } from './pages/index/components/benefit-decision/benefit-decision.component';
 
 @NgModule( {
   declarations: [
+    BenefitDecisionComponent,
     CalendarComponent,
     CreateComponent,
     DiaDeLaFamiliaComponent,
