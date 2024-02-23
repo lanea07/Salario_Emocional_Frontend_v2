@@ -42,7 +42,6 @@ export class BenefitDecisionComponent {
       this.decisionForm.markAllAsTouched();
       return;
     }
-    this.ref.close();
     let payload = {
       cmd: this.decisionForm.get( 'cmd' )?.value,
       decision_comment: this.decisionForm.get( 'decision_comment' )?.value,
@@ -54,6 +53,7 @@ export class BenefitDecisionComponent {
           this.messagingService.message.next( {
             decisionTaken: true,
           } );
+        this.ref.close();
         },
         error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } );
