@@ -1,46 +1,43 @@
 <!-- Toolbar -->
 <p-toolbar styleClass="mb-4">
-    <div class="row w-100">
-        <div class="col-11">
+    <div class="row w-100 d-flex flex-column flex-lg-row">
+        <div class="col col-lg-11">
             <form [formGroup]="formGroup">
-                <nav class="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <p-calendar formControlName="year" view="year" dateFormat="yy" inputId="yearpicker"
-                                (ngModelChange)="getBenefits()"></p-calendar>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <p-dropdown [filter]="true" optionLabel="name" optionValue="id" formControlName="benefit_id"
-                                [options]="benefits" placeholder="-- Seleccione Beneficio --"
-                                (onChange)="getBenefits()"></p-dropdown>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <p-dropdown [filter]="true" optionLabel="name" optionValue="id" formControlName="user_id"
-                                [options]="users" placeholder="-- Seleccione Colaborador --"
-                                (onChange)="getBenefits()"></p-dropdown>
-                        </li>
-                    </ol>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <p-dropdown [filter]="true" optionLabel="name" optionValue="id"
-                                formControlName="dependency_id" [options]="dependencies"
-                                placeholder="-- Seleccione Dependencia --" (onChange)="getBenefits()"></p-dropdown>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <p-dropdown optionLabel="name" optionValue="value" formControlName="is_approved"
-                                [options]="status" placeholder="-- Seleccione Estado --"
-                                (onChange)="getBenefits()"></p-dropdown>
-                        </li>
-                    </ol>
-                </nav>
+                <div class="row d-flex flex-column flex-xl-row">
+                    <div class="col m-1">
+                        <p-calendar styleClass="border-0 w-100" inputStyleClass="border-0 w-100" formControlName="year" view="year"
+                            dateFormat="yy" inputId="yearpicker" (ngModelChange)="getBenefits()"></p-calendar>
+                    </div>
+                    <div class="col m-1">
+                        <p-dropdown styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id"
+                            formControlName="benefit_id" [options]="benefits" placeholder="-- Seleccione Beneficio --"
+                            (onChange)="getBenefits()"></p-dropdown>
+                    </div>
+                    <div class="col m-1">
+                        <p-dropdown styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id"
+                            formControlName="user_id" [options]="users" placeholder="-- Seleccione Colaborador --"
+                            (onChange)="getBenefits()"></p-dropdown>
+                    </div>
+                    <div class="col m-1">
+                        <p-dropdown styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id"
+                            formControlName="dependency_id" [options]="dependencies" placeholder="-- Seleccione Dependencia --"
+                            (onChange)="getBenefits()"></p-dropdown>
+                    </div>
+                    <div class="col m-1">
+                        <p-dropdown styleClass="border-0 w-100" optionLabel="name" optionValue="value" formControlName="is_approved"
+                            [options]="status" placeholder="-- Seleccione Estado --" (onChange)="getBenefits()"></p-dropdown>
+                    </div>
+                    </div>
             </form>
         </div>
-        <div class="col-1 d-flex flex-column justify-content-evenly">
+        <div class="col col-lg-1 mt-1 px-3 d-flex flex-column justify-content-evenly">
             <button class="btn btn-outline-secondary border" type="button" (click)="resetForm()">
-                <i class="fa-solid fa-rotate-right"></i>
-            </button>
-            <button [ngClass]="{'d-none': loaded}" class="btn btn-outline-secondary border">
-                <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+                <span [ngClass]="{'d-none': !loaded}">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </span>
+                <span [ngClass]="{'d-none': loaded}">
+                    <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+                </span>
             </button>
         </div>
     </div>
@@ -94,7 +91,6 @@
     <div class="col">
         <table datatable [dtOptions]="dtOptions" class="table table-hover table-sm w-100">
             <thead class="bg-dark text-light"></thead>
-            <tbody></tbody>
         </table>
     </div>
 </div>

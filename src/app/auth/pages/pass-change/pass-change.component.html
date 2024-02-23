@@ -10,25 +10,25 @@
                 <h2 class="mb-2">Cambio de contraseña requerido</h2>
                 <div class="form-floating mb-3">
                   <input type="password" class="form-control" id="current_password" formControlName="current_password"
-                    placeholder="Nueva Contraseña" [ngClass]="{'invalid': campoEsValido('current_password')}">
+                    placeholder="Nueva Contraseña" [ngClass]="{'invalid': isValidField('current_password')}">
                   <label for="current_password" class="form-label">Contraseña Actual</label>
-                  @if (campoEsValido('current_password')) {
+                  @if (isValidField('current_password')) {
                   <small class="text-danger">Obligatorio</small>
                   }
                 </div>
                 <div class="form-floating mb-3">
                   <input type="password" class="form-control" id="password" formControlName="password"
-                    placeholder="Nueva Contraseña" [ngClass]="{'invalid': campoEsValido('password')}">
+                    placeholder="Nueva Contraseña" [ngClass]="{'invalid': isValidField('password')}">
                   <label for="password" class="form-label">Nueva Contraseña</label>
-                  @if (campoEsValido('password')) {
+                  @if (isValidField('password')) {
                   <small class="text-danger">{{ passErrorMsg }}</small>
                   }
                 </div>
                 <div class="form-floating mb-3">
                   <input type="password" class="form-control" id="password_confirmation" formControlName="password_confirmation"
-                    placeholder="Repita la contraseña" [ngClass]="{'invalid': campoEsValido('password_confirmation')}">
+                    placeholder="Repita la contraseña" [ngClass]="{'invalid': isValidField('password_confirmation')}">
                   <label for="password_confirmation" class="form-label">Repita la contraseña</label>
-                  @if (campoEsValido('password_confirmation')) {
+                  @if (isValidField('password_confirmation')) {
                   <small class="text-danger">Las contraseña no coinciden</small>
                   }
                 </div>

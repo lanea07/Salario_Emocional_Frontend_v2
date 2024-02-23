@@ -19,7 +19,7 @@
                 <div class="form-outline form-white mb-4">
                   <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Correo"
                     formControlName="email" required />
-                    @if (campoEsValido('email')) {
+                    @if (isValidField('email')) {
                       <small class="text-danger">{{ userIdErrors }}</small>
                     }
                 </div>
@@ -27,7 +27,7 @@
                 <div class="form-outline form-white mb-4">
                   <input type="password" id="password" name="password" class="form-control form-control-lg"
                     placeholder="Contraseña" formControlName="password" required />
-                    @if (campoEsValido('password')) {
+                    @if (isValidField('password')) {
                       <small class="text-danger">{{ passwordErrors }}</small>
                     }
                 </div>

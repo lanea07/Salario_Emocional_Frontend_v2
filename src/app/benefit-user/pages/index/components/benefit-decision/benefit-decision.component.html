@@ -1,0 +1,60 @@
+<div class="row mb-3">
+    <h5>{{ benefitUser?.user?.name }} ha solicitado el siguiente beneficio:</h5>
+</div>
+
+<div class="row mb-3">
+    <table class="table table-hover table-borderless">
+        <tbody>
+            <tr>
+                <th>Beneficio</th>
+                <td>{{ benefitUser?.benefits?.name }}</td>
+            </tr>
+            <tr>
+                <th>Detalle</th>
+                <td>{{ benefitUser?.benefit_detail?.name }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de creación</th>
+                <td>{{ benefitUser?.created_at | date:'short' }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de redención</th>
+                <td>{{ benefitUser?.benefit_begin_time | date:'short' }}</td>
+            </tr>
+            <tr>
+                <th>Finalización</th>
+                <td>{{ benefitUser?.benefit_end_time | date:'short' }}</td>
+            </tr>
+            <tr>
+                <th>Observaciones</th>
+                <td>{{ benefitUser?.request_comment }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<form [formGroup]="decisionForm" (ngSubmit)="decideBenefit()">
+    <div class="mb-3">
+        <label for="decision_comment" class="text-body-secondary">Comentarios</label>
+        <textarea class="w-100" styleClass="w-100" pInputTextarea formControlName="decision_comment"
+            id="decision_comment" [autoResize]="true" rows="1"></textarea>
+    </div>
+    <div class="mb-3">
+        <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" formControlName="cmd" id="btnradio1" autocomplete="off"
+                value="approve">
+            <label class="btn btn-outline-success" for="btnradio1">Aprobar</label>
+
+            <input type="radio" class="btn-check" formControlName="cmd" id="btnradio2" autocomplete="off"
+                value="reject">
+            <label class="btn btn-outline-danger" for="btnradio2">Rechazar</label>
+        </div>
+        @if (isValidField('cmd')) {
+        <small class="text-danger ms-3">El campo es requerido</small>
+        }
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </div>
+</form>

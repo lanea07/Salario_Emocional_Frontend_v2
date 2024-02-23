@@ -36,4 +36,6 @@ export interface BenefitUserElement {
   user: BenefitUser;
   is_approved: number;
   approved_at: Date;
+  request_comment: string;
+  decision_comment: string;
 }

@@ -13,18 +13,18 @@
   </ng-template>
   <form [formGroup]="profileForm" (ngSubmit)="save()" class="mt-6 space-y-6">
     <div class="form-floating mb-3 col-12 col-md-8">
-      <input [ngClass]="{'invalid': campoEsValido('name')}" class="form-control" type="text"
+      <input [ngClass]="{'invalid': isValidField('name')}" class="form-control" type="text"
         formControlName="name" id="name" placeholder="Nombre Completo">
         <label class="form-label" for="name"><i class="fa-solid fa-user me-1"></i>Nombre Completo</label>
-        @if (campoEsValido('name')) {
+        @if (isValidField('name')) {
           <span class="form-text text-danger">Obligatorio</span>
         }
       </div>
       <div class="form-floating mb-3 col-12 col-md-8">
-        <input [ngClass]="{'invalid': campoEsValido('email')}" class="form-control" type="text"
+        <input [ngClass]="{'invalid': isValidField('email')}" class="form-control" type="text"
           formControlName="email" id="email" placeholder="Correo Electrónico">
           <label class="form-label" for="email"><i class="fa-solid fa-at me-1"></i>Correo Electrónico</label>
-          @if (campoEsValido('email')) {
+          @if (isValidField('email')) {
             <span class="form-text text-danger">Obligatorio</span>
           }
         </div>
