@@ -1,15 +1,17 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { PanelModule } from 'primeng/panel';
 import { TabViewModule } from 'primeng/tabview';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TreeSelectModule } from 'primeng/treeselect';
+
 
 @NgModule( {
   declarations: [],
@@ -18,6 +20,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
     CalendarModule,
     DialogModule,
     DropdownModule,
+    DynamicDialogModule,
     InputTextareaModule, 
     InputTextModule,
     PanelModule,
@@ -28,6 +31,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
     CalendarModule,
     DialogModule,
     DropdownModule,
+    DynamicDialogModule,
     InputTextareaModule,
     InputTextModule,
     PanelModule,

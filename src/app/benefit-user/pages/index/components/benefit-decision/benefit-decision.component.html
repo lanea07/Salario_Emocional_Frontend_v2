@@ -1,0 +1,39 @@
+<div class="row mb-3">
+    <h5>{{ benefitUser?.user?.name }} ha solicitado el siguiente beneficio:</h5>
+</div>
+
+<div class="row mb-3">
+    <table class="table table-hover table-borderless">
+        <tbody>
+            <tr>
+                <th>Beneficio</th>
+                <td>{{ benefitUser?.benefits?.name }}</td>
+            </tr>
+            <tr>
+                <th>Detalle</th>
+                <td>{{ benefitUser?.benefit_detail?.name }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de creación</th>
+                <td>{{ benefitUser?.created_at }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de redención</th>
+                <td>{{ benefitUser?.benefit_begin_time }}</td>
+            </tr>
+            <tr>
+                <th>Finalización</th>
+                <td>{{ benefitUser?.benefit_end_time }}</td>
+            </tr>
+            <tr>
+                <th>Observaciones</th>
+                <td>{{ benefitUser?.request_comment }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="btn-group" role="group" aria-label="Decide Benefit">
+    <button class="btn btn-success" (click)="decideBenefit('accept')">Aceptar</button>
+    <button class="btn btn-danger" (click)="decideBenefit('reject')">Rechazar</button>
+</div>

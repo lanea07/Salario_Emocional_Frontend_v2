@@ -10,11 +10,16 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 import es_CO from '../../../../../shared/Datatables-langs/es-CO.json';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { BenefitDecisionComponent } from '../benefit-decision/benefit-decision.component';
+import { Dropdown } from 'primeng/dropdown';
+import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
 
 @Component( {
   selector: 'my-team-request',
   templateUrl: './my-team-request.component.html',
-  styles: []
+  styles: [],
+  providers: [ DialogService ]
 } )
 export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy {
 
@@ -24,11 +29,14 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
   dtElement!: DataTableDirective;
   dtOptions: any = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
+  ref: DynamicDialogRef | undefined;
 
   constructor (
     private activatedRoute: ActivatedRoute,
     private as: AlertService,
     private benefitUserService: BenefitUserService,
+    private dialogService: DialogService,
+    private messagingService: MessagingService,
     private renderer: Renderer2,
     private router: Router,
   ) { }
@@ -54,24 +62,6 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
           { title: 'Colaborador', data: 'user.name' },
           { title: 'Beneficio', data: 'benefits.name' },
           { title: 'Detalle', data: 'benefit_detail.name' },
-          {
-            title: 'Solicitado',
-            data: function ( data: any, type: any, full: any ) {
-              return new Date( data.created_at ).toLocaleString( 'es-CO' );
-            }
-          },
-          {
-            title: 'Fecha y hora de redención',
-            data: function ( data: any, type: any, full: any ) {
-              return new Date( data.benefit_begin_time ).toLocaleString( 'es-CO' );
-            }
-          },
-          {
-            title: 'Fecha y hora de finalización',
-            data: function ( data: any, type: any, full: any ) {
-              return new Date( data.benefit_end_time ).toLocaleString( 'es-CO' );
-            }
-          },
           {
             title: 'Estado',
             data: function ( data: any, type: any, full: any ) {
@@ -115,6 +105,20 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
         ]
       }
     } );
+    this.messagingService.message
+      .subscribe( {
+        next: ( { decisionTaken } ) => {
+          if ( decisionTaken ) {
+            this.dtElement.dtInstance.then( ( dtInstance: DataTables.Api ) => {
+              // Destroy the table first
+              dtInstance.destroy();
+              // Call the dtTrigger to rerender again
+              this.dtTrigger.next( this.dtOptions );
+            } );
+          }
+        },
+        error: ( err ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.statusText )
+      } );
   }
 
   ngAfterViewInit (): void {
@@ -130,27 +134,22 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
     } );
   }
 
-  onCaptureEvent ( event: DropdownComponentEventType ) {
-    if ( event.cmd === 'view' ) {
-      return this.router.navigate( [ "../show", event.data.id ], { relativeTo: this.activatedRoute } );
-    }
-    this.benefitUserService.decideBenefitUser( event )
-      .subscribe( {
-        next: ( res ) => {
-          this.dtElement.dtInstance.then( ( dtInstance: DataTables.Api ) => {
-            // Destroy the table first
-            dtInstance.destroy();
-            // Call the dtTrigger to rerender again
-            this.dtTrigger.next( this.dtOptions );
-          } );
-        },
-        error: ( err ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.statusText )
-      } );
-    return;
-  }
-
   ngOnDestroy (): void {
     this.dtTrigger.unsubscribe();
   }
 
+  onCaptureEvent ( event: DropdownComponentEventType ) {
+    if ( event.cmd === 'view' ) {
+      return this.router.navigate( [ "../show", event.data.id ], { relativeTo: this.activatedRoute } );
+    }
+    if ( event.cmd === 'decide' ) {
+      this.ref = this.dialogService.open( BenefitDecisionComponent, {
+        data: event.data,
+        header: 'Decidir Beneficio',
+        contentStyle: { overflow: 'auto' },
+        width: '50vw',
+      } );
+    }
+    return;
+  }
 }

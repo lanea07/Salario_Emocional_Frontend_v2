@@ -1,5 +1,6 @@
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Dropdown } from 'primeng/dropdown';
 import { Subject } from 'rxjs';
 
 import { DropdownComponentEventType } from 'src/app/benefit-user/interfaces/dropdown-component-event-type';
@@ -18,9 +19,11 @@ interface Options {
 } )
 export class DropdownComponent implements OnInit, OnDestroy {
 
-  options: Options[] = [];
   @Input() data = {};
   @Output() emitter = new Subject<DropdownComponentEventType>();
+  @ViewChild( 'dropdown' ) dropdown!: Dropdown;
+
+  options: Options[] = [];
   formGroup!: FormGroup;
 
   constructor (
@@ -30,8 +33,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
   ngOnInit () {
     this.options = [
       { action: 'view', label: 'Ver' },
-      { action: 'approve', label: 'Aprobar' },
-      { action: 'reject', label: 'Rechazar' },
+      { action: 'decide', label: 'Decidir' },
     ];
 
     this.formGroup = new FormGroup( {
