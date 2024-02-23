@@ -5,6 +5,7 @@ import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
 import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'my-collaborators-benefits',
@@ -28,12 +29,15 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
   miCumpleanos: BenefitUserElement[] = [];
   miViernes: BenefitUserElement[] = [];
   misVacaciones: BenefitUserElement[] = [];
+  permisoEspecial: BenefitUserElement[] = [];
   trabajoHibrido: BenefitUserElement[] = [];
+  loader = this.lbs.useRef();
 
   constructor (
     private as: AlertService,
     private benefitUserService: BenefitUserService,
     private changeDetectorRef: ChangeDetectorRef,
+    private lbs: LoadingBarService,
     private messagingService: MessagingService,
     private fb: FormBuilder,
   ) { }
@@ -61,6 +65,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
 
   getBenefitDetail () {
     if ( this.year ) {
+      this.loader.start();
       this.benefitUserService.indexCollaborators( new Date( this.year ).getFullYear().valueOf() )
         .subscribe( {
           next: ( benefitUser ) => {
@@ -70,6 +75,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
               return user.id !== Number.parseInt( localStorage.getItem( 'uid' )! );
             } );
             this.fillBenefits();
+            this.loader.complete();
           },
           error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         } );
@@ -86,6 +92,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
       this.miBancoHoras = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Mi Banco de Horas" );
       this.trabajoHibrido = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Trabajo Híbrido" );
       this.misVacaciones = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Mis Vacaciones" );
+      this.permisoEspecial = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Permiso Especial" );
       this.calendarData = [];
       this.calendarData = [
         ...this.miCumpleanos,
@@ -93,6 +100,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
         ...this.miViernes,
         ...this.miBancoHoras,
         ...this.misVacaciones,
+        ...this.permisoEspecial,
       ]
     }
     this.loaded = true;
