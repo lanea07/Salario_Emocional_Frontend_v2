@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { LoadingBarService } from '@ngx-loading-bar/core';
+
 import { BenefitUser, BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
@@ -17,18 +19,21 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
 
   calendarData: BenefitUserElement[] = [];
   loaded: boolean = false;
+  loader = this.lbs.useRef();
   diaDeLaFamilia: BenefitUserElement[] = [];
   miHorarioFlexible: BenefitUserElement[] = [];
   miBancoHoras: BenefitUserElement[] = [];
   miCumpleanos: BenefitUserElement[] = [];
   miViernes: BenefitUserElement[] = [];
   misVacaciones: BenefitUserElement[] = [];
+  permisoEspecial: BenefitUserElement[] = [];
   trabajoHibrido: BenefitUserElement[] = [];
 
   constructor (
     private activatedRoute: ActivatedRoute,
     private as: AlertService,
     private benefitUserService: BenefitUserService,
+    private lbs: LoadingBarService,
     private renderer: Renderer2,
     private router: Router,
   ) { }
@@ -48,12 +53,14 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
   }
 
   getBenefitDetail () {
+    this.loader.start();
     if ( this.year ) {
       this.benefitUserService.index( Number.parseInt( localStorage.getItem( 'uid' )! ), new Date( this.year ).getFullYear().valueOf() )
         .subscribe( {
           next: ( benefitUser ) => {
             this.fillBenefits( benefitUser );
             this.loaded = true;
+            this.loader.complete();
             this.loadedData.emit( true );
           },
           error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
@@ -69,6 +76,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
     this.miBancoHoras = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mi Banco de Horas" );
     this.trabajoHibrido = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Trabajo Híbrido" );
     this.misVacaciones = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mis Vacaciones" );
+    this.permisoEspecial = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Permiso Especial" );
     this.calendarData = [];
     this.calendarData = [
       ...this.miCumpleanos,
@@ -76,6 +84,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
       ...this.miViernes,
       ...this.miBancoHoras,
       ...this.misVacaciones,
+      ...this.permisoEspecial,
     ]
   }
 

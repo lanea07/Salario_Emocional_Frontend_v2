@@ -28,6 +28,7 @@ import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
 import { SharedModule } from '../shared/shared.module';
 import { BenefitDecisionComponent } from './pages/index/components/benefit-decision/benefit-decision.component';
+import { PermisoEspecialComponent } from './pages/index/components/permiso-especial/permiso-especial.component';
 
 @NgModule( {
   declarations: [
@@ -49,6 +50,7 @@ import { BenefitDecisionComponent } from './pages/index/components/benefit-decis
     MyTeamRequestComponent,
     ShowComponent,
     TrabajoHibridoComponent,
+    PermisoEspecialComponent,
   ],
   imports: [
     BenefitUserRoutingModule,
