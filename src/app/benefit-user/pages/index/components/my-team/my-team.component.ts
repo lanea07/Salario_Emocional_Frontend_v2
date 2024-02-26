@@ -6,6 +6,7 @@ import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.s
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUser, BenefitUserElement } from '../../../../interfaces/benefit-user.interface';
 import { MessagingService } from '../../../../services/messaging.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'my-team',
@@ -32,6 +33,7 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
     private as: AlertService,
     private lbs: LoadingBarService,
     private benefitUserService: BenefitUserService,
+    private lbs: LoadingBarService,
     private messagingService: MessagingService,
   ) { }
 
@@ -55,10 +57,12 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
   }
 
   getBenefitDetail () {
+    this.loader.start();
     this.benefitUserService.indexCollaborators( new Date( this.year ).getFullYear().valueOf() )
       .subscribe( {
         next: ( benefitUser ) => {
           this.fillBenefits( benefitUser );
+          this.loader.complete();
         },
         error: ( { error } ) => {
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
