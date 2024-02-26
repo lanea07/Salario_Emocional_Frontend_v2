@@ -6,7 +6,6 @@ import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.s
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUser, BenefitUserElement } from '../../../../interfaces/benefit-user.interface';
 import { MessagingService } from '../../../../services/messaging.service';
-import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'my-team',
@@ -31,7 +30,6 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
 
   constructor (
     private as: AlertService,
-    private lbs: LoadingBarService,
     private benefitUserService: BenefitUserService,
     private lbs: LoadingBarService,
     private messagingService: MessagingService,
