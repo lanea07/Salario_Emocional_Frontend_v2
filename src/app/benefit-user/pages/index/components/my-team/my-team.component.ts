@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
+
 import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUser, BenefitUserElement } from '../../../../interfaces/benefit-user.interface';
@@ -29,6 +30,7 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
 
   constructor (
     private as: AlertService,
+    private lbs: LoadingBarService,
     private benefitUserService: BenefitUserService,
     private messagingService: MessagingService,
   ) { }
