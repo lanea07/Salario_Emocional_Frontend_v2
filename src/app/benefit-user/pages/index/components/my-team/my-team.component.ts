@@ -1,11 +1,10 @@
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
+import { LoadingBarService } from '@ngx-loading-bar/core';
 import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUser, BenefitUserElement } from '../../../../interfaces/benefit-user.interface';
-import { FullCalendarComponent } from '@fullcalendar/angular';
 import { MessagingService } from '../../../../services/messaging.service';
-import { User } from 'src/app/user/interfaces/user.interface';
 
 @Component( {
   selector: 'my-team',
@@ -25,6 +24,8 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
   miBancoHoras: BenefitUserElement[] = [];
   trabajoHibrido: BenefitUserElement[] = [];
   misVacaciones: BenefitUserElement[] = [];
+  permisoEspecial: BenefitUserElement[] = [];
+  loader = this.lbs.useRef();
 
   constructor (
     private as: AlertService,
@@ -86,6 +87,9 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
     this.misVacaciones = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
       return user.benefit_user.filter( benefit => benefit.benefits.name === "Mis Vacaciones" );
     } );
+    this.permisoEspecial = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
+      return user.benefit_user.filter( benefit => benefit.benefits.name === "Permiso Especial" );
+    } );
     this.calendarData = [];
     this.calendarData = [
       ...this.miCumpleanos,
@@ -93,6 +97,7 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
       ...this.miViernes,
       ...this.miBancoHoras,
       ...this.misVacaciones,
+      ...this.permisoEspecial,
     ]
   }
 }
