@@ -31,6 +31,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
   misVacaciones: BenefitUserElement[] = [];
   permisoEspecial: BenefitUserElement[] = [];
   trabajoHibrido: BenefitUserElement[] = [];
+  viernesCorto: BenefitUserElement[] = [];
   loader = this.lbs.useRef();
 
   constructor (
@@ -93,6 +94,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
       this.trabajoHibrido = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Trabajo Híbrido" );
       this.misVacaciones = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Mis Vacaciones" );
       this.permisoEspecial = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Permiso Especial" );
+      this.viernesCorto = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Viernes Corto" );
       this.calendarData = [];
       this.calendarData = [
         ...this.miCumpleanos,
@@ -101,6 +103,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
         ...this.miBancoHoras,
         ...this.misVacaciones,
         ...this.permisoEspecial,
+        ...this.viernesCorto,
       ]
     }
     this.loaded = true;

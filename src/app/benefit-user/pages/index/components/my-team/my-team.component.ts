@@ -26,6 +26,7 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
   trabajoHibrido: BenefitUserElement[] = [];
   misVacaciones: BenefitUserElement[] = [];
   permisoEspecial: BenefitUserElement[] = [];
+  viernesCorto: BenefitUserElement[] = [];
   loader = this.lbs.useRef();
 
   constructor (
@@ -94,6 +95,9 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
     this.permisoEspecial = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
       return user.benefit_user.filter( benefit => benefit.benefits.name === "Permiso Especial" );
     } );
+    this.permisoEspecial = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
+      return user.benefit_user.filter( benefit => benefit.benefits.name === "Viernes Corto" );
+    } );
     this.calendarData = [];
     this.calendarData = [
       ...this.miCumpleanos,
@@ -102,6 +106,7 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
       ...this.miBancoHoras,
       ...this.misVacaciones,
       ...this.permisoEspecial,
+      ...this.viernesCorto,
     ]
   }
 }
