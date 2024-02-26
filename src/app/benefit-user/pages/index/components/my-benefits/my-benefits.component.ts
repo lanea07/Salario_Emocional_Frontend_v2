@@ -28,6 +28,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
   misVacaciones: BenefitUserElement[] = [];
   permisoEspecial: BenefitUserElement[] = [];
   trabajoHibrido: BenefitUserElement[] = [];
+  viernesCorto: BenefitUserElement[] = [];
 
   constructor (
     private activatedRoute: ActivatedRoute,
@@ -77,6 +78,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
     this.trabajoHibrido = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Trabajo Híbrido" );
     this.misVacaciones = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mis Vacaciones" );
     this.permisoEspecial = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Permiso Especial" );
+    this.viernesCorto = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Viernes Corto" );
     this.calendarData = [];
     this.calendarData = [
       ...this.miCumpleanos,
@@ -85,6 +87,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
       ...this.miBancoHoras,
       ...this.misVacaciones,
       ...this.permisoEspecial,
+      ...this.viernesCorto,
     ]
   }
 
