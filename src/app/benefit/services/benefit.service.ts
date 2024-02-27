@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { Benefit } from '../interfaces/benefit.interface';
+import { DefaultPreferences } from 'src/app/shared/interfaces/Preferences.interface';
 
 @Injectable( {
   providedIn: 'root'
@@ -65,6 +66,30 @@ export class BenefitService {
 
     this.http.get( `${ this.baseUrl }/sanctum/csrf-cookie` ).subscribe()
     return this.http.get<Benefit[]>( `${ this.apiBaseUrl }/benefit/available`, { headers, withCredentials: true } )
+  }
+
+  indexSettings (): Observable<DefaultPreferences[]> {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.get<DefaultPreferences[]>( `${ this.apiBaseUrl }/benefit-settings`, { headers, withCredentials: true } )
+  }
+
+  showSettings ( id: number ): Observable<DefaultPreferences> {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.get<DefaultPreferences>( `${ this.apiBaseUrl }/benefit-settings/${ id }`, { headers, withCredentials: true } )
+  }
+
+  updateSettings ( id: number, formValues: any ) {
+    const headers = new HttpHeaders()
+      .set( 'Accept', 'application/json' )
+      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
+
+    return this.http.put<any>( `${ this.apiBaseUrl }/benefit-settings/${ id }`, formValues, { headers, withCredentials: true } );
   }
 
 }

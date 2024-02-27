@@ -1,4 +1,4 @@
-export interface DefaultUserPreferences {
+export interface DefaultPreferences {
     preference: any[];
 }
 
