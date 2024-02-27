@@ -95,7 +95,7 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
     this.permisoEspecial = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
       return user.benefit_user.filter( benefit => benefit.benefits.name === "Permiso Especial" );
     } );
-    this.permisoEspecial = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
+    this.viernesCorto = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
       return user.benefit_user.filter( benefit => benefit.benefits.name === "Viernes Corto" );
     } );
     this.calendarData = [];
