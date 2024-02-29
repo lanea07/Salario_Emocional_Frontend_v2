@@ -24,10 +24,9 @@ export class AuthService {
   login ( email: string, password: string, device_name: string ) {
     const url = `${ this.baseUrl }/login`;
     const body = { email, password, device_name };
-    const headers = new HttpHeaders().set( 'Accept', 'application/json' );
     return this.getCookie().pipe(
       mergeMap( res => {
-        return this.http.post<AuthResponse>( url, body, { headers, withCredentials: true } )
+        return this.http.post<AuthResponse>( url, body, { withCredentials: true } )
           .pipe(
             tap( resp => {
               if ( resp.token ) {
@@ -43,12 +42,7 @@ export class AuthService {
 
   logout () {
     const url = `${ this.baseUrl }/logout`;
-    const token = localStorage.getItem( 'token' );
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ token }` );
-
-    return this.http.post<AuthResponse>( url, [], { headers, withCredentials: true } )
+    return this.http.post<AuthResponse>( url, [], { withCredentials: true } )
       .pipe(
         tap( resp => {
           localStorage.clear();
@@ -58,11 +52,7 @@ export class AuthService {
 
   validarToken (): Observable<boolean> {
     const url = `${ this.baseUrl }/validate-token`;
-    const token = localStorage.getItem( 'token' );
-    const headers = new HttpHeaders()
-      .append( 'Authorization', `Bearer ${ token }` );
-
-    return this.http.post<ValidToken>( url, [], { headers, withCredentials: true } )
+    return this.http.post<ValidToken>( url, [], { withCredentials: true } )
       .pipe(
         map( resp => resp.valid ),
         catchError( err => { return of( false ) } )
@@ -71,43 +61,26 @@ export class AuthService {
 
   validarAdmin () {
     const url = `${ this.baseUrl }/validate-roles`;
-    const token = localStorage.getItem( 'token' );
-    const headers = new HttpHeaders()
-      .append( 'Authorization', `Bearer ${ token }` );
-
-    return this.http.post<any>( url, [], { headers, withCredentials: true } );
+    return this.http.post<any>( url, [], { withCredentials: true } );
   }
 
   validarRequirePassChange (): Observable<boolean> {
     const url = `${ this.baseUrl }/validate-requirePassChange`;
-    const token = localStorage.getItem( 'token' );
-    const headers = new HttpHeaders()
-      .append( 'Authorization', `Bearer ${ token }` );
-
-    return this.http.post<boolean>( url, [], { headers, withCredentials: true } )
+    return this.http.post<boolean>( url, [], { withCredentials: true } )
   }
 
   passwordChange ( formValues: any ) {
     const url = `${ this.baseUrl }/passwordChange`;
-    const token = localStorage.getItem( 'token' );
-    const headers = new HttpHeaders()
-      .append( 'Authorization', `Bearer ${ token }` );
-
-    return this.http.post<boolean>( url, formValues, { headers, withCredentials: true } )
+    return this.http.post<boolean>( url, formValues, { withCredentials: true } )
   }
 
   loginAs ( user_id: number ) {
     const url = `${ this.baseUrl }/login-as`;
     const device_name = 'PC';
     const body = { user_id, device_name };
-    const token = localStorage.getItem( 'token' );
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ token }` );
-
     return this.getCookie().pipe(
       mergeMap( () => {
-        return this.http.post<AuthResponse>( url, body, { headers, withCredentials: true } )
+        return this.http.post<AuthResponse>( url, body, { withCredentials: true } )
           .pipe(
             tap( resp => {
               if ( resp.token ) {

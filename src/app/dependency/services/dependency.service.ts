@@ -13,59 +13,33 @@ import { Dependency } from '../interfaces/dependency.interface';
 export class DependencyService {
 
   apiBaseUrl = environment.apiBaseUrl;
-  token = localStorage.getItem( 'token' );
 
-  constructor ( private http: HttpClient ) {
-
-  }
+  constructor ( private http: HttpClient ) { }
 
   index (): Observable<Dependency[]> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependency`, { headers, withCredentials: true } )
+    return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependency`, { withCredentials: true } )
   }
 
   show ( id: number ): Observable<Dependency> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<Dependency>( `${ this.apiBaseUrl }/dependency/${ id }`, { headers, withCredentials: true } )
+    return this.http.get<Dependency>( `${ this.apiBaseUrl }/dependency/${ id }`, { withCredentials: true } )
   }
 
   create ( formValues: any ): Observable<Dependency> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.post<Dependency>( `${ this.apiBaseUrl }/dependency`, formValues, { headers, withCredentials: true } );
+    return this.http.post<Dependency>( `${ this.apiBaseUrl }/dependency`, formValues, { withCredentials: true } );
   }
 
   update ( id: number | undefined, formValues: any ) {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.put<Dependency>( `${ this.apiBaseUrl }/dependency/${ id }`, formValues, { headers, withCredentials: true } );
+    return this.http.put<Dependency>( `${ this.apiBaseUrl }/dependency/${ id }`, formValues, { withCredentials: true } );
   }
 
   destroy ( id: number | undefined ) {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.delete( `${ this.apiBaseUrl }/dependency/${ id }`, { headers, withCredentials: true } );
+    return this.http.delete( `${ this.apiBaseUrl }/dependency/${ id }`, { withCredentials: true } );
   }
 
   getNonTreeValidDependencies (): Observable<Dependency[]> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependency/getNonTreeValidDependencies`, { headers, withCredentials: true } )
+    return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependency/getNonTreeValidDependencies`, { withCredentials: true } )
   }
+
 
   // Methods for transform the dependencies results
 
@@ -107,11 +81,7 @@ export class DependencyService {
    * @returns Dependency[]
    */
   public dependencyAncestors ( id: any ): Observable<Dependency[]> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependency/dependencyAncestors/${ id }`, { headers, withCredentials: true } )
+    return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependency/dependencyAncestors/${ id }`, { withCredentials: true } )
   }
 
   /**

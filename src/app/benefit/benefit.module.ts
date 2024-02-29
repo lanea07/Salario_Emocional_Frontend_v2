@@ -10,11 +10,13 @@ import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
 import { SharedModule } from '../shared/shared.module';
 import { PrimengModule } from '../primeng/primeng.module';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 @NgModule( {
   declarations: [
     CreateComponent,
     IndexComponent,
+    SettingsComponent,
     ShowComponent,
   ],
   imports: [
