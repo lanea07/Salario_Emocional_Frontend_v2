@@ -13,83 +13,42 @@ export class BenefitService {
 
   apiBaseUrl = environment.apiBaseUrl;
   baseUrl = environment.baseUrl
-  token = localStorage.getItem( 'token' );
 
   constructor ( private http: HttpClient ) { }
 
   index (): Observable<Benefit[]> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    this.http.get( `${ this.baseUrl }/sanctum/csrf-cookie` ).subscribe()
-    return this.http.get<Benefit[]>( `${ this.apiBaseUrl }/benefit`, { headers, withCredentials: true } )
+    return this.http.get<Benefit[]>( `${ this.apiBaseUrl }/benefit`, { withCredentials: true } )
   }
 
   show ( id: number ): Observable<Benefit> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Content-type', 'multipart/form-data' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<Benefit>( `${ this.apiBaseUrl }/benefit/${ id }`, { headers, withCredentials: true } )
+    return this.http.get<Benefit>( `${ this.apiBaseUrl }/benefit/${ id }`, { withCredentials: true } )
   }
 
   create ( formValues: any ): Observable<Benefit> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.post<Benefit>( `${ this.apiBaseUrl }/benefit`, formValues, { headers, withCredentials: true } );
+    return this.http.post<Benefit>( `${ this.apiBaseUrl }/benefit`, formValues, { withCredentials: true } );
   }
 
   update ( id: number | undefined, formValues: any ) {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.post<Benefit>( `${ this.apiBaseUrl }/benefit/${ id }`, formValues, { headers, withCredentials: true } );
+    return this.http.post<Benefit>( `${ this.apiBaseUrl }/benefit/${ id }`, formValues, { withCredentials: true } );
   }
 
   destroy ( id: number | undefined ) {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.delete( `${ this.apiBaseUrl }/benefit/${ id }`, { headers, withCredentials: true } );
+    return this.http.delete( `${ this.apiBaseUrl }/benefit/${ id }`, { withCredentials: true } );
   }
 
   indexAvailable (): Observable<Benefit[]> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    this.http.get( `${ this.baseUrl }/sanctum/csrf-cookie` ).subscribe()
-    return this.http.get<Benefit[]>( `${ this.apiBaseUrl }/benefit/available`, { headers, withCredentials: true } )
+    return this.http.get<Benefit[]>( `${ this.apiBaseUrl }/benefit/available`, { withCredentials: true } )
   }
 
   indexSettings (): Observable<DefaultPreferences[]> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<DefaultPreferences[]>( `${ this.apiBaseUrl }/benefit-settings`, { headers, withCredentials: true } )
+    return this.http.get<DefaultPreferences[]>( `${ this.apiBaseUrl }/benefit-settings`, { withCredentials: true } )
   }
 
   showSettings ( id: number ): Observable<DefaultPreferences> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<DefaultPreferences>( `${ this.apiBaseUrl }/benefit-settings/${ id }`, { headers, withCredentials: true } )
+    return this.http.get<DefaultPreferences>( `${ this.apiBaseUrl }/benefit-settings/${ id }`, { withCredentials: true } )
   }
 
   updateSettings ( id: number, formValues: any ) {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.put<any>( `${ this.apiBaseUrl }/benefit-settings/${ id }`, formValues, { headers, withCredentials: true } );
+    return this.http.put<any>( `${ this.apiBaseUrl }/benefit-settings/${ id }`, formValues, { withCredentials: true } );
   }
-
 }

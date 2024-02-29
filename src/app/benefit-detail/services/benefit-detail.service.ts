@@ -11,48 +11,26 @@ import { BenefitDetail } from '../interfaces/benefit-detail.interface';
 export class BenefitDetailService {
 
   apiBaseUrl = environment.apiBaseUrl;
-  token = localStorage.getItem( 'token' );
 
   constructor ( private http: HttpClient ) { }
 
   index (): Observable<BenefitDetail[]> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<BenefitDetail[]>( `${ this.apiBaseUrl }/benefitdetail`, { headers, withCredentials: true } )
+    return this.http.get<BenefitDetail[]>( `${ this.apiBaseUrl }/benefitdetail`, { withCredentials: true } )
   }
 
   show ( id: number ): Observable<BenefitDetail> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail/${ id }`, { headers, withCredentials: true } )
+    return this.http.get<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail/${ id }`, { withCredentials: true } )
   }
 
   create ( formValues: any ): Observable<BenefitDetail> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.post<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail`, formValues, { headers, withCredentials: true } );
+    return this.http.post<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail`, formValues, { withCredentials: true } );
   }
 
   update ( id: number | undefined, formValues: any ) {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.put<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail/${ id }`, formValues, { headers, withCredentials: true } );
+    return this.http.put<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail/${ id }`, formValues, { withCredentials: true } );
   }
 
   destroy ( id: number | undefined ) {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.delete( `${ this.apiBaseUrl }/benefitdetail/${ id }`, { headers, withCredentials: true } );
+    return this.http.delete( `${ this.apiBaseUrl }/benefitdetail/${ id }`, { withCredentials: true } );
   }
-
 }

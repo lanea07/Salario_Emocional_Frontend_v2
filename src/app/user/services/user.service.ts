@@ -11,50 +11,26 @@ import { User } from '../interfaces/user.interface';
 export class UserService {
 
   apiBaseUrl = environment.apiBaseUrl;
-  token = localStorage.getItem( 'token' );
 
-  constructor ( private http: HttpClient ) {
-
-  }
+  constructor ( private http: HttpClient ) { }
 
   index (): Observable<User[]> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<User[]>( `${ this.apiBaseUrl }/user`, { headers, withCredentials: true } )
+    return this.http.get<User[]>( `${ this.apiBaseUrl }/user`, { withCredentials: true } )
   }
 
   show ( id: number ): Observable<User> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<User>( `${ this.apiBaseUrl }/user/${ id }`, { headers, withCredentials: true } )
+    return this.http.get<User>( `${ this.apiBaseUrl }/user/${ id }`, { withCredentials: true } )
   }
 
   create ( formValues: any ): Observable<User> {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.post<User>( `${ this.apiBaseUrl }/user`, formValues, { headers, withCredentials: true } );
+    return this.http.post<User>( `${ this.apiBaseUrl }/user`, formValues, { withCredentials: true } );
   }
 
   update ( id: number | undefined, formValues: any ) {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.put<User>( `${ this.apiBaseUrl }/user/${ id }`, formValues, { headers, withCredentials: true } );
+    return this.http.put<User>( `${ this.apiBaseUrl }/user/${ id }`, formValues, { withCredentials: true } );
   }
 
   destroy ( id: number | undefined ) {
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.delete( `${ this.apiBaseUrl }/user/${ id }`, { headers, withCredentials: true } );
+    return this.http.delete( `${ this.apiBaseUrl }/user/${ id }`, { withCredentials: true } );
   }
-
 }

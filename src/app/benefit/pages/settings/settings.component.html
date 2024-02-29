@@ -19,7 +19,6 @@
                     <select [ngClass]="{'invalid': isValidField(setting.name)}" class="form-select"
                         aria-label="Default select example" id='{{setting.name}}' name='{{setting.name}}'
                         formControlName="{{setting.name}}" multiple>
-                        <option value='' selected>--- Seleccione una opción ---</option>
                         @for (value of setting.values; track value) {
                         <option [ngValue]='value'>{{value}}</option>
                         }
@@ -29,7 +28,6 @@
                     <select [ngClass]="{'invalid': isValidField(setting.name)}" class="form-select"
                         aria-label="Default select example" id='{{setting.name}}' name='{{setting.name}}'
                         formControlName="{{setting.name}}">
-                        <option value='' selected>--- Seleccione una opción ---</option>
                         @for (value of setting.values; track value) {
                         <option [ngValue]='value'>{{value}}</option>
                         }
