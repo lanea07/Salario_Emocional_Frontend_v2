@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { combineLatest } from 'rxjs';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
-import { Preference } from 'src/app/user-preferences/interfaces/UserPreferences.interface';
+import { Preference } from 'src/app/shared/interfaces/Preferences.interface';
 import { UserPreferencesService } from 'src/app/user-preferences/services/user-preferences.service';
 
 @Component( {

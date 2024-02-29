@@ -53,6 +53,7 @@ export class BenefitDecisionComponent {
           this.messagingService.message.next( {
             decisionTaken: true,
           } );
+          // TODO: This is not closing modal
         this.ref.close();
         },
         error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )

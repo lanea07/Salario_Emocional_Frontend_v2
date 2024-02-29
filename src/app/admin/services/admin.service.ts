@@ -10,7 +10,6 @@ import { environment } from 'src/environments/environment';
 export class AdminService {
 
   apiBaseUrl = environment.apiBaseUrl;
-  token = localStorage.getItem( 'token' );
 
   constructor (
     private http: HttpClient,
@@ -18,20 +17,12 @@ export class AdminService {
 
   getAllBenefitUser ( data: any ) {
     let params = this.cleanParams( data );
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/admin/getAllBenefitUser`, { params, headers, withCredentials: true } )
+    return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/admin/getAllBenefitUser`, { params, withCredentials: true } )
   }
 
   getAllGroupedBenefits ( data: any ) {
     let params = this.cleanParams( data );
-    const headers = new HttpHeaders()
-      .set( 'Accept', 'application/json' )
-      .set( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` );
-
-    return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/admin/getAllGroupedBenefits`, { params, headers, withCredentials: true } )
+    return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/admin/getAllGroupedBenefits`, { params, withCredentials: true } )
   }
 
   cleanParams ( data: any ): HttpParams {

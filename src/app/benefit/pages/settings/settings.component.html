@@ -1,0 +1,51 @@
+<section>
+    <p-panel>
+        <ng-template pTemplate="header">
+            <div class="d-flex flex-column">
+                <h5 class="text-secondary">
+                    <i class="fa-solid fa-gears"></i>
+                    Preferencias de Beneficio: {{ benefit?.name }}
+                </h5>
+            </div>
+        </ng-template>
+        <form [formGroup]="settingsForm" (ngSubmit)="save()" class="mt-6 space-y-6">
+            @for (setting of defaultSettings; track setting) {
+            <div class="mb-3 row">
+                <div class="col-4 text-end">
+                    {{ setting.name }}
+                </div>
+                <div class="col-8">
+                    @if(setting.name === 'cant_combine_with'){
+                    <select [ngClass]="{'invalid': isValidField(setting.name)}" class="form-select"
+                        aria-label="Default select example" id='{{setting.name}}' name='{{setting.name}}'
+                        formControlName="{{setting.name}}" multiple>
+                        @for (value of setting.values; track value) {
+                        <option [ngValue]='value'>{{value}}</option>
+                        }
+                    </select>
+                    }
+                    @else {
+                    <select [ngClass]="{'invalid': isValidField(setting.name)}" class="form-select"
+                        aria-label="Default select example" id='{{setting.name}}' name='{{setting.name}}'
+                        formControlName="{{setting.name}}">
+                        @for (value of setting.values; track value) {
+                        <option [ngValue]='value'>{{value}}</option>
+                        }
+                    </select>
+                    }
+                </div>
+            </div>
+            }
+            <div class="flex items-center">
+                <button class="btn btn-primary d-flex" type="submit">
+                    Actualizar
+                    @if (!loaded) {
+                    <div class="ms-1">
+                        <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
+                    </div>
+                    }
+                </button>
+            </div>
+        </form>
+    </p-panel>
+</section>
