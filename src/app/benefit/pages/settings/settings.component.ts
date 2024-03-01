@@ -39,12 +39,14 @@ export class SettingsComponent {
     } )
       .subscribe( {
         next: ( { settingsDefault, benefitSettings } ) => {
-          let DefaultUserSettings: any = settingsDefault;
-          let keys = Object.keys( DefaultUserSettings[ 0 ] );
+          let defaultBenefitService: any = settingsDefault;
+          let keys = Object.keys( defaultBenefitService[ 0 ] );
           this.defaultSettings = keys.map( ( key: any ) => {
             return {
               name: key,
-              values: DefaultUserSettings[ 0 ][ key ]
+              title: defaultBenefitService[ 0 ][ key ].title,
+              description: defaultBenefitService[ 0 ][ key ].description,
+              values: defaultBenefitService[ 0 ][ key ].allowed
             }
           } );
 
@@ -53,6 +55,8 @@ export class SettingsComponent {
           this.benefitSettings = keys.map( ( key: any ) => {
             return {
               name: key,
+              title: CurrentUserSettings[ 0 ][ key ].title,
+              description: CurrentUserSettings[ 0 ][ key ].description,
               values: CurrentUserSettings[ 0 ][ key ]
             }
           } );
@@ -67,9 +71,9 @@ export class SettingsComponent {
       } );
   }
 
-  isValidField ( campo: string ) {
-    return this.settingsForm.controls[ campo ].errors
-      && this.settingsForm.controls[ campo ].touched;
+  isValidField ( campo?: string ) {
+    return this.settingsForm.controls[ campo! ].errors
+      && this.settingsForm.controls[ campo! ].touched;
   }
 
   save () {
@@ -88,7 +92,6 @@ export class SettingsComponent {
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
           this.loaded = true;
         }
-      } )
-
+      } );
   }
 }
