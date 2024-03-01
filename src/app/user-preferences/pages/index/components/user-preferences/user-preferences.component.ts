@@ -32,12 +32,14 @@ export class UserPreferencesComponent {
     } )
       .subscribe( {
         next: ( { preferencesDefault, userPreferences } ) => {
-          let DefaultUserPreferences: any = preferencesDefault;
-          let keys = Object.keys( DefaultUserPreferences[ 0 ] );
+          let defaultUserPreferences: any = preferencesDefault;
+          let keys = Object.keys( defaultUserPreferences[ 0 ] );
           this.defaultPreferences = keys.map( ( key: any ) => {
             return {
               name: key,
-              values: DefaultUserPreferences[ 0 ][ key ]
+              title: defaultUserPreferences[ 0 ][ key ].title,
+              description: defaultUserPreferences[ 0 ][ key ].description,
+              values: defaultUserPreferences[ 0 ][ key ].allowed
             }
           } );
 
@@ -46,6 +48,8 @@ export class UserPreferencesComponent {
           this.userPreferences = keys.map( ( key: any ) => {
             return {
               name: key,
+              title: CurrentUserPreferences[ 0 ][ key ].title,
+              description: CurrentUserPreferences[ 0 ][ key ].description,
               values: CurrentUserPreferences[ 0 ][ key ]
             }
           } );
@@ -60,9 +64,9 @@ export class UserPreferencesComponent {
   }
 
 
-  isValidField ( campo: string ) {
-    return this.preferencesForm.controls[ campo ].errors
-      && this.preferencesForm.controls[ campo ].touched;
+  isValidField ( campo?: string ) {
+    return this.preferencesForm.controls[ campo! ].errors
+      && this.preferencesForm.controls[ campo! ].touched;
   }
 
   save () {

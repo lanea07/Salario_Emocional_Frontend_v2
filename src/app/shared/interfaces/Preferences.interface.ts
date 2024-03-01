@@ -3,6 +3,8 @@ export interface DefaultPreferences {
 }
 
 export interface Preference {
-    name: string;
+    name?: string;
+    title?: string;
+    description?: string;
     values: [];
 }
