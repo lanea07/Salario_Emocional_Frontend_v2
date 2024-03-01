@@ -39,14 +39,14 @@ export class SettingsComponent {
     } )
       .subscribe( {
         next: ( { settingsDefault, benefitSettings } ) => {
-          let DefaultUserSettings: any = settingsDefault;
-          let keys = Object.keys( DefaultUserSettings[ 0 ] );
+          let defaultBenefitService: any = settingsDefault;
+          let keys = Object.keys( defaultBenefitService[ 0 ] );
           this.defaultSettings = keys.map( ( key: any ) => {
             return {
               name: key,
-              title: DefaultUserSettings[ 0 ][ key ].title,
-              description: DefaultUserSettings[ 0 ][ key ].description,
-              values: DefaultUserSettings[ 0 ][ key ].allowed
+              title: defaultBenefitService[ 0 ][ key ].title,
+              description: defaultBenefitService[ 0 ][ key ].description,
+              values: defaultBenefitService[ 0 ][ key ].allowed
             }
           } );
 
