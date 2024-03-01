@@ -60,9 +60,9 @@ export class UserPreferencesComponent {
   }
 
 
-  isValidField ( campo: string ) {
-    return this.preferencesForm.controls[ campo ].errors
-      && this.preferencesForm.controls[ campo ].touched;
+  isValidField ( campo?: string ) {
+    return this.preferencesForm.controls[ campo! ].errors
+      && this.preferencesForm.controls[ campo! ].touched;
   }
 
   save () {
