@@ -39,6 +39,7 @@ export class ViewAllBenefitUserComponent implements OnInit {
 
   allBenefits: BenefitUserElement[] = [];
   approvedBenefits: BenefitUserElement[] = [];
+  barChartOptions: any;
   benefits: Benefit[] = [];
   dependencies: Dependency[] = [];
   dtOptions: any = {};
@@ -117,6 +118,31 @@ export class ViewAllBenefitUserComponent implements OnInit {
   };
 
   ngOnInit (): void {
+    this.barChartOptions = {
+      responsive: true,
+      scales: {
+        x: {
+          grid: {
+            drawBorder: false
+          }
+        },
+        y: {
+          beginAtZero: true,
+          grid: {
+            drawBorder: false
+          }
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        datalabels: {
+          anchor: 'end',
+          align: 'end'
+        }
+      }
+    };
     this.getBenefits();
     $.fn[ 'dataTable' ].ext.search.push( ( settings: any, data: any, dataIndex: any ) => {
       return true;
