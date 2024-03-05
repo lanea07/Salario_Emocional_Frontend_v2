@@ -5,11 +5,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { DataTablesModule } from 'angular-datatables';
 
-import { ChartsModule } from '../charts/charts.module';
 import { PrimengModule } from '../primeng/primeng.module';
-import { VacationsDatePipe } from '../shared/pipes/vacations-date.pipe';
+import { SharedModule } from '../shared/shared.module';
 import { BenefitUserRoutingModule } from './benefit-user-routing.module';
 import { CreateComponent } from './pages/create/create.component';
+import { BenefitDecisionComponent } from './pages/index/components/benefit-decision/benefit-decision.component';
 import { CalendarComponent } from './pages/index/components/calendar/calendar.component';
 import { DiaDeLaFamiliaComponent } from './pages/index/components/dia-de-la-familia/dia-de-la-familia.component';
 import { MiBancoDeHorasComponent } from './pages/index/components/mi-banco-de-horas/mi-banco-de-horas.component';
@@ -23,12 +23,10 @@ import { MyPendingBenefitsComponent } from './pages/index/components/my-pending-
 import { DropdownComponent } from './pages/index/components/my-team-request/components/dropdown/dropdown.component';
 import { MyTeamRequestComponent } from './pages/index/components/my-team-request/my-team-request.component';
 import { MyTeamComponent } from './pages/index/components/my-team/my-team.component';
+import { PermisoEspecialComponent } from './pages/index/components/permiso-especial/permiso-especial.component';
 import { TrabajoHibridoComponent } from './pages/index/components/trabajo-hibrido/trabajo-hibrido.component';
 import { IndexComponent } from './pages/index/index.component';
 import { ShowComponent } from './pages/show/show.component';
-import { SharedModule } from '../shared/shared.module';
-import { BenefitDecisionComponent } from './pages/index/components/benefit-decision/benefit-decision.component';
-import { PermisoEspecialComponent } from './pages/index/components/permiso-especial/permiso-especial.component';
 
 @NgModule( {
   declarations: [
@@ -54,7 +52,6 @@ import { PermisoEspecialComponent } from './pages/index/components/permiso-espec
   ],
   imports: [
     BenefitUserRoutingModule,
-    ChartsModule,
     CommonModule,
     DataTablesModule,
     FormsModule,

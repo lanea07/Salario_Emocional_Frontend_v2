@@ -1,8 +1,13 @@
 <div class="row">
   <div class="col">
-    <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()">
+    <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()" enctype="multipart/form-data">
       <div class="mb-3">
         <p-panel header="Información del Beneficio">
+          @if(!logoInput){
+          <div class="d-flex logo-container mb-3 justify-content-around">
+            <img class="h-100 img-fluid" [src]="helpers.imgFromSVG(benefit?.encoded_logo)" alt="">
+          </div>
+          }
           <div class="mb-3 form-floating">
             <input [ngClass]="{ invalid: isValidField('name') }" class="form-control" type="text" formControlName="name"
               id="name" placeholder="Nombre Completo" />
@@ -10,12 +15,12 @@
             @if (isValidField('name')) {
             <small class="text-danger">{{ benefitNameErrors }}</small>
             }
-            </div>
-            @if (politicsInput) {
-            <div class="mb-3">
-              <label for="filePoliticas" class="form-label">Archivo de políticas</label>
-              <input class="form-control" type="file" id="filePoliticas" formControlName="filePoliticas"
-                (change)="onFileChange($event)">
+          </div>
+
+          @if (politicsInput) {
+          <div class="mb-3">
+            <label for="filePoliticas" class="form-label">Archivo de políticas</label>
+            <input class="form-control" type="file" id="filePoliticas" (change)="onPoliticsFileChange($event)">
             </div>
             }
             @else {
@@ -23,13 +28,27 @@
               <a class="me-3 link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
                 href="{{ filePoliticas }}" target="_blank" rel="noopener noreferrer"><i
                 class="fa-solid fa-arrow-up-right-from-square me-1"></i>Ver política</a>
-            <a (click)="showInput()" style="cursor: pointer;"
+            <a (click)="showPoliticasInput()" style="cursor: pointer;"
               class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"><i
                 class="fa-solid fa-pen-to-square me-1"></i>Editar adjunto</a>
           </div>
           }
-          </p-panel>
+          @if (logoInput) {
+          <div class="mb-3">
+            <label for="logo_file" class="form-label">Logo del beneficio</label>
+            <input class="form-control" [ngClass]="{ invalid: isValidField('fileLogo') }" type="file" id="logo_file"
+              (change)="onLogoFileChange($event)">
           </div>
+          }
+          @else {
+          <div class="mb-3">
+            <a (click)="showLogoInput()" style="cursor: pointer;"
+              class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"><i
+                class="fa-solid fa-pen-to-square me-1"></i>Editar Logo</a>
+          </div>
+          }
+        </p-panel>
+        </div>
 
       <div class="mb-3">
         <p-panel header="Detalle">
@@ -46,7 +65,7 @@
             }
           </div>
         </p-panel>
-        </div>
+      </div>
 
       <div class="mb-3">
         <p-panel header="Válido">
@@ -64,6 +83,6 @@
           {{ benefit?.id ? "Actualizar" : "Crear" }}
         </button>
       </div>
-      </form>
-      </div>
-      </div>
+    </form>
+    </div>
+    </div>
