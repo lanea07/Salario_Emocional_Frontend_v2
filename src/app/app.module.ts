@@ -30,7 +30,6 @@ registerLocaleData( es );
     provideHttpClient(
       withInterceptors( [ tokenInterceptor ] ),
     ),
-    // { provide: NgChartsConfiguration, useValue: { generateColors: false } },
   ],
   bootstrap: [ AppComponent ],
 } )

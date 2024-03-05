@@ -6,6 +6,8 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { HelpersService } from 'src/app/shared/services/helpers.service';
 
 @Component( {
   selector: 'benefit-show',
@@ -26,6 +28,7 @@ export class ShowComponent {
     private as: AlertService,
     private authService: AuthService,
     private benefitService: BenefitService,
+    public helpers: HelpersService,
   ) { }
 
   ngOnInit () {
@@ -51,5 +54,4 @@ export class ShowComponent {
         error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } );
   }
-
 }
