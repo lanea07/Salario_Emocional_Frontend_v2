@@ -3,9 +3,11 @@
     <form class="p-5" [formGroup]="createForm" (ngSubmit)="save()" enctype="multipart/form-data">
       <div class="mb-3">
         <p-panel header="Información del Beneficio">
-          <div [ngClass]="{'d-flex logo-container mb-3 justify-content-around': !logoInput}" #svgContainer>
-            <img class="h-100" [src]="helpers.imgFromSVG(benefit?.encoded_logo)" alt="">
+          @if(!logoInput){
+          <div class="d-flex logo-container mb-3 justify-content-around">
+            <img class="h-100 img-fluid" [src]="helpers.imgFromSVG(benefit?.encoded_logo)" alt="">
           </div>
+          }
           <div class="mb-3 form-floating">
             <input [ngClass]="{ invalid: isValidField('name') }" class="form-control" type="text" formControlName="name"
               id="name" placeholder="Nombre Completo" />
