@@ -4,7 +4,7 @@ import { combineLatest } from 'rxjs';
 
 import { DataTableDirective } from 'angular-datatables';
 import { ChartData } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
+// import { BaseChartDirective } from 'ng2-charts';
 
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
@@ -26,7 +26,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 } )
 export class ViewAllBenefitUserComponent implements OnInit {
 
-  @ViewChild( BaseChartDirective ) chart!: BaseChartDirective;
+  // @ViewChild( BaseChartDirective ) chart!: BaseChartDirective;
   @ViewChild( DataTableDirective, { static: false } ) datatableElement!: DataTableDirective;
 
   formGroup: FormGroup = this.fb.group( {
@@ -39,6 +39,7 @@ export class ViewAllBenefitUserComponent implements OnInit {
 
   allBenefits: BenefitUserElement[] = [];
   approvedBenefits: BenefitUserElement[] = [];
+  barChartOptions: any;
   benefits: Benefit[] = [];
   dependencies: Dependency[] = [];
   dtOptions: any = {};
@@ -117,6 +118,31 @@ export class ViewAllBenefitUserComponent implements OnInit {
   };
 
   ngOnInit (): void {
+    this.barChartOptions = {
+      responsive: true,
+      scales: {
+        x: {
+          grid: {
+            drawBorder: false
+          }
+        },
+        y: {
+          beginAtZero: true,
+          grid: {
+            drawBorder: false
+          }
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        datalabels: {
+          anchor: 'end',
+          align: 'end'
+        }
+      }
+    };
     this.getBenefits();
     $.fn[ 'dataTable' ].ext.search.push( ( settings: any, data: any, dataIndex: any ) => {
       return true;

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { NgChartsConfiguration } from 'ng2-charts';
+// import { NgChartsConfiguration } from 'ng2-charts';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,7 +30,6 @@ registerLocaleData( es );
     provideHttpClient(
       withInterceptors( [ tokenInterceptor ] ),
     ),
-    { provide: NgChartsConfiguration, useValue: { generateColors: false } },
   ],
   bootstrap: [ AppComponent ],
 } )

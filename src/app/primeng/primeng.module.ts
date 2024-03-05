@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { CalendarModule } from 'primeng/calendar';
+import { ChartModule } from 'primeng/chart';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
@@ -16,8 +17,9 @@ import { TreeSelectModule } from 'primeng/treeselect';
 @NgModule( {
   declarations: [],
   imports: [
-    CommonModule,
     CalendarModule,
+    ChartModule,
+    CommonModule,
     DialogModule,
     DropdownModule,
     DynamicDialogModule,
@@ -29,6 +31,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
   ],
   exports: [
     CalendarModule,
+    ChartModule,
     DialogModule,
     DropdownModule,
     DynamicDialogModule,
