@@ -79,7 +79,7 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
         this.calendar?.getApi().addEvent( this.makeEvent( item ) )
       } );
     }
-    let year = new Date( this.year ).getFullYear();
+    let year = this.year;
     let month = new Date().getMonth() + 1;
     let day = '01';
     let date = new Date( `${ year }-${ month }-${ day }` );

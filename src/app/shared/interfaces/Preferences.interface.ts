@@ -1,5 +1,5 @@
 export interface DefaultPreferences {
-    preference: any[];
+    [ key: string ]: any[];
 }
 
 export interface Preference {

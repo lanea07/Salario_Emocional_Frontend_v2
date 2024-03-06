@@ -1,0 +1,5 @@
+@for(userBenefit of userBenefits | keyvalue; track userBenefit){
+<div class="row mb-3">
+    <benefit-detail [data]="userBenefit.value"></benefit-detail>
+</div>
+}

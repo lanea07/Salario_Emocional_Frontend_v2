@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
+import { LoadingBarService } from '@ngx-loading-bar/core';
+import { DataTableDirective } from 'angular-datatables';
+import { ADTSettings } from 'angular-datatables/src/models/settings';
+import { Subject } from 'rxjs';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { BenefitService } from '../../services/benefit.service';
-import { DataTableDirective } from 'angular-datatables';
-import { ADTSettings } from 'angular-datatables/src/models/settings';
-import { Subject, map } from 'rxjs';
-import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'benefit-index',
@@ -30,7 +30,6 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
     private as: AlertService,
     private lbs: LoadingBarService,
     private benefitService: BenefitService,
-    private renderer: Renderer2,
     private router: Router,
   ) { }
 
@@ -106,11 +105,6 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
       // race condition fails unit tests if dtOptions isn't sent with dtTrigger
       this.dtTrigger.next( this.dtOptions );
     }, 200 );
-    this.renderer.listen( 'document', 'click', ( event ) => {
-      if ( event.target.hasAttribute( "benefit_id" ) ) {
-        this.router.navigate( [ "../show", event.target.getAttribute( "benefit_id" ) ], { relativeTo: this.activatedRoute } );
-      }
-    } );
   }
 
   ngOnDestroy (): void {
