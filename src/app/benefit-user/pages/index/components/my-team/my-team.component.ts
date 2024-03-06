@@ -13,7 +13,7 @@ import { MessagingService } from '../../../../services/messaging.service';
   styles: [
   ]
 } )
-export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDestroy {
+export class MyTeamComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   calendarData: BenefitUserElement[] = [];
   loader = this.lbs.useRef();
@@ -26,13 +26,6 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
     private lbs: LoadingBarService,
     private messagingService: MessagingService,
   ) { }
-
-  ngOnInit (): void {
-    this.messagingService.message
-      .subscribe( {
-        next: ( { mustRefresh } ) => mustRefresh && this.getBenefitDetail( this.year )
-      } )
-  }
 
   ngOnDestroy (): void {
     this.messagingService.message.unsubscribe();

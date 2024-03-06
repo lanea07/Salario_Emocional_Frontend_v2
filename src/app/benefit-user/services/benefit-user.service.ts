@@ -50,7 +50,11 @@ export class BenefitUserService {
     return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser/indexcollaborators?year=${ year }`, { withCredentials: true } )
   }
 
-  decideBenefitUser ( formValues: any ) {
+  public decideBenefitUser ( formValues: any ) {
     return this.http.post<any>( `${ this.apiBaseUrl }/benefituser/decidebenefituser`, formValues, { withCredentials: true } )
+  }
+
+  public showByUserID ( user_id: number, year: number ) {
+    return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser/${ user_id }/${ year }`, { withCredentials: true } )
   }
 }

@@ -22,4 +22,5 @@ export interface User {
   positions: Position;
   roles: Role[];
   children: User[];
+  descendants: User[];
 }
