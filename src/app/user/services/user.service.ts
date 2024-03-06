@@ -33,4 +33,8 @@ export class UserService {
   destroy ( id: number | undefined ) {
     return this.http.delete( `${ this.apiBaseUrl }/user/${ id }`, { withCredentials: true } );
   }
+
+  userDescendants () {
+    return this.http.get<User[]>( `${ this.apiBaseUrl }/user-descendants`, { withCredentials: true } )
+  }
 }
