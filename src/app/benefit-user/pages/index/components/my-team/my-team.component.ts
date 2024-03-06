@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
 
@@ -15,23 +15,14 @@ import { MessagingService } from '../../../../services/messaging.service';
 } )
 export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDestroy {
 
-  @Input() year: number = new Date().getFullYear().valueOf();
-
   calendarData: BenefitUserElement[] = [];
-  miHorarioFlexible: BenefitUserElement[] = [];
-  miCumpleanos: BenefitUserElement[] = [];
-  miViernes: BenefitUserElement[] = [];
-  diaDeLaFamilia: BenefitUserElement[] = [];
-  miBancoHoras: BenefitUserElement[] = [];
-  trabajoHibrido: BenefitUserElement[] = [];
-  misVacaciones: BenefitUserElement[] = [];
-  permisoEspecial: BenefitUserElement[] = [];
-  viernesCorto: BenefitUserElement[] = [];
   loader = this.lbs.useRef();
+  year?: number;
 
   constructor (
     private as: AlertService,
     private benefitUserService: BenefitUserService,
+    private changeDetectorRef: ChangeDetectorRef,
     private lbs: LoadingBarService,
     private messagingService: MessagingService,
   ) { }
@@ -39,7 +30,7 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
   ngOnInit (): void {
     this.messagingService.message
       .subscribe( {
-        next: ( { mustRefresh } ) => mustRefresh && this.getBenefitDetail()
+        next: ( { mustRefresh } ) => mustRefresh && this.getBenefitDetail( this.year )
       } )
   }
 
@@ -48,65 +39,29 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnInit, OnDest
   }
 
   ngAfterViewInit (): void {
-    this.getBenefitDetail();
+    this.changeDetectorRef.detectChanges();
+    this.getBenefitDetail( this.year );
   }
 
   ngOnChanges (): void {
-    this.getBenefitDetail();
+    this.getBenefitDetail( this.year );
   }
 
-  getBenefitDetail () {
+  getBenefitDetail ( event?: any ) {
+    if ( event ) {
     this.loader.start();
-    this.benefitUserService.indexCollaborators( new Date( this.year ).getFullYear().valueOf() )
+      this.year = event;
+      this.benefitUserService.indexCollaborators( this.year! )
       .subscribe( {
         next: ( benefitUser ) => {
-          this.fillBenefits( benefitUser );
+          this.calendarData = [];
+          this.calendarData = benefitUser[ 0 ].descendants_and_self.flatMap( user => user.benefit_user );
           this.loader.complete();
         },
         error: ( { error } ) => {
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         }
       } );
-  }
-
-  fillBenefits ( benefitUser: BenefitUser[] ) {
-    if ( !benefitUser[ 0 ].descendants_and_self ) return;
-    this.miViernes = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
-      return user.benefit_user.filter( benefit => { return benefit.benefits.name === "Mi Viernes" } );
-    } );
-    this.miHorarioFlexible = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
-      return user.benefit_user.filter( benefit => benefit.benefits.name === "Mi Horario Flexible" );
-    } );
-    this.miCumpleanos = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
-      return user.benefit_user.filter( benefit => benefit.benefits.name === "Mi Cumpleaños" );
-    } );
-    this.diaDeLaFamilia = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
-      return user.benefit_user.filter( benefit => benefit.benefits.name === "Día de la Familia" );
-    } );
-    this.miBancoHoras = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
-      return user.benefit_user.filter( benefit => benefit.benefits.name === "Mi Banco de Horas" );
-    } );
-    this.trabajoHibrido = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
-      return user.benefit_user.filter( benefit => benefit.benefits.name === "Trabajo Híbrido" );
-    } );
-    this.misVacaciones = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
-      return user.benefit_user.filter( benefit => benefit.benefits.name === "Mis Vacaciones" );
-    } );
-    this.permisoEspecial = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
-      return user.benefit_user.filter( benefit => benefit.benefits.name === "Permiso Especial" );
-    } );
-    this.viernesCorto = benefitUser[ 0 ].descendants_and_self.flatMap( user => {
-      return user.benefit_user.filter( benefit => benefit.benefits.name === "Viernes Corto" );
-    } );
-    this.calendarData = [];
-    this.calendarData = [
-      ...this.miCumpleanos,
-      ...this.diaDeLaFamilia,
-      ...this.miViernes,
-      ...this.miBancoHoras,
-      ...this.misVacaciones,
-      ...this.permisoEspecial,
-      ...this.viernesCorto,
-    ]
+    }
   }
 }

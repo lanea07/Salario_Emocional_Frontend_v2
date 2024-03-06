@@ -1,14 +1,14 @@
-import { Component, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 
+import { LoadingBarService } from '@ngx-loading-bar/core';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../../../shared/Datatables-langs/es-CO.json';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
-import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'my-pending-benefits',
@@ -31,7 +31,6 @@ export class MyPendingBenefitsComponent implements OnInit {
     private BenefitUserService: BenefitUserService,
     private as: AlertService,
     private lbs: LoadingBarService,
-    private renderer: Renderer2,
     private router: Router,
   ) { }
 
@@ -113,13 +112,7 @@ export class MyPendingBenefitsComponent implements OnInit {
 
   ngAfterViewInit (): void {
     setTimeout( () => {
-      // race condition fails unit tests if dtOptions isn't sent with dtTrigger
       this.dtTrigger.next( this.dtOptions );
     }, 200 );
-    this.renderer.listen( 'document', 'click', ( event ) => {
-      if ( event.target.hasAttribute( "benefit_user_id" ) ) {
-        this.router.navigate( [ "../show", event.target.getAttribute( "benefit_user_id" ) ], { relativeTo: this.activatedRoute } );
-      }
-    } );
   }
 }

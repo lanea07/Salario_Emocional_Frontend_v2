@@ -1,33 +1,9 @@
-@if (loaded) {
-<div>
-  <div class="row mb-3">
-    <mi-horario-flexible [data]="miHorarioFlexible"></mi-horario-flexible>
+<p-toolbar styleClass="mb-4">
+  <year-selector (yearChanged)="getBenefitDetail($event)"></year-selector>
+</p-toolbar>
+<div class="row mb-3">
+  <benefit-detail-container [data]="benefitUser"></benefit-detail-container>
   </div>
   <div class="row mb-3">
-    <mi-cumpleanos [data]="miCumpleanos"></mi-cumpleanos>
+  <calendar-component [year]="year!" [data]="calendarData"></calendar-component>
   </div>
-  <div class="row mb-3">
-    <dia-de-la-familia [data]="diaDeLaFamilia"></dia-de-la-familia>
-  </div>
-  <div class="row mb-3">
-    <trabajo-hibrido [data]="trabajoHibrido"></trabajo-hibrido>
-  </div>
-  <div class="row mb-3">
-    <mi-viernes [data]="miViernes"></mi-viernes>
-  </div>
-  <div class="row mb-3">
-    <mi-banco-de-horas [data]="miBancoHoras"></mi-banco-de-horas>
-  </div>
-  <div class="row mb-3">
-    <mis-vacaciones [data]="misVacaciones"></mis-vacaciones>
-  </div>
-  <div class="row mb-3">
-    <permiso-especial [data]="permisoEspecial"></permiso-especial>
-  </div>
-  <div class="row mb-3">
-    <calendar-component [year]="year" [data]="calendarData"></calendar-component>
-  </div>
-  </div>
-} @else {
-<span class="loader-cloud"></span>
-}
