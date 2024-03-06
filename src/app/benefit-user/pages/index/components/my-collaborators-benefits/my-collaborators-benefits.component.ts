@@ -1,7 +1,7 @@
 import { AfterContentInit, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
+import { BenefitUser, BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
 import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
@@ -14,25 +14,15 @@ import { LoadingBarService } from '@ngx-loading-bar/core';
 } )
 export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDestroy, AfterContentInit {
 
-  @Input() year: number = new Date().getFullYear().valueOf();
-
+  calendarData: BenefitUserElement[] = [];
+  collaborators: BenefitUser[] = [];
+  currentUser?: any = null;
   formGroup: FormGroup = this.fb.group( {
     user_id: [ '', Validators.required ],
   } );
-
   loaded: boolean = true;
-  collaborators: any[] = [];
-  calendarData: BenefitUserElement[] = [];
-  diaDeLaFamilia: BenefitUserElement[] = [];
-  miHorarioFlexible: BenefitUserElement[] = [];
-  miBancoHoras: BenefitUserElement[] = [];
-  miCumpleanos: BenefitUserElement[] = [];
-  miViernes: BenefitUserElement[] = [];
-  misVacaciones: BenefitUserElement[] = [];
-  permisoEspecial: BenefitUserElement[] = [];
-  trabajoHibrido: BenefitUserElement[] = [];
-  viernesCorto: BenefitUserElement[] = [];
   loader = this.lbs.useRef();
+  year?: number;
 
   constructor (
     private as: AlertService,
@@ -44,16 +34,16 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
   ) { }
 
   ngOnInit (): void {
-    this.getBenefitDetail();
+    this.getBenefitDetail( this.year );
     this.messagingService.message
       .subscribe( {
-        next: ( { mustRefresh } ) => mustRefresh && this.getBenefitDetail()
+        next: ( { mustRefresh } ) => mustRefresh && this.getBenefitDetail( this.year )
       } )
   }
 
   ngOnChanges ( changes: SimpleChanges ): void {
     this.loaded = false;
-    this.getBenefitDetail();
+    this.getBenefitDetail( this.year );
   }
 
   ngOnDestroy (): void {
@@ -64,10 +54,11 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
     this.changeDetectorRef.detectChanges();
   }
 
-  getBenefitDetail () {
-    if ( this.year ) {
+  getBenefitDetail ( event?: any ) {
+    if ( event ) {
+      this.year = event;
       this.loader.start();
-      this.benefitUserService.indexCollaborators( new Date( this.year ).getFullYear().valueOf() )
+      this.benefitUserService.indexCollaborators( this.year! )
         .subscribe( {
           next: ( benefitUser ) => {
             this.loaded = true;
@@ -75,6 +66,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
             this.collaborators = benefitUser[ 0 ].descendants_and_self.filter( ( user ) => {
               return user.id !== Number.parseInt( localStorage.getItem( 'uid' )! );
             } );
+            this.collaborators.sort( ( a, b ) => a.name.localeCompare( b.name ) );
             this.fillBenefits();
             this.loader.complete();
           },
@@ -84,27 +76,10 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges, OnDe
   }
 
   fillBenefits () {
-    let currentUser = this.collaborators.filter( user => user.id === this.formGroup.value.user_id );
-    if ( currentUser.length > 0 ) {
-      this.miHorarioFlexible = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Mi Horario Flexible" );
-      this.miCumpleanos = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Mi Cumpleaños" );
-      this.miViernes = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Mi Viernes" );
-      this.diaDeLaFamilia = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Día de la Familia" );
-      this.miBancoHoras = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Mi Banco de Horas" );
-      this.trabajoHibrido = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Trabajo Híbrido" );
-      this.misVacaciones = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Mis Vacaciones" );
-      this.permisoEspecial = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Permiso Especial" );
-      this.viernesCorto = currentUser[ 0 ].benefit_user.filter( ( benefit: any ) => benefit.benefits.name === "Viernes Corto" );
+    this.currentUser = this.collaborators.find( user => user.id === this.formGroup.value.user_id );
+    if ( this.currentUser ) {
       this.calendarData = [];
-      this.calendarData = [
-        ...this.miCumpleanos,
-        ...this.diaDeLaFamilia,
-        ...this.miViernes,
-        ...this.miBancoHoras,
-        ...this.misVacaciones,
-        ...this.permisoEspecial,
-        ...this.viernesCorto,
-      ]
+      this.calendarData = this.currentUser.benefit_user;
     }
     this.loaded = true;
   }

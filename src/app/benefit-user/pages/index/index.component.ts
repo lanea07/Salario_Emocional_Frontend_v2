@@ -1,10 +1,9 @@
-import { AfterContentInit, ChangeDetectorRef, Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 
 import { FullCalendarComponent } from '@fullcalendar/angular';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { BenefitUserService } from '../../services/benefit-user.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MenuItem } from 'primeng/api';
 
 @Component( {
   selector: 'benefitemployee-index',
@@ -12,49 +11,31 @@ import { BenefitUserService } from '../../services/benefit-user.service';
   styles: [
   ]
 } )
-export class IndexComponent implements AfterContentInit {
+export class IndexComponent implements OnInit {
 
   calendarApis: FullCalendarComponent[] = [];
-  loaded?: boolean;
-  viewBenefitUser: FormGroup = this.fb.group( {
-    years: [ new Date(), Validators.required ],
-  } );
+  items: MenuItem[] | undefined;
+  activeItem: MenuItem | undefined;
 
   constructor (
-    private as: AlertService,
-    private benefitUserService: BenefitUserService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private fb: FormBuilder,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) { }
 
-  ngAfterContentInit (): void {
-    this.changeDetectorRef.detectChanges();
+  ngOnInit () {
+    this.items = [
+      { id: "my-benefits", label: 'Mis Beneficios', icon: 'fa-solid fa-user-large', command: () => this.router.navigate( [ "my-benefits" ], { relativeTo: this.activatedRoute } ) },
+      { id: "my-pending-benefits", label: 'Mis Solicitudes', icon: 'fa-solid fa-business-time', command: () => this.router.navigate( [ "my-pending-benefits" ], { relativeTo: this.activatedRoute } ) },
+      { id: "my-team", label: 'Mi Equipo', icon: 'fa-solid fa-users', command: () => this.router.navigate( [ "my-team" ], { relativeTo: this.activatedRoute } ) },
+      { id: "my-team-request", label: 'Solicitudes de Mi Equipo', icon: 'fa-solid fa-users-gear', command: () => this.router.navigate( [ "my-team-request" ], { relativeTo: this.activatedRoute } ) },
+      { id: "my-collaborators-benefits", label: 'Mis Colaboradores', icon: 'fa-solid fa-users-viewfinder', command: () => this.router.navigate( [ "my-collaborators-benefits" ], { relativeTo: this.activatedRoute } ) },
+    ];
+    this.setActiveTab();
   }
 
-  printObject ( event: any ) {
-    this.calendarApis.push( event.detail );
+  setActiveTab () {
+    const lastSegment = this.router.url.split( '/' ).pop();
+    const index = this.items!.findIndex( item => item.id === lastSegment );
+    this.activeItem = this.items![ index ];
   }
-
-  renderCalendars () {
-    this.calendarApis?.forEach( ( calendarApi: any ) => {
-      setTimeout( () => {
-        calendarApi.getApi().render();
-      }, 300 );
-    } );
-  }
-
-  downloadReport () {
-    this.benefitUserService.downloadReport( this.viewBenefitUser.value )
-      .subscribe(
-        {
-          next: resp => this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.INFO, 'El reporte fue programado y será enviado a tu correo. Revisa tu bandeja de correo no deseado si es necesario.' ),
-          error: err => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
-        }
-      )
-  }
-
-  loadedData ( event: any ) {
-    this.loaded = event;
-  }
-
 }

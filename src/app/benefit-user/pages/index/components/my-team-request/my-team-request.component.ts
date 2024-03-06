@@ -1,20 +1,19 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 
+import { LoadingBarService } from '@ngx-loading-bar/core';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DropdownComponentEventType } from 'src/app/benefit-user/interfaces/dropdown-component-event-type';
+import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../../../shared/Datatables-langs/es-CO.json';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
-import { DropdownComponent } from './components/dropdown/dropdown.component';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { BenefitDecisionComponent } from '../benefit-decision/benefit-decision.component';
-import { Dropdown } from 'primeng/dropdown';
-import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
-import { LoadingBarService } from '@ngx-loading-bar/core';
+import { DropdownComponent } from './components/dropdown/dropdown.component';
 
 @Component( {
   selector: 'my-team-request',
@@ -40,7 +39,6 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
     private dialogService: DialogService,
     private lbs: LoadingBarService,
     private messagingService: MessagingService,
-    private renderer: Renderer2,
     private router: Router,
   ) { }
 
@@ -132,12 +130,6 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
       // race condition fails unit tests if dtOptions isn't sent with dtTrigger
       this.dtTrigger.next( this.dtOptions );
     }, 200 );
-
-    this.renderer.listen( 'document', 'click', ( event ) => {
-      if ( event.target.hasAttribute( "benefit_user_id" ) ) {
-        this.router.navigate( [ "../show", event.target.getAttribute( "benefit_user_id" ) ], { relativeTo: this.activatedRoute } );
-      }
-    } );
   }
 
   ngOnDestroy (): void {
@@ -146,7 +138,10 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
 
   onCaptureEvent ( event: DropdownComponentEventType ) {
     if ( event.cmd === 'view' ) {
-      return this.router.navigate( [ "../show", event.data.id ], { relativeTo: this.activatedRoute } );
+      // return this.router.navigate( [ "../../show", event.data.id ], { relativeTo: this.activatedRoute } );
+      return this.router.navigate( [], { relativeTo: this.activatedRoute } ).then( ( result ) => {
+        window.open( `basic/benefit-employee/show/${ event.data.id }`, '_blank' );
+      } );
     }
     if ( event.cmd === 'decide' ) {
       this.ref = this.dialogService.open( BenefitDecisionComponent, {

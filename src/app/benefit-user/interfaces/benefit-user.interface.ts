@@ -1,7 +1,6 @@
 import { BenefitDetail } from "src/app/benefit-detail/interfaces/benefit-detail.interface";
 import { Benefit } from "src/app/benefit/interfaces/benefit.interface";
 import { Dependency } from "src/app/dependency/interfaces/dependency.interface";
-import { User } from "src/app/user/interfaces/user.interface";
 
 export interface BenefitUser {
   id: number;
@@ -18,7 +17,7 @@ export interface BenefitUser {
   updated_at: Date;
   benefit_user: BenefitUserElement[];
   dependency: Dependency;
-  descendants_and_self: BenefitUserElement[];
+  descendants_and_self: BenefitUser[];
 }
 
 export interface BenefitUserElement {
@@ -38,4 +37,8 @@ export interface BenefitUserElement {
   approved_at: Date;
   request_comment: string;
   decision_comment: string;
+}
+
+export interface UserBenefit {
+  [ key: string ]: BenefitUserElement[];
 }

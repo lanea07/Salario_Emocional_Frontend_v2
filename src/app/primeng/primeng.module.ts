@@ -9,6 +9,7 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { PanelModule } from 'primeng/panel';
+import { TabMenuModule } from 'primeng/tabmenu';
 import { TabViewModule } from 'primeng/tabview';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TreeSelectModule } from 'primeng/treeselect';
@@ -26,6 +27,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
     InputTextareaModule, 
     InputTextModule,
     PanelModule,
+    TabMenuModule,
     TabViewModule,
     TreeSelectModule,
   ],
@@ -38,6 +40,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
     InputTextareaModule,
     InputTextModule,
     PanelModule,
+    TabMenuModule,
     TabViewModule,
     ToolbarModule,
     TreeSelectModule,

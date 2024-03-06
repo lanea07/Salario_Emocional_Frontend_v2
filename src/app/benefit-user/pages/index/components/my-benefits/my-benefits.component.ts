@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, Renderer2, SimpleChanges } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { AfterViewInit, ChangeDetectorRef, Component, OnChanges, SimpleChanges } from '@angular/core';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
 
 import { BenefitUser, BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
+import { UserBenefit } from '../../../../interfaces/benefit-user.interface';
 
 @Component( {
   selector: 'my-benefits',
@@ -14,81 +14,43 @@ import { BenefitUserService } from '../../../../services/benefit-user.service';
 } )
 export class MyBenefitsComponent implements AfterViewInit, OnChanges {
 
-  @Input() year: number = new Date().getFullYear().valueOf();
-  @Output() loadedData: EventEmitter<boolean> = new EventEmitter();
-
+  benefitUser?: BenefitUser;
   calendarData: BenefitUserElement[] = [];
   loaded: boolean = false;
   loader = this.lbs.useRef();
-  diaDeLaFamilia: BenefitUserElement[] = [];
-  miHorarioFlexible: BenefitUserElement[] = [];
-  miBancoHoras: BenefitUserElement[] = [];
-  miCumpleanos: BenefitUserElement[] = [];
-  miViernes: BenefitUserElement[] = [];
-  misVacaciones: BenefitUserElement[] = [];
-  permisoEspecial: BenefitUserElement[] = [];
-  trabajoHibrido: BenefitUserElement[] = [];
-  viernesCorto: BenefitUserElement[] = [];
+  year?: number;
 
   constructor (
-    private activatedRoute: ActivatedRoute,
     private as: AlertService,
     private benefitUserService: BenefitUserService,
+    private changeDetectorRef: ChangeDetectorRef,
     private lbs: LoadingBarService,
-    private renderer: Renderer2,
-    private router: Router,
   ) { }
 
   ngOnChanges ( changes: SimpleChanges ): void {
-    this.loadedData.emit( false );
-    this.getBenefitDetail();
+    this.getBenefitDetail( this.year );
   }
 
   ngAfterViewInit (): void {
-    this.renderer.listen( 'document', 'click', ( event ) => {
-      if ( event.target.hasAttribute( "benefit_employee_id" ) ) {
-        this.router.navigate( [ "../show", event.target.getAttribute( "benefit_employee_id" ) ], { relativeTo: this.activatedRoute } );
-      }
-    } );
-    this.getBenefitDetail();
+    this.changeDetectorRef.detectChanges();
+    this.getBenefitDetail( this.year );
   }
 
-  getBenefitDetail () {
-    this.loader.start();
-    if ( this.year ) {
-      this.benefitUserService.index( Number.parseInt( localStorage.getItem( 'uid' )! ), new Date( this.year ).getFullYear().valueOf() )
+  getBenefitDetail ( event?: any ) {
+    if ( event ) {
+      this.year = event;
+      this.loader.start();
+      this.benefitUserService.index( Number.parseInt( localStorage.getItem( 'uid' )! ), this.year! )
         .subscribe( {
           next: ( benefitUser ) => {
-            this.fillBenefits( benefitUser );
+            this.calendarData = [];
+            this.calendarData = benefitUser[ 0 ].benefit_user;
+            this.benefitUser = benefitUser[ 0 ];
             this.loaded = true;
             this.loader.complete();
-            this.loadedData.emit( true );
           },
           error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
         } );
     }
   }
-
-  fillBenefits ( benefitUser: BenefitUser[] ) {
-    this.miHorarioFlexible = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mi Horario Flexible" );
-    this.miCumpleanos = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mi Cumpleaños" );
-    this.miViernes = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mi Viernes" );
-    this.diaDeLaFamilia = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Día de la Familia" );
-    this.miBancoHoras = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mi Banco de Horas" );
-    this.trabajoHibrido = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Trabajo Híbrido" );
-    this.misVacaciones = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Mis Vacaciones" );
-    this.permisoEspecial = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Permiso Especial" );
-    this.viernesCorto = benefitUser[ 0 ].benefit_user.filter( benefit => benefit.benefits.name === "Viernes Corto" );
-    this.calendarData = [];
-    this.calendarData = [
-      ...this.miCumpleanos,
-      ...this.diaDeLaFamilia,
-      ...this.miViernes,
-      ...this.miBancoHoras,
-      ...this.misVacaciones,
-      ...this.permisoEspecial,
-      ...this.viernesCorto,
-    ]
-  }
-
 }
