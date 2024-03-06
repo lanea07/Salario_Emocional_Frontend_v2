@@ -50,9 +50,6 @@ export class DropdownComponent implements OnInit, OnDestroy {
       cmd: cmd.value,
       data: this.data,
     } );
-    this.messagingService.message.next( {
-      mustRefresh: true,
-    } );
   }
 
 }
