@@ -37,7 +37,7 @@
       </div>
       <ng-template pTemplate="footer">
         @if (isAdmin) {
-          <a class="btn btn-warning" href="/basic/benefit-employee/edit/{{ modalData?.id }}">
+          <a class="btn btn-warning" [routerLink]="['../../', 'edit', modalData.id]" [relativeTo]="activatedRoute">
             Editar
           </a>
         }

@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component( {
   selector: 'calendar-component',
@@ -56,6 +57,7 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
   };
 
   constructor (
+    public activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private as: AlertService,
     private benefitUserService: BenefitUserService,

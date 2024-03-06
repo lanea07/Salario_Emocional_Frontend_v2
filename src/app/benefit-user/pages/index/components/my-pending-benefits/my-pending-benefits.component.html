@@ -8,12 +8,12 @@
 </div>
 <ng-template #dataTableOptions let-data="adtData">
     <div>
-        <a [routerLink]="['..', 'show', data.id]" [relativeTo]="activatedRoute"
-            class="badge rounded-pill text-bg-warning">
+        <a [routerLink]="['../../', 'show', data.id]" [relativeTo]="activatedRoute" class="badge rounded-pill text-bg-warning"
+            target="_blank">
             Detalles
             <i class="fa-solid fa-circle-info fa-fade"></i>
         </a>
-        <a [routerLink]="['..', 'edit', data.id]" [relativeTo]="activatedRoute"
+        <a [routerLink]="['../../', 'edit', data.id]" [relativeTo]="activatedRoute"
             class="badge rounded-pill text-bg-warning ms-1">
             Editar
             <i class="fa-solid fa-edit fa-fade"></i>
