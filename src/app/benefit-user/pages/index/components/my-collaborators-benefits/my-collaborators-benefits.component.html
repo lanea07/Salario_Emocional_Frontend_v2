@@ -1,9 +1,10 @@
 <p-toolbar styleClass="mb-4">
-    <year-selector (yearChanged)="getBenefitDetail($event)"></year-selector>
+    <year-selector (yearChanged)="updateBenefitsPerUser($event)"></year-selector>
     <form [formGroup]="formGroup">
         <p-dropdown [filter]="true" class="w-100" styleClass="w-100" optionLabel="name" optionValue="id"
             formControlName="user_id" [options]="collaborators" placeholder="-- Seleccione Colaborador --"
-            (onChange)="fillBenefits()"></p-dropdown>
+            (onChange)="fillBenefits()">
+        </p-dropdown>
     </form>
 </p-toolbar>
 @if(currentUser){
