@@ -1,4 +1,4 @@
-import { registerLocaleData } from '@angular/common';
+import { DATE_PIPE_DEFAULT_OPTIONS, registerLocaleData } from '@angular/common';
 import es from '@angular/common/locales/es';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -30,6 +30,7 @@ registerLocaleData( es );
     provideHttpClient(
       withInterceptors( [ tokenInterceptor ] ),
     ),
+    { provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: { locale: 'es', dateFormat: 'medium', timezone: 'es-CO' } },
   ],
   bootstrap: [ AppComponent ],
 } )
