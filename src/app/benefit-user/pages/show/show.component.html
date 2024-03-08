@@ -27,15 +27,15 @@
         </tr>
         <tr>
           <th>Fecha de creación</th>
-          <td>{{ benefitUser?.created_at | date:'short' }}</td>
+          <td>{{ benefitUser?.benefit_user![0].created_at | date }}</td>
         </tr>
         <tr>
           <th>Fecha de redención</th>
-          <td>{{ benefitUser?.benefit_user![0].benefit_begin_time | date:'short' }}</td>
+          <td>{{ benefitUser?.benefit_user![0].benefit_begin_time | date }}</td>
         </tr>
         <tr>
           <th>Finalización</th>
-          <td>{{ benefitUser?.benefit_user![0].benefit_end_time | date:'short' }}</td>
+          <td>{{ benefitUser?.benefit_user![0].benefit_end_time | date }}</td>
         </tr>
         <tr>
           <th>Observaciones</th>
