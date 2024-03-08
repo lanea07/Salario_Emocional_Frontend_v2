@@ -153,7 +153,7 @@ export class ViewAllBenefitUserComponent implements OnInit {
       columnDefs: [
         {
           className: 'all',
-          targets: [ -1 ]
+          targets: [ 1, -1 ]
         }
       ],
       responsive: true,

@@ -26,15 +26,16 @@
             }
         </div>
         @if( uses_doughnutchart ){
-        <div class="col-12 col-lg-3 justify-content-around" style="position: relative;">
-            <p-chart type="doughnut" [data]="doughnutChartData" [options]="doughnutChartOptions"></p-chart>
+        <div class="col-12 col-lg-3 justify-content-around" style="position: relative; height: 15rem;">
+            <p-chart type="doughnut" [data]="doughnutChartData" [options]="doughnutChartOptions" width="100%"
+                height="100%"></p-chart>
         </div>
         }
     </div>
     @if(uses_barchart){
-    <div class="row">
+    <div class="row" style="height: 15rem;">
         <div class="w-100 h-100 mb-md-3">
-            <p-chart type="bar" [data]="barChartData" [options]="barChartOptions"></p-chart>
+            <p-chart type="bar" [data]="barChartData" [options]="barChartOptions" width="100%" height="100%"></p-chart>
         </div>
     </div>
     }

@@ -12,25 +12,13 @@ import { PanelModule } from 'primeng/panel';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { TabViewModule } from 'primeng/tabview';
 import { ToolbarModule } from 'primeng/toolbar';
+import { TooltipModule } from 'primeng/tooltip';
 import { TreeSelectModule } from 'primeng/treeselect';
 
 
 @NgModule( {
   declarations: [],
-  imports: [
-    CalendarModule,
-    ChartModule,
-    CommonModule,
-    DialogModule,
-    DropdownModule,
-    DynamicDialogModule,
-    InputTextareaModule, 
-    InputTextModule,
-    PanelModule,
-    TabMenuModule,
-    TabViewModule,
-    TreeSelectModule,
-  ],
+  imports: [],
   exports: [
     CalendarModule,
     ChartModule,
@@ -43,6 +31,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
     TabMenuModule,
     TabViewModule,
     ToolbarModule,
+    TooltipModule,
     TreeSelectModule,
   ]
 } )

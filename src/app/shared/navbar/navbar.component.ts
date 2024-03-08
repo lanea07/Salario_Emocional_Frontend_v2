@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit (): void {
-    this.isSimulated = Boolean( localStorage.getItem( 'simulated' ) );
+    this.isSimulated = JSON.parse( localStorage.getItem( 'simulated' )! );
     this.authService.validarAdmin()
       .subscribe( {
         next: ( isAdmin: any ) => {

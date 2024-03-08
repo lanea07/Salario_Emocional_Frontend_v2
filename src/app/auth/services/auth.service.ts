@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { AuthResponse, ValidToken } from '../interfaces/auth.interface';
@@ -25,7 +25,7 @@ export class AuthService {
     const url = `${ this.baseUrl }/login`;
     const body = { email, password, device_name };
     return this.getCookie().pipe(
-      mergeMap( res => {
+      switchMap( res => {
         return this.http.post<AuthResponse>( url, body, { withCredentials: true } )
           .pipe(
             tap( resp => {
@@ -33,7 +33,7 @@ export class AuthService {
                 localStorage.setItem( 'token', resp.token! );
                 localStorage.setItem( 'user', JSON.stringify( resp.user! ) );
                 localStorage.setItem( 'uid', resp.id!.toString() );
-                localStorage.setItem( 'simulated', false + '' );
+                localStorage.setItem( 'simulated', false.toString() );
               }
             } )
           );

@@ -84,13 +84,13 @@
 </div>
 
 <!-- Charts -->
-<p-chart type="bar" [data]="barChartData" [options]="barChartOptions" [style]="{'height': '300px'}"></p-chart>
+<div style="height: 300px;">
+    <p-chart type="bar" [data]="barChartData" [options]="barChartOptions" width="100%" height="100%"></p-chart>
+</div>
 
 <!-- Tables -->
 <div class="row mt-5">
     <div class="col">
-        <table datatable [dtOptions]="dtOptions" class="table table-hover table-sm w-100 nowrap">
-            <thead class="bg-dark text-light"></thead>
-        </table>
+        <table datatable [dtOptions]="dtOptions" class="table table-hover table-sm w-100 nowrap"></table>
     </div>
 </div>
