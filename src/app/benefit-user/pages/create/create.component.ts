@@ -1,4 +1,3 @@
-import { formatDate } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,6 +18,9 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 import { User } from '../../../user/interfaces/user.interface';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
+import { DatePipe } from '@angular/common';
+import { style } from '@angular/animations';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'benefitemployee-create',
@@ -58,6 +60,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
   dependencies!: Dependency[];
   disabledDays: number[] = [];
   disableSubmitBtn: boolean = false;
+  loader = this.lbs.useRef();
   nodes!: any[];
   numberOfMonths: number = 1;
   selectedBenefitDetail?: BenefitDetail;
@@ -96,6 +99,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
     private benefitUserService: BenefitUserService,
     private changeDetectorRef: ChangeDetectorRef,
     private fb: FormBuilder,
+    private lbs: LoadingBarService,
     private pgConfig: PrimeNGConfig,
     private router: Router,
     private userService: UserService,
@@ -104,8 +108,8 @@ export class CreateComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit (): void {
+    this.loader.start();
     this.pgConfig.setTranslation( this.es );
-
     combineLatest( {
       benefits: this.benefitService.indexAvailable(),
       benefitUser: this.router.url.includes( 'edit' ) ? this.activatedRoute.params.pipe(
@@ -135,10 +139,12 @@ export class CreateComponent implements OnInit, AfterViewInit {
             this.createForm.get( 'rangeDates' )?.setValue( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ) );
             this.createForm.get( 'benefit_id' )?.disable();
           }
+          this.loader.complete();
         },
         error: ( { error } ) => {
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          this.loader.complete();
         }
       } );
     this.createForm.get( 'benefit_detail_id' )!.valueChanges
@@ -174,11 +180,11 @@ export class CreateComponent implements OnInit, AfterViewInit {
       finalDate.setDate( finalDate.getDate() + 1 );
       initialDate.setHours( 0, 0, 0, 0 );
       finalDate.setHours( 0, 0, 0, 0 );
-      this.createForm.get( 'benefit_begin_time' )?.setValue( formatDate( initialDate, 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
-      this.createForm.get( 'benefit_end_time' )?.setValue( formatDate( finalDate, 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
+      this.createForm.get( 'benefit_begin_time' )?.setValue( initialDate );
+      this.createForm.get( 'benefit_end_time' )?.setValue( finalDate );
     } else {
-      this.createForm.get( 'benefit_begin_time' )?.setValue( formatDate( new Date( date ), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
-      this.createForm.get( 'benefit_end_time' )?.setValue( formatDate( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ).toString(), 'yyyy-MM-dd HH:mm:ss', 'en-US' ) );
+      this.createForm.get( 'benefit_begin_time' )?.setValue( new Date( date ) );
+      this.createForm.get( 'benefit_end_time' )?.setValue( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ) );
     }
 
     if ( this.currentUserBenefits?.id ) {
@@ -235,14 +241,6 @@ export class CreateComponent implements OnInit, AfterViewInit {
               this.createForm.get( 'request_comment' )?.disable();
               this.benefitDetailSpinner = true;
               this.createForm.get( 'rangeDates' )!.enable();
-              let simulatedEvent = {
-                originalEvent: {
-                  target: {
-                    textContent: this.currentUserBenefits?.benefit_user[ 0 ].benefits.name
-                  }
-                }
-              };
-              this.setCalendar( simulatedEvent );
             }
             this.createForm.get( 'benefit_detail_id' )!.enable();
           },
@@ -274,11 +272,22 @@ export class CreateComponent implements OnInit, AfterViewInit {
       this.calendar.selectionMode = 'single'
       this.numberOfMonths = 1;
     }
+    this.calendar.currentSecond = 0;
     this.calendar.updateTime();
     this.calendar.updateUI();
   }
 
-  enableCalendar () {
+  enableCalendar ( event: any ) {
     this.createForm.get( 'rangeDates' )!.enable();
+    let benefitDetail = event.originalEvent.target.textContent;
+    if ( benefitDetail === 'Tarde' ) {
+      this.calendar.currentHour = 13;
+      this.calendar.currentMinute = 0;
+    } else {
+      this.calendar.currentHour = 7;
+      this.calendar.currentMinute = 0;
+    }
+    this.calendar.updateTime();
+    this.calendar.updateUI();
   }
 }

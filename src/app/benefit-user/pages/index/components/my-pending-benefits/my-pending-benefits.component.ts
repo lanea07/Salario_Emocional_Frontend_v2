@@ -59,13 +59,13 @@ export class MyPendingBenefitsComponent implements OnInit {
           {
             title: 'Solicitado',
             data: function ( data: any, type: any, full: any ) {
-              return new Date( data.created_at ).toLocaleString( 'es-CO', { timeZone: 'UTC' } );
+              return new Date( data.created_at ).toLocaleString( 'es-CO' );
             }
           },
           {
             title: 'Fecha y hora de redención',
             data: function ( data: any, type: any, full: any ) {
-              return new Date( data.benefit_begin_time ).toLocaleString( 'es-CO', { timeZone: 'UTC' } );
+              return new Date( data.benefit_begin_time ).toLocaleString( 'es-CO' );
             }
           },
           {
