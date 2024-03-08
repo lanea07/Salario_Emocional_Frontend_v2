@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { combineLatest, of, switchMap } from 'rxjs';
 
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { Dependency } from '../../interfaces/dependency.interface';
@@ -32,7 +32,6 @@ export class CreateComponent implements OnInit {
     if ( errors![ 'required' ] ) {
       return 'El nombre es obligatorio';
     }
-
     return '';
   }
 
@@ -44,38 +43,32 @@ export class CreateComponent implements OnInit {
     private router: Router,
   ) { }
 
-
   ngOnInit () {
-
-    this.dependencyService.index().subscribe( {
-      next: ( dependencies ) => {
+    combineLatest( {
+      dependencies: this.dependencyService.index(),
+      dependency: this.router.url.includes( 'edit' ) ? this.activatedRoute.params.pipe(
+        switchMap( ( { id } ) => this.dependencyService.show( id ) )
+      ) : of( undefined ),
+    } )
+      .subscribe( {
+        next: ( { dependencies, dependency } ) => {
         this.dependencies = dependencies;
         this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependencies[ 0 ] ) ];
-      },
-      error: ( { error } ) => {
-        this.router.navigate( [ 'dependency' ] );
-        this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
-      }
-    } );
-
-    if ( !this.router.url.includes( 'edit' ) ) {
-      return;
-    }
-
-    this.activatedRoute.params
-      .pipe(
-        switchMap( ( { id } ) => this.dependencyService.show( id ) )
-      )
-      .subscribe( dependency => {
-        this.dependency = Object.values( dependency )[ 0 ];
-        let parent = this.dependencyService.flattenDependency( { ...this.dependencies[ 0 ] } ).find( ( dependency: any ) => dependency.id === this.dependency?.parent_id );
-        this.createForm.reset( {
-          name: this.dependency?.name,
-          parent_id: this.dependencyService.makeNode( parent! )
-        } );
-        this.loaded = true;
+          if ( dependency ) {
+            this.dependency = Object.values( dependency )[ 0 ];
+            let parent = this.dependencyService.flattenDependency( { ...this.dependencies[ 0 ] } ).find( ( dependency: any ) => dependency.id === this.dependency?.parent_id );
+            this.createForm.reset( {
+              name: this.dependency?.name,
+              parent_id: this.dependencyService.makeNode( parent! )
+            } );
+            this.loaded = true;
+          }
+        },
+        error: ( { error } ) => {
+          this.router.navigate( [ 'dependency' ] );
+          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        }
       } );
-
   }
 
   isValidField ( campo: string ) {
