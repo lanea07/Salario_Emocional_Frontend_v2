@@ -6,6 +6,7 @@ import { combineLatest, of, switchMap } from 'rxjs';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { Dependency } from '../../interfaces/dependency.interface';
 import { DependencyService } from '../../services/dependency.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'user-create',
@@ -22,6 +23,7 @@ export class CreateComponent implements OnInit {
   dependency?: Dependency;
   disableSubmitBtn: boolean = false;
   loaded: boolean = false;
+  loader = this.lbs.useRef();
   nodes!: any[];
 
   get nameErrorMsg (): string {
@@ -40,10 +42,12 @@ export class CreateComponent implements OnInit {
     private as: AlertService,
     private fb: FormBuilder,
     private dependencyService: DependencyService,
+    private lbs: LoadingBarService,
     private router: Router,
   ) { }
 
   ngOnInit () {
+    this.loader.start();
     combineLatest( {
       dependencies: this.dependencyService.index(),
       dependency: this.router.url.includes( 'edit' ) ? this.activatedRoute.params.pipe(
@@ -63,10 +67,12 @@ export class CreateComponent implements OnInit {
             } );
             this.loaded = true;
           }
+          this.loader.complete();
         },
         error: ( { error } ) => {
           this.router.navigate( [ 'dependency' ] );
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          this.loader.complete();
         }
       } );
   }
