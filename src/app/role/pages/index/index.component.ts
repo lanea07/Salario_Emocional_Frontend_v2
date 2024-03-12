@@ -1,10 +1,13 @@
-import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { RoleService } from '../../services/role.service';
-import { LoadingBarService } from '@ngx-loading-bar/core';
+import { Subject } from 'rxjs';
+import { ADTSettings } from 'angular-datatables/src/models/settings';
 
 @Component( {
   selector: 'role-index',
@@ -14,39 +17,35 @@ import { LoadingBarService } from '@ngx-loading-bar/core';
 } )
 export class IndexComponent implements OnInit, AfterViewInit {
 
-  columns = [
-    { title: 'Nombre', data: 'name' },
-    {
-      title: 'Opciones',
-      data: function ( data: any, type: any, full: any ) {
-        return `
-          <span style="cursor: pointer;" role_id="${ data.id }" class="badge rounded-pill text-bg-warning">
-            Detalles
-            <i class="fa-solid fa-circle-info fa-fade" style="color: #000000;"></i>
-          </span>`;
-      }
-    } ];
+  @ViewChild( 'dataTableOptions' ) dataTableOptions!: TemplateRef<any>;
+
   dtOptions: any;
+  dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
   loader = this.lbs.useRef();
 
   constructor (
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private as: AlertService,
     private lbs: LoadingBarService,
-    private renderer: Renderer2,
     private roleService: RoleService,
     private router: Router,
   ) { }
 
   ngOnInit (): void {
     const self = this;
+    this.loader.start()
     this.dtOptions = {
+      serverSide: true,
+      processing: true,
       ajax: ( dataTablesParameters: any, callback: any ) => {
-        this.loader.start()
-        this.roleService.index()
+        this.roleService.datatable( dataTablesParameters )
           .subscribe( {
-            next: ( roles ) => {
-              callback( { data: roles } );
+            next: ( roles: any ) => {
+              callback( {
+                data: roles.original.data,
+                recordsTotal: roles.original.recordsTotal,
+                recordsFiltered: roles.original.recordsFiltered,
+              } );
               this.loader.complete();
             },
             error: ( err ) => {
@@ -56,7 +55,17 @@ export class IndexComponent implements OnInit, AfterViewInit {
           } );
       },
       autowidth: true,
-      columns: this.columns,
+      columns: [
+        { title: 'Nombre', data: 'name' },
+        {
+          title: 'Opciones',
+          data: null,
+          defaultContent: '',
+          searchable: false,
+          ngTemplateRef: {
+            ref: this.dataTableOptions,
+          }
+        } ],
       columnDefs: [
         {
           className: 'all',
@@ -84,11 +93,9 @@ export class IndexComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit (): void {
-    this.renderer.listen( 'document', 'click', ( event ) => {
-      if ( event.target.hasAttribute( "role_id" ) ) {
-        this.router.navigate( [ "../show", event.target.getAttribute( "role_id" ) ], { relativeTo: this.activatedRoute } );
-      }
-    } );
+    setTimeout( () => {
+      this.dtTrigger.next( this.dtOptions );
+    }, 200 );
   }
 
 }

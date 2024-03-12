@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
-import { Subject } from 'rxjs';
+
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
@@ -13,13 +14,7 @@ import { UserService } from '../../services/user.service';
 @Component( {
   selector: 'user-index',
   templateUrl: './index.component.html',
-  styles: [
-    `
-      a{
-        cursor: pointer;
-      }
-    `
-  ]
+  styles: []
 } )
 export class IndexComponent implements OnInit, AfterViewInit {
 
@@ -41,16 +36,22 @@ export class IndexComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit (): void {
+    this.loader.start();
     setTimeout( () => {
       const self = this;
       this.dtOptions = {
+        serverSide: true,
+        processing: true,
         ajax: ( dataTablesParameters: any, callback: any ) => {
-          this.loader.start();
-          this.userService.index()
+          this.userService.datatable( dataTablesParameters )
             .subscribe(
               {
-                next: users => {
-                  callback( { data: users } );
+                next: ( users: any ) => {
+                  callback( {
+                    data: users.original.data,
+                    recordsTotal: users.original.recordsTotal,
+                    recordsFiltered: users.original.recordsFiltered,
+                  } );
                   this.loader.complete();
                 },
                 error: err => {
@@ -62,17 +63,26 @@ export class IndexComponent implements OnInit, AfterViewInit {
         columns: [
           { title: 'Nombre', data: 'name' },
           { title: 'Correo', data: 'email' },
-          { title: 'Roles', data: 'roles[0].name' },
+          {
+            title: 'Roles',
+            data: 'roles',
+            render: function ( data: any, type: any, full: any ) {
+              return data.map( ( detail: any ) => detail.name ).join( '<br>' );
+            },
+            searchable: false,
+          },
           { title: 'Cargo', data: 'positions.name' },
           { title: 'Responsable Directo', data: 'parent.name' },
           {
             title: 'Válido',
-            data: function ( data: any, type: any, full: any ) {
+            data: 'valid_id',
+            render: function ( data: any, type: any, full: any ) {
               return data.valid_id ? 'Válido' : 'No Válido';
             }
           },
           {
             title: 'Opciones',
+            searchable: false,
             data: null,
             defaultContent: '',
             ngTemplateRef: {

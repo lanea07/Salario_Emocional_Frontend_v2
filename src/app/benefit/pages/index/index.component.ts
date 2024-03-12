@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
-import { Subject } from 'rxjs';
+
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { BenefitService } from '../../services/benefit.service';
@@ -34,20 +35,27 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
   ) { }
 
   ngOnInit () {
+    this.loader.start();
     setTimeout( () => {
       const self = this;
       this.dtOptions = {
+        serverSide: true,
+        processing: true,
         ajax: ( dataTablesParameters: any, callback: any ) => {
-          this.loader.start();
-          this.benefitService.index().subscribe( {
-            next: ( benefits ) => {
-              callback( { data: benefits } );
-              this.loader.complete();
-            },
-            error: ( err ) => {
-              this.router.navigate( [ 'basic', 'benefit-employee' ] );
-              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
-            }
+          this.benefitService.datatable( dataTablesParameters )
+            .subscribe( {
+              next: ( benefits: any ) => {
+                callback( {
+                  data: benefits.original.data,
+                  recordsTotal: benefits.original.recordsTotal,
+                  recordsFiltered: benefits.original.recordsFiltered,
+                } );
+                this.loader.complete();
+              },
+              error: ( err ) => {
+                this.router.navigate( [ 'basic', 'benefit-employee' ] );
+                this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
+              }
           } );
         },
         autoWidth: true,
@@ -55,14 +63,16 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
           { title: 'Nombre', data: 'name' },
           {
             title: 'Configuraciones',
-            data: function ( data: any, type: any, full: any ) {
-              return data.benefit_detail.map( ( detail: any ) => detail.name ).join( '<br>' );
+            data: 'benefit_detail',
+            render: function ( data: any, type: any, full: any ) {
+              return data.map( ( detail: any ) => detail.name ).join( '<br>' );
             }
           },
           {
             title: 'Opciones',
             data: null,
             defaultContent: '',
+            searchable: false,
             ngTemplateRef: {
               ref: this.dataTableOptions,
             }
@@ -102,7 +112,6 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngAfterViewInit (): void {
     setTimeout( () => {
-      // race condition fails unit tests if dtOptions isn't sent with dtTrigger
       this.dtTrigger.next( this.dtOptions );
     }, 200 );
   }

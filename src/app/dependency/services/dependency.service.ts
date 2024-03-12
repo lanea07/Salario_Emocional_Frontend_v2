@@ -40,6 +40,10 @@ export class DependencyService {
     return this.http.get<Dependency[]>( `${ this.apiBaseUrl }/dependency/getNonTreeValidDependencies`, { withCredentials: true } )
   }
 
+  datatable ( dataTablesParameters: any ) {
+    return this.http.post( `${ this.apiBaseUrl }/dependency/datatable`, dataTablesParameters, { withCredentials: true } );
+  }
+
 
   // Methods for transform the dependencies results
 

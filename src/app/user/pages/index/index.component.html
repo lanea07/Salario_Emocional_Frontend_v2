@@ -6,11 +6,11 @@
 </div>
 <ng-template #dataTableOptions let-data="adtData">
   <div>
-    <a [routerLink]="['..', 'show', data.id]" [relativeTo]="activatedRoute" class="badge rounded-pill text-bg-warning">
+    <a [routerLink]="['..', 'show', data.id]" [relativeTo]="activatedRoute" class="mx-1 badge rounded-pill text-bg-warning">
       Detalles
       <i class="fa-solid fa-circle-info fa-fade"></i>
     </a>
-    <a class="badge rounded-pill text-bg-danger" (click)="loginAs(data.id)">
+    <a class="mx-1 badge rounded-pill text-bg-danger" (click)="loginAs(data.id)">
       Iniciar sesión como...
       <i class="fa-solid fa-circle-info fa-fade"></i>
     </a>

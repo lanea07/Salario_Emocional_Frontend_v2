@@ -33,4 +33,8 @@ export class BenefitDetailService {
   destroy ( id: number | undefined ) {
     return this.http.delete( `${ this.apiBaseUrl }/benefitdetail/${ id }`, { withCredentials: true } );
   }
+
+  datatable ( datatableParameters: any ) {
+    return this.http.post( `${ this.apiBaseUrl }/benefitdetail/datatable`, datatableParameters, { withCredentials: true } );
+  }
 }

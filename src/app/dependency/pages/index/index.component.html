@@ -1,5 +1,21 @@
 <div class="row mt-5">
     <div class="col">
-        <table datatable [dtOptions]="dtOptions" class="table table-hover table-sm w-100 nowrap"></table>
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover table-sm w-100 nowrap">
+        </table>
     </div>
 </div>
+<ng-template #dataTableOptions let-data="adtData">
+    <div>
+        @if (data.politicas_path) {
+        <a target="_blank" href="{{data.politicas_path}}" class="badge rounded-pill text-bg-primary">
+            Política
+            <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>
+        </a>
+        }
+        <a [routerLink]="['..', 'show', data.id]" [relativeTo]="activatedRoute"
+            class="badge rounded-pill text-bg-warning">
+            Detalles
+            <i class="fa-solid fa-circle-info fa-fade" style="color: #000000;"></i>
+        </a>
+    </div>
+</ng-template>

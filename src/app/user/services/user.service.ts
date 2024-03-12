@@ -37,4 +37,8 @@ export class UserService {
   userDescendants () {
     return this.http.get<User[]>( `${ this.apiBaseUrl }/user-descendants`, { withCredentials: true } )
   }
+
+  datatable ( datatableParameters: any ) {
+    return this.http.post( `${ this.apiBaseUrl }/user/datatable`, datatableParameters, { withCredentials: true } );
+  }
 }
