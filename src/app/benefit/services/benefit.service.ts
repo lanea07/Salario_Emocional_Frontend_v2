@@ -51,4 +51,8 @@ export class BenefitService {
   updateSettings ( id: number, formValues: any ) {
     return this.http.put<any>( `${ this.apiBaseUrl }/benefit-settings/${ id }`, formValues, { withCredentials: true } );
   }
+
+  datatable ( dataTablesParameters: any ) {
+    return this.http.post( `${ this.apiBaseUrl }/benefit/datatable`, dataTablesParameters, { withCredentials: true } )
+  }
 }

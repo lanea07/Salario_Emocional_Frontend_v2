@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BenefitDetailService } from '../../services/benefit-detail.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { LoadingBarService } from '@ngx-loading-bar/core';
+import { Subject } from 'rxjs';
+import { ADTSettings } from 'angular-datatables/src/models/settings';
 
 @Component( {
   selector: 'benefitdetail-index',
@@ -13,48 +15,35 @@ import { LoadingBarService } from '@ngx-loading-bar/core';
 } )
 export class IndexComponent implements OnInit, AfterViewInit {
 
-  columns = [
-    { title: 'Nombre', data: 'name' },
-    {
-      title: 'Beneficio Asociado',
-      data: function ( data: any, type: any, full: any ) {
-        let data2 = data.benefit.map( ( benefit: any ) => {
-          return `<a style="cursor: pointer;" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover px-1"
-          benefit_detail_id="${ benefit.id }">${ benefit.name }</a>`
-        } );
-        return data2.join( '|' );
-      }
-    },
-    {
-      title: 'Opciones',
-      data: function ( data: any, type: any, full: any ) {
-        return `
-          <span style="cursor: pointer;" benefit_detail_options_id="${ data.id }" class="badge rounded-pill text-bg-warning">
-            Detalles
-            <i class="fa-solid fa-circle-info fa-fade" style="color: #000000;"></i>
-          </span>`;
-      }
-    } ];
+  @ViewChild( 'dataTableOptions' ) dataTableOptions!: TemplateRef<any>;
+
   dtOptions: any;
+  dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
   loader = this.lbs.useRef();
 
   constructor (
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private as: AlertService,
     private benefitDetailService: BenefitDetailService,
     private lbs: LoadingBarService,
-    private renderer: Renderer2,
     private router: Router,
   ) { }
 
   ngOnInit (): void {
+    this.loader.start();
+    setTimeout( () => {
     this.dtOptions = {
+      serverSide: true,
+      processing: true,
       ajax: ( dataTablesParameters: any, callback: any ) => {
-        this.loader.start();
-        this.benefitDetailService.index()
+        this.benefitDetailService.datatable( dataTablesParameters )
           .subscribe( {
-            next: ( benefitDetails ) => {
-              callback( { data: benefitDetails } );
+            next: ( benefitDetails: any ) => {
+              callback( {
+                data: benefitDetails.original.data,
+                recordsTotal: benefitDetails.original.recordsTotal,
+                recordsFiltered: benefitDetails.original.recordsFiltered,
+              } );
               this.loader.complete();
             },
             error: ( err ) => {
@@ -64,7 +53,27 @@ export class IndexComponent implements OnInit, AfterViewInit {
           } );
       },
       autowidth: true,
-      columns: this.columns,
+      columns: [
+        { title: 'Nombre', data: 'name' },
+        {
+          title: 'Beneficio Asociado',
+          data: 'benefit',
+          render: function ( data: any, type: any, full: any ) {
+            return data.map( ( benefit: any ) => {
+              return `<a style="cursor: pointer;" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover px-1"
+            benefit_detail_id="${ benefit.id }">${ benefit.name }</a>`
+            } ).join( ' | ' );
+          }
+        },
+        {
+          title: 'Opciones',
+          data: null,
+          defaultContent: '',
+          searchable: false,
+          ngTemplateRef: {
+            ref: this.dataTableOptions,
+          }
+        } ],
       columnDefs: [
         {
           className: 'all',
@@ -89,17 +98,13 @@ export class IndexComponent implements OnInit, AfterViewInit {
         }
       ]
     }
+    } );
   }
 
   ngAfterViewInit (): void {
-    this.renderer.listen( 'document', 'click', ( event ) => {
-      if ( event.target.hasAttribute( "benefit_detail_id" ) ) {
-        this.router.navigate( [ "../show", event.target.getAttribute( "benefit_detail_id" ) ], { relativeTo: this.activatedRoute } );
-      }
-      if ( event.target.hasAttribute( "benefit_detail_options_id" ) ) {
-        this.router.navigate( [ "../show", event.target.getAttribute( "benefit_detail_options_id" ) ], { relativeTo: this.activatedRoute } );
-      }
-    } );
+    setTimeout( () => {
+      this.dtTrigger.next( this.dtOptions );
+    }, 200 );
   }
 
 }

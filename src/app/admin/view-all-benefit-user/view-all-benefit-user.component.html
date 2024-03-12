@@ -91,6 +91,17 @@
 <!-- Tables -->
 <div class="row mt-5">
     <div class="col">
-        <table datatable [dtOptions]="dtOptions" class="table table-hover table-sm w-100 nowrap"></table>
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover table-sm w-100 nowrap">
+        </table>
     </div>
 </div>
+<!-- Table column buttons template -->
+<ng-template #dataTableOptions let-data="adtData">
+    <div>
+        <a [routerLink]="['..','benefit', 'show', data.id]" [relativeTo]="activatedRoute"
+            class="badge rounded-pill text-bg-warning">
+            Detalles
+            <i class="fa-solid fa-circle-info fa-fade" style="color: #000000;"></i>
+        </a>
+    </div>
+</ng-template>
