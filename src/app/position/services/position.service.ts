@@ -33,4 +33,8 @@ export class PositionService {
   destroy ( id: number | undefined ) {
     return this.http.delete( `${ this.apiBaseUrl }/position/${ id }`, { withCredentials: true } );
   }
+
+  datatable ( datatableParameters: any ) {
+    return this.http.post( `${ this.apiBaseUrl }/position/datatable`, datatableParameters, { withCredentials: true } );
+  }
 }

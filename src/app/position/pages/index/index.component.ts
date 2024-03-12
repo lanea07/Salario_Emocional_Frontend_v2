@@ -1,10 +1,13 @@
-import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+
+import { LoadingBarService } from '@ngx-loading-bar/core';
+import { ADTSettings } from 'angular-datatables/src/models/settings';
 
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { PositionService } from '../../services/position.service';
-import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'position-index',
@@ -14,38 +17,37 @@ import { LoadingBarService } from '@ngx-loading-bar/core';
 } )
 export class IndexComponent implements OnInit, AfterViewInit {
 
-  columns = [
-    { title: 'Nombre', data: 'name' },
-    {
-      title: 'Opciones',
-      data: function ( data: any, type: any, full: any ) {
-        return `
-          <span style="cursor: pointer;" position_id="${ data.id }" class="badge rounded-pill text-bg-warning">
-            Detalles
-            <i class="fa-solid fa-circle-info fa-fade" style="color: #000000;"></i>
-          </span>`;
-      }
-    } ];
+  @ViewChild( 'dataTableOptions' ) dataTableOptions!: TemplateRef<any>;
+
   dtOptions: any;
+  dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
   loader = this.lbs.useRef();
 
   constructor (
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private as: AlertService,
     private lbs: LoadingBarService,
     private positionService: PositionService,
-    private renderer: Renderer2,
     private router: Router,
   ) { }
 
   ngOnInit (): void {
+    this.loader.start();
+    setTimeout( () => {
+
     const self = this;
     this.dtOptions = {
+      serverSide: true,
+      processing: true,
       ajax: ( dataTablesParameters: any, callback: any ) => {
-        this.loader.start();
-        this.positionService.index().subscribe( {
-          next: ( positions ) => {
-            callback( { data: positions } );
+        this.positionService.datatable( dataTablesParameters )
+          .subscribe( {
+            next: ( positions: any ) => {
+              callback( {
+                data: positions.original.data,
+                recordsTotal: positions.original.recordsTotal,
+                recordsFiltered: positions.original.recordsFiltered,
+              } );
             this.loader.complete();
           },
           error: ( err ) => {
@@ -55,7 +57,17 @@ export class IndexComponent implements OnInit, AfterViewInit {
         } );
       },
       autowidth: true,
-      columns: this.columns,
+      columns: [
+        { title: 'Nombre', data: 'name' },
+        {
+          title: 'Opciones',
+          data: null,
+          defaultContent: '',
+          searchable: false,
+          ngTemplateRef: {
+            ref: this.dataTableOptions,
+          }
+        } ],
       responsive: true,
       language: es_CO,
       dom: 'r<"top mb-2 d-flex flex-column flex-xs-column flex-md-column flex-lg-row justify-content-between"<"mx-2"f><"mx-2"l><"mx-2 my-1 d-flex justify-content-center regexSearch"><"d-flex flex-grow-1 justify-content-center justify-content-md-end"p>><t><"bottom d-flex flex-column flex-xs-column flex-md-column flex-lg-column flex-xl-row justify-content-start mt-2"B<"mx-2"l><"mx-2 flex-grow-1"><"d-none d-sm-block"i>>',
@@ -74,14 +86,13 @@ export class IndexComponent implements OnInit, AfterViewInit {
         }
       ]
     }
+    } );
   }
 
   ngAfterViewInit (): void {
-    this.renderer.listen( 'document', 'click', ( event ) => {
-      if ( event.target.hasAttribute( "position_id" ) ) {
-        this.router.navigate( [ "../show", event.target.getAttribute( "position_id" ) ], { relativeTo: this.activatedRoute } );
-      }
-    } );
+    setTimeout( () => {
+      this.dtTrigger.next( this.dtOptions );
+    }, 200 );
   }
 
 }

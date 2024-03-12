@@ -33,4 +33,8 @@ export class RoleService {
   destroy ( id: number | undefined ) {
     return this.http.delete( `${ this.apiBaseUrl }/role/${ id }`, { withCredentials: true } );
   }
+
+  datatable ( datatableParameters: any ) {
+    return this.http.post( `${ this.apiBaseUrl }/role/datatable`, datatableParameters, { withCredentials: true } );
+  }
 }
