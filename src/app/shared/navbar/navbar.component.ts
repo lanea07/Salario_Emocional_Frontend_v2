@@ -25,14 +25,8 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit (): void {
     this.isSimulated = JSON.parse( localStorage.getItem( 'simulated' )! );
-    this.authService.validarAdmin()
-      .subscribe( {
-        next: ( isAdmin: any ) => {
-          this.isAdmin = isAdmin.admin;
-          this.user = JSON.parse( localStorage.getItem( 'user' )! );
-        },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
-      } );
+    this.isAdmin = JSON.parse( localStorage.getItem( 'admin' )! );
+    this.user = JSON.parse( localStorage.getItem( 'user' )! );
   }
 
   logout () {

@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { CalendarOptions } from '@fullcalendar/core';
@@ -13,7 +14,6 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component( {
   selector: 'calendar-component',
