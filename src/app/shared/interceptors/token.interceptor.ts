@@ -8,9 +8,6 @@ export const tokenInterceptor: HttpInterceptorFn = ( req: HttpRequest<unknown>, 
   const as = inject( AlertService );
   const router = inject( Router );
   const token = localStorage.getItem( 'token' );
-  if ( !token ) {
-    return next( req );
-  }
   const modifiedReq = req.clone( {
     headers: req.headers
       .append( 'Accept', 'application/json' )
@@ -20,12 +17,12 @@ export const tokenInterceptor: HttpInterceptorFn = ( req: HttpRequest<unknown>, 
     .pipe(
       catchError( err => {
         if ( err instanceof HttpErrorResponse ) {
-          if ( err.status === 401 ) {
+          if ( err.status === 401 && token ) {
             as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
             router.navigate( [ 'login' ] );
           }
         }
-        return of( err );
+        return next( req );
       } )
     );
 };
