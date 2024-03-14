@@ -8,6 +8,7 @@ export interface AuthResponse {
   id: number;
   user: User;
   simulated?: boolean;
+  admin: boolean;
 }
 
 export interface Errors {

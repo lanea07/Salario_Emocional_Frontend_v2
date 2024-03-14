@@ -37,8 +37,8 @@ export class NavbarComponent implements OnInit {
 
   logout () {
     this.authService.logout()
-      .subscribe( resp => {
-        this.router.navigate( [ 'login' ] );
+      .subscribe( {
+        next: () => this.router.navigate( [ 'login' ] )
       } );
   }
 

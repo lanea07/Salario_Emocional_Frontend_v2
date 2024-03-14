@@ -33,6 +33,7 @@ export class AuthService {
                 localStorage.setItem( 'token', resp.token! );
                 localStorage.setItem( 'user', JSON.stringify( resp.user! ) );
                 localStorage.setItem( 'uid', resp.id!.toString() );
+                localStorage.setItem( 'admin', resp.admin!.toString() );
                 localStorage.setItem( 'simulated', false.toString() );
               }
             } )
@@ -88,6 +89,7 @@ export class AuthService {
                 localStorage.setItem( 'token', resp.token! );
                 localStorage.setItem( 'user', JSON.stringify( resp.user! ) );
                 localStorage.setItem( 'uid', resp.id!.toString() );
+                localStorage.setItem( 'admin', resp.admin!.toString() );
                 localStorage.setItem( 'simulated', resp.simulated!.toString() );
               }
             } )
