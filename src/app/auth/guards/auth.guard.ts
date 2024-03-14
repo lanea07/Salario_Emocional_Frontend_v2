@@ -9,18 +9,14 @@ export const authGuard: CanMatchFn = ( route, segments ) => {
   const router = inject( Router );
   const authService = inject( AuthService );
   return forkJoin( {
-    tokenIsValid: authService.validarToken(),
     requirePassChange: authService.validarRequirePassChange()
   } )
     .pipe(
-      map( ( { tokenIsValid, requirePassChange } ) => {
-        if ( tokenIsValid && !requirePassChange ) {
-          return true;
-        }
-        if ( tokenIsValid && requirePassChange ) {
+      map( ( { requirePassChange } ) => {
+        if ( requirePassChange ) {
           return router.createUrlTree( [ 'login', 'password-change' ] )
         }
-        return false;
+        return true;
       } ),
       catchError( err => {
         return of( false )
