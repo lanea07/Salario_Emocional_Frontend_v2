@@ -88,7 +88,7 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
         language: es_CO,
         createdRow: function ( row: any, data: any, dataIndex: any, cells: any ) {
           if ( !data.valid_id ) {
-            $( row ).addClass( 'invalid-user' );
+            $( row ).children( 'td' ).addClass( 'invalid-user' );
           };
         },
         dom: 'r<"top mb-2 d-flex flex-column flex-xs-column flex-md-column flex-lg-row justify-content-between"<"mx-2"f><"mx-2"l><"mx-2 my-1 d-flex justify-content-center regexSearch"><"d-flex flex-grow-1 justify-content-center justify-content-md-end"p>><t><"bottom d-flex flex-column flex-xs-column flex-md-column flex-lg-column flex-xl-row justify-content-start mt-2"B<"mx-2"l><"mx-2 flex-grow-1"><"d-none d-sm-block"i>>',

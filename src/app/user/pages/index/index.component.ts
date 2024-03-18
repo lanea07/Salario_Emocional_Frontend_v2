@@ -77,7 +77,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
             title: 'Válido',
             data: 'valid_id',
             render: function ( data: any, type: any, full: any ) {
-              return data.valid_id ? 'Válido' : 'No Válido';
+              return data ? 'Válido' : 'No Válido';
             }
           },
           {
@@ -92,7 +92,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
         language: es_CO,
         createdRow: function ( row: any, data: any, dataIndex: any ) {
           if ( !data.valid_id ) {
-            $( row ).addClass( 'invalid-user' );
+            $( row ).children( 'td' ).addClass( 'invalid-user' );
           }
         },
         columnDefs: [
