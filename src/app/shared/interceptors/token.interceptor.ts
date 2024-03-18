@@ -22,7 +22,7 @@ export const tokenInterceptor: HttpInterceptorFn = ( req: HttpRequest<unknown>, 
             router.navigate( [ 'login' ] );
           }
         }
-        return next( req );
+        return next( modifiedReq );
       } )
     );
 };
