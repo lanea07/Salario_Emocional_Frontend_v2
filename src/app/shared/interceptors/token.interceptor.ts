@@ -18,7 +18,7 @@ export const tokenInterceptor: HttpInterceptorFn = ( req: HttpRequest<unknown>, 
       catchError( err => {
         if ( err instanceof HttpErrorResponse ) {
           if ( err.status === 401 && token ) {
-            as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
+            as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.WARNING, "Sesión Caducada." );
             router.navigate( [ 'login' ] );
           }
         }
