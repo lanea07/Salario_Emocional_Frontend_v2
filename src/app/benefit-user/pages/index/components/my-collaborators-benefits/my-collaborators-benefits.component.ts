@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
 
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
-import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { User } from 'src/app/user/interfaces/user.interface';
 import { UserService } from 'src/app/user/services/user.service';
@@ -30,10 +29,8 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges {
   constructor (
     private as: AlertService,
     private benefitUserService: BenefitUserService,
-    private changeDetectorRef: ChangeDetectorRef,
     private fb: FormBuilder,
     private lbs: LoadingBarService,
-    private messagingService: MessagingService,
     private userService: UserService,
   ) { }
 
