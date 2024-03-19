@@ -1,6 +1,17 @@
 <p-toolbar styleClass="mb-4">
     <year-selector (yearChanged)="getBenefitDetail($event)"></year-selector>
+    <form [formGroup]="form">
+        <p-dropdown styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id" [options]="benefits"
+            formControlName="benefit" placeholder="-- Filtrar Beneficio --" filterBy="name" [showClear]="true"
+            (onChange)="getBenefitDetail(year)">
+        </p-dropdown>
+    </form>
 </p-toolbar>
 <div class="row mb-3">
+    @if (!loaded) {
+    <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+    }
+    @else {
     <calendar-component [year]="year!" [data]="calendarData"></calendar-component>
+    }
 </div>

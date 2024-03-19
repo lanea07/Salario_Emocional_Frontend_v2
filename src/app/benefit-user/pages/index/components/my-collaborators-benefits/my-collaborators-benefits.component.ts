@@ -35,6 +35,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit (): void {
+    this.loaded = false;
     this.loader.start();
     this.userService.userDescendants()
       .subscribe( {
@@ -66,6 +67,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges {
 
   fillBenefits () {
     if ( this.formGroup.invalid ) return;
+    this.loaded = false;
     this.loader.start();
     this.benefitUserService.showByUserID( this.formGroup.value.user_id, this.year! )
       .subscribe( {
