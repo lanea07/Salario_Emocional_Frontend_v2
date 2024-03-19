@@ -17,6 +17,7 @@ import { BenefitService } from '../../benefit/services/benefit.service';
 import { DependencyService } from '../../dependency/services/dependency.service';
 import es_CO from '../../shared/Datatables-langs/es-CO.json';
 import { AdminService } from '../services/admin.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'app-view-all-benefit-user',
@@ -45,6 +46,7 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
   dtOptions: any = {};
   dtTrigger: Subject<ADTSettings> = new Subject<ADTSettings>();
   loaded: boolean = false;
+  loader = this.lbs.useRef();
   pendingBenefits: BenefitUserElement[] = [];
   rejectedBenefits: BenefitUserElement[] = [];
   status: any[] = [
@@ -66,6 +68,7 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
     private benefitService: BenefitService,
     private dependencyService: DependencyService,
     private fb: FormBuilder,
+    private lbs: LoadingBarService,
     private userService: UserService,
   ) { }
 
@@ -166,6 +169,7 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
 
   getBenefits () {
     this.loaded = false;
+    this.loader.start();
     this.formGroup.value.year = new Date( this.formGroup.value.year ).getFullYear();
     combineLatest( {
       allBenefits: this.adminService.getAllBenefitUser( this.formGroup.value ),
@@ -213,6 +217,7 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
           this.datatableElement.dtInstance.then( ( dtInstance: DataTables.Api ) => {
             dtInstance.clear().rows.add( this.allBenefits ).draw();
           } );
+          this.loader.complete();
         },
         error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
       } );

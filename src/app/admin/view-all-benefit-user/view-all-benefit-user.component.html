@@ -98,7 +98,7 @@
 <!-- Table column buttons template -->
 <ng-template #dataTableOptions let-data="adtData">
     <div>
-        <a [routerLink]="['..','benefit', 'show', data.id]" [relativeTo]="activatedRoute"
+        <a target="_blank" [routerLink]="['..','benefit-employee', 'show', data.id]" [relativeTo]="activatedRoute"
             class="badge rounded-pill text-bg-warning">
             Detalles
             <i class="fa-solid fa-circle-info fa-fade" style="color: #000000;"></i>
