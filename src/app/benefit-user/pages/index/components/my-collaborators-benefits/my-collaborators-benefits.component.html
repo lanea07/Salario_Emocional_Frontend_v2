@@ -7,7 +7,10 @@
         </p-dropdown>
     </form>
 </p-toolbar>
-@if(currentUser){
+@if(!loaded){
+<p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+}
+@else if(currentUser){
 <div class="row mb-3">
     <benefit-detail-container [data]="currentUser"></benefit-detail-container>
     </div>

@@ -5,7 +5,6 @@ import { LoadingBarService } from '@ngx-loading-bar/core';
 import { BenefitUser, BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
-import { UserBenefit } from '../../../../interfaces/benefit-user.interface';
 
 @Component( {
   selector: 'my-benefits',
@@ -38,6 +37,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
 
   getBenefitDetail ( event?: any ) {
     if ( event ) {
+      this.loaded = false;
       this.year = event;
       this.loader.start();
       this.benefitUserService.index( Number.parseInt( localStorage.getItem( 'uid' )! ), this.year! )

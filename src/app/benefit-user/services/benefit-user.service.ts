@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -46,8 +46,9 @@ export class BenefitUserService {
     return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/benefituser/indexcollaboratorsnonapproved`, { withCredentials: true } )
   }
 
-  public indexCollaborators ( year: number ) {
-    return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser/indexcollaborators?year=${ year }`, { withCredentials: true } )
+  public indexCollaborators ( year: number, benefit_id?: number ) {
+    let params = this.cleanParams( { year, benefit_id } )
+    return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser/indexcollaborators`, { params, withCredentials: true } )
   }
 
   public decideBenefitUser ( formValues: any ) {
@@ -56,5 +57,17 @@ export class BenefitUserService {
 
   public showByUserID ( user_id: number, year: number ) {
     return this.http.get<BenefitUser[]>( `${ this.apiBaseUrl }/benefituser/${ user_id }/${ year }`, { withCredentials: true } )
+  }
+
+  cleanParams ( data: any ): HttpParams {
+    const params = new HttpParams( { fromObject: data } );
+    const paramsKeysAux = params.keys();
+    paramsKeysAux.forEach( ( key ) => {
+      const value = params.get( key );
+      if ( value === null || value === 'null' || value === undefined || value === '' ) {
+        params[ 'map' ].delete( key );
+      }
+    } );
+    return params;
   }
 }

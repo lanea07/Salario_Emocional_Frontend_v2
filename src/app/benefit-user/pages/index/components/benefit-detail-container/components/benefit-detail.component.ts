@@ -3,7 +3,7 @@ import { Component, Input, SimpleChanges } from '@angular/core';
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
 import { BenefitService } from 'src/app/benefit/services/benefit.service';
-import { DefaultPreferences, Preference } from 'src/app/shared/interfaces/Preferences.interface';
+import { DefaultPreferences } from 'src/app/shared/interfaces/Preferences.interface';
 import { HelpersService } from 'src/app/shared/services/helpers.service';
 
 @Component( {
@@ -14,6 +14,7 @@ import { HelpersService } from 'src/app/shared/services/helpers.service';
 export class BenefitDetailComponent {
 
   @Input() data?: any;
+
   barChartData: any;
   barChartOptions: any;
   benefit?: Benefit;

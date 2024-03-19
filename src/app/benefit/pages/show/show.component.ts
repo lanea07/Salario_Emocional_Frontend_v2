@@ -4,10 +4,9 @@ import { switchMap } from 'rxjs';
 
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import { HelpersService } from 'src/app/shared/services/helpers.service';
 import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { HelpersService } from 'src/app/shared/services/helpers.service';
 
 @Component( {
   selector: 'benefit-show',
