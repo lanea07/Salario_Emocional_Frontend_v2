@@ -52,4 +52,19 @@ export class ValidatorService {
       return null;
     }
   }
+
+  maxDateGreaterThanMinDate ( minDate: any, maxDate: any ) {
+    return ( formGroup: AbstractControl ): ValidationErrors | null => {
+      const min = formGroup.get( minDate )?.value;
+      const max = formGroup.get( maxDate )?.value;
+
+      if ( min > max ) {
+        formGroup.get( minDate )?.setErrors( { maxDateGreaterThanMinDate: true } );
+        return { maxDateGreaterThanMinDate: true }
+      }
+
+      formGroup.get( minDate )?.setErrors( null );
+      return null;
+    }
+  }
 }
