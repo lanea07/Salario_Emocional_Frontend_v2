@@ -9,6 +9,8 @@ import { PrimeNGConfig } from 'primeng/api';
 import { Calendar } from 'primeng/calendar';
 import { Dropdown } from 'primeng/dropdown';
 
+import { LoadingBarService } from '@ngx-loading-bar/core';
+import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { UserService } from 'src/app/user/services/user.service';
 import { BenefitDetail } from '../../../benefit-detail/interfaces/benefit-detail.interface';
 import { Benefit } from '../../../benefit/interfaces/benefit.interface';
@@ -18,9 +20,6 @@ import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 
 import { User } from '../../../user/interfaces/user.interface';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
-import { DatePipe } from '@angular/common';
-import { style } from '@angular/animations';
-import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'benefitemployee-create',
@@ -54,6 +53,8 @@ export class CreateComponent implements OnInit, AfterViewInit {
     user_id: [ '', Validators.required ],
     rangeDates: [ { value: '', disabled: true }, Validators.required ],
     request_comment: [ '' ],
+  }, {
+    validators: this.validatorService.maxDateGreaterThanMinDate( 'benefit_begin_time', 'benefit_end_time' )
   } );
   currentUserBenefits?: BenefitUser;
   date!: { year: number, month: number };
@@ -92,6 +93,17 @@ export class CreateComponent implements OnInit, AfterViewInit {
     return '';
   }
 
+  get benefitBeginTimeErrors (): string {
+    const errors = this.createForm.get( 'benefit_begin_time' )?.errors;
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
+    }
+    if ( errors![ 'maxDateGreaterThanMinDate' ] ) {
+      return 'El beneficio solicitado indica que las fechas son un rango. Asegúrate de haber seleccionado inicio y fin del beneficio solicitado';
+    }
+    return '';
+  }
+
   constructor (
     private activatedRoute: ActivatedRoute,
     private as: AlertService,
@@ -103,6 +115,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
     private pgConfig: PrimeNGConfig,
     private router: Router,
     private userService: UserService,
+    private validatorService: ValidatorService,
   ) {
     this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
   }
@@ -168,25 +181,11 @@ export class CreateComponent implements OnInit, AfterViewInit {
   }
 
   save () {
+
     if ( this.createForm.invalid ) {
       this.createForm.markAllAsTouched();
       return;
     }
-    let date = this.createForm.get( 'rangeDates' )?.value;
-    let permissionName = this.benefit.containerViewChild?.nativeElement.innerText;
-    if ( permissionName === 'Mis Vacaciones' || permissionName === 'Permiso Especial' ) {
-      let initialDate = new Date( date[ 0 ] );
-      let finalDate = new Date( date[ 1 ] );
-      finalDate.setDate( finalDate.getDate() + 1 );
-      initialDate.setHours( 0, 0, 0, 0 );
-      finalDate.setHours( 0, 0, 0, 0 );
-      this.createForm.get( 'benefit_begin_time' )?.setValue( initialDate );
-      this.createForm.get( 'benefit_end_time' )?.setValue( finalDate );
-    } else {
-      this.createForm.get( 'benefit_begin_time' )?.setValue( new Date( date ) );
-      this.createForm.get( 'benefit_end_time' )?.setValue( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ) );
-    }
-
     if ( this.currentUserBenefits?.id ) {
       this.benefitUserService.update( this.currentUserBenefits!.benefit_user[ 0 ].id, this.createForm.getRawValue() )
         .subscribe(
@@ -249,10 +248,10 @@ export class CreateComponent implements OnInit, AfterViewInit {
           }
         }
       );
-    this.setCalendar( event );
+    this.initCalendar( event );
   }
 
-  setCalendar ( event: any ) {
+  initCalendar ( event: any ) {
     this.createForm.get( 'rangeDates' )!.reset( '' );
     let permissionName = event.originalEvent.target.textContent;
     if ( event.originalEvent && permissionName == "Mi Viernes" ) {
@@ -289,5 +288,24 @@ export class CreateComponent implements OnInit, AfterViewInit {
     }
     this.calendar.updateTime();
     this.calendar.updateUI();
+  }
+
+  setCalendarDates () {
+    let date = this.createForm.get( 'rangeDates' )?.value;
+    let permissionName = this.benefit.containerViewChild?.nativeElement.innerText;
+    if ( date instanceof Array ) {
+      let initialDate = new Date( date[ 0 ] );
+      let finalDate = new Date( date[ 1 ] );
+      finalDate.setDate( finalDate.getDate() + 1 );
+      if ( permissionName === "Mis Vacaciones" ) {
+        initialDate.setHours( 0, 0, 0, 0 );
+        finalDate.setHours( 0, 0, 0, 0 );
+      }
+      this.createForm.get( 'benefit_begin_time' )?.setValue( initialDate );
+      this.createForm.get( 'benefit_end_time' )?.setValue( finalDate );
+    } else {
+      this.createForm.get( 'benefit_begin_time' )?.setValue( new Date( date ) );
+      this.createForm.get( 'benefit_end_time' )?.setValue( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ) );
+    }
   }
 }

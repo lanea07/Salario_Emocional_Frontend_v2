@@ -41,10 +41,13 @@
             </div>
 
             <div class="row mb-3">
-              <label for="benefit_detail_id">Selecciona una fecha *</label>
+              <label for="rangeDates">Selecciona una fecha *</label>
               <p-calendar styleClass="w-100" #calendar [showTime]="true" formControlName="rangeDates" selectionMode="single"
                 [readonlyInput]="true" [disabledDays]="disabledDays" [numberOfMonths]="numberOfMonths" appendTo="body"
-              [baseZIndex]="2000" [hideOnDateTimeSelect]="false"></p-calendar>
+              [baseZIndex]="2000" [hideOnDateTimeSelect]="false" (onSelect)="setCalendarDates()"></p-calendar>
+              @if (isValidField('benefit_begin_time')) {
+              <small class="text-danger">{{ benefitBeginTimeErrors }}</small>
+              }
             </div>
 
             <div class="mb-3">
