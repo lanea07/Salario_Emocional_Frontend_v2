@@ -97,4 +97,9 @@ export class AuthService {
       } )
     )
   }
+
+  forgotPassword ( formValues: any ) {
+    const url = `${ this.baseUrl }/forgot-password`;
+    return this.http.post<boolean>( url, formValues, { withCredentials: true } )
+  }
 }

@@ -1,45 +1,37 @@
 @if (showScreen) {
-<form autocomplete="off" [formGroup]="miFormulario" (ngSubmit)="submitPassChange()">
-  <section class="vh-100 gradient-custom">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-          <div class="card" style="border-radius: 1rem;">
-            <div class="card-body p-5 text-center">
-              <div class="mb-md-5 mt-md-4 pb-5">
-                <h2 class="mb-2">Cambio de contraseña requerido</h2>
-                <div class="form-floating mb-3">
-                  <input type="password" class="form-control" id="current_password" formControlName="current_password"
-                    placeholder="Nueva Contraseña" [ngClass]="{'invalid': isValidField('current_password')}">
-                  <label for="current_password" class="form-label">Contraseña Actual</label>
-                  @if (isValidField('current_password')) {
-                  <small class="text-danger">Obligatorio</small>
-                  }
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="password" class="form-control" id="password" formControlName="password"
-                    placeholder="Nueva Contraseña" [ngClass]="{'invalid': isValidField('password')}">
-                  <label for="password" class="form-label">Nueva Contraseña</label>
-                  @if (isValidField('password')) {
-                  <small class="text-danger">{{ passErrorMsg }}</small>
-                  }
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="password" class="form-control" id="password_confirmation" formControlName="password_confirmation"
-                    placeholder="Repita la contraseña" [ngClass]="{'invalid': isValidField('password_confirmation')}">
-                  <label for="password_confirmation" class="form-label">Repita la contraseña</label>
-                  @if (isValidField('password_confirmation')) {
-                  <small class="text-danger">Las contraseña no coinciden</small>
-                  }
-                </div>
-                <input type="hidden" id="device_name" formControlName="device_name" />
-                <button class="btn btn-secondary" [disabled]="!miFormulario.valid">Login</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<section class="align-items-center bg-gradient d-flex flex-column p-5 rounded-4 shadow-lg">
+
+  <div class="d-flex align-items-center mx-2">
+    <img src="./assets/images/pajaro_transparencia.png" width="25" height="25" class="me-3">
+    <h2 class="mb-2 text-light">Cambio de contraseña requerido</h2>
+  </div>
+  <form class="w-100" autocomplete="off" [formGroup]="miFormulario" (ngSubmit)="submitPassChange()">
+    <div class="form-floating mb-3">
+      <input type="password" class="form-control" id="current_password" formControlName="current_password"
+        placeholder="Nueva Contraseña" [ngClass]="{'invalid': isValidField('current_password')}">
+      <label for="current_password" class="form-label">Contraseña Actual</label>
+      @if (isValidField('current_password')) {
+      <small class="text-danger">Obligatorio</small>
+      }
     </div>
+    <div class="form-floating mb-3">
+      <input type="password" class="form-control" id="password" formControlName="password" placeholder="Nueva Contraseña"
+        [ngClass]="{'invalid': isValidField('password')}">
+      <label for="password" class="form-label">Nueva Contraseña</label>
+      @if (isValidField('password')) {
+      <small class="text-danger">{{ passErrorMsg }}</small>
+      }
+      </div>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="password_confirmation" formControlName="password_confirmation"
+          placeholder="Repita la contraseña" [ngClass]="{'invalid': isValidField('password_confirmation')}">
+        <label for="password_confirmation" class="form-label">Repita la contraseña</label>
+        @if (isValidField('password_confirmation')) {
+        <small class="text-danger">Las contraseña no coinciden</small>
+        }
+      </div>
+      <input type="hidden" id="device_name" formControlName="device_name" />
+    <button class="btn btn-danger" [disabled]="!miFormulario.valid">Login</button>
+    </form>
   </section>
-</form>
 }
