@@ -58,12 +58,14 @@ export class ValidatorService {
       const min = formGroup.get( minDate )?.value;
       const max = formGroup.get( maxDate )?.value;
 
-      if ( min > max ) {
+      if ( min >= max ) {
         formGroup.get( minDate )?.setErrors( { maxDateGreaterThanMinDate: true } );
+        formGroup.get( maxDate )?.setErrors( { maxDateGreaterThanMinDate: true } );
         return { maxDateGreaterThanMinDate: true }
       }
 
       formGroup.get( minDate )?.setErrors( null );
+      formGroup.get( maxDate )?.setErrors( null );
       return null;
     }
   }

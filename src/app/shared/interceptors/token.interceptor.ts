@@ -11,7 +11,6 @@ export const tokenInterceptor: HttpInterceptorFn = ( req: HttpRequest<unknown>, 
   const modifiedReq = req.clone( {
     headers: req.headers
       .append( 'Accept', 'application/json' )
-      .append( 'Content-Type', 'application/json' )
       .append( 'Authorization', `Bearer ${ localStorage.getItem( 'token' ) }` )
   } );
   return next( modifiedReq )
