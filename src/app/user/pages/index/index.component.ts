@@ -66,10 +66,10 @@ export class IndexComponent implements OnInit, AfterViewInit {
           {
             title: 'Roles',
             data: 'roles',
+            name: 'roles.name',
             render: function ( data: any, type: any, full: any ) {
               return data.map( ( detail: any ) => detail.name ).join( '<br>' );
             },
-            searchable: false,
           },
           { title: 'Cargo', data: 'positions.name' },
           { title: 'Responsable Directo', data: 'parent.name' },

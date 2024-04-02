@@ -58,6 +58,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
         {
           title: 'Beneficio Asociado',
           data: 'benefit',
+          name: 'benefit.name',
           render: function ( data: any, type: any, full: any ) {
             return data.map( ( benefit: any ) => {
               return `<a style="cursor: pointer;" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover px-1"
