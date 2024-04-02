@@ -1,6 +1,7 @@
 @import "primeng/resources/themes/bootstrap4-light-blue/theme.css";
 @import "primeng/resources/primeng.min.css";
 $enable-gradients: false;
+
 html,
 body {
   height: 100%;
@@ -13,14 +14,15 @@ body {
 }
 
 .invalid {
-  border-color: red;
-  border-width: 1px;
-  border-style: solid;
+  border-color: red !important;
+    border-width: 1px !important;
+    border-style: solid !important;
 }
 
 .invalid-user {
   color: lightgray !important;
 }
+
 .loader-cloud {
   width: 175px;
   height: 80px;
@@ -73,6 +75,7 @@ body {
     transform: rotate(-360deg);
   }
 }
+
 /* Sidebars */
 .b-example-divider {
   flex-shrink: 0;
@@ -154,9 +157,11 @@ body {
 .lh-tight {
   line-height: 1.25;
 }
+
 .logo-container {
   height: 100px;
 }
+
 .swal2-container {
   z-index: 1000000;
 }
