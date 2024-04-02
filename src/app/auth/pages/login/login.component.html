@@ -1,47 +1,30 @@
-<!-- div for login -->
-@if (loging) {
-<div class="loginAnimation d-flex align-items-center justify-content-center" [@fadeInOut]>
-  <span class="loader-lock"></span>
-</div>
-}
-
 @if (showScreen) {
-<form autocomplete="off" [formGroup]="loginForm" (ngSubmit)="login()">
-  <section class="vh-100 gradient-custom">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-          <div class="card bg-dark text-white">
-            <div class="card-body p-5 text-center">
-              <img src="./assets/images/pajaro_transparencia.png" width="50">
-              <div class="mb-md-5 mt-4">
-
-                <div class="form-outline form-white mb-4">
-                  <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Correo"
-                    formControlName="email" required />
-                    @if (isValidField('email')) {
-                      <small class="text-danger">{{ userIdErrors }}</small>
-                    }
-                </div>
-
-                <div class="form-outline form-white mb-4">
-                  <input type="password" id="password" name="password" class="form-control form-control-lg"
-                    placeholder="Contraseña" formControlName="password" required />
-                    @if (isValidField('password')) {
-                      <small class="text-danger">{{ passwordErrors }}</small>
-                    }
-                </div>
-
-                <input type="hidden" id="device_name" formControlName="device_name" />
-                <button type="submit" class="btn btn-outline-light btn-lg px-5 my-auto">Login</button>
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
+<section class="align-items-center bg-gradient d-flex flex-column p-5 rounded-4 shadow-lg">
+  <img src="./assets/images/pajaro_transparencia.png" width="65" class="pb-5">
+  <form class="w-100" autocomplete="off" [formGroup]="loginForm" (ngSubmit)="login()">
+    <div class="form-floating mb-3">
+      <input type="email" id="email" name="email" class="form-control" placeholder="Correo" formControlName="email"
+        required />
+      <label for="email" class="form-label">Correo</label>
+      @if (isValidField('email')) {
+      <small class="text-danger">{{ userIdErrors }}</small>
+      }
     </div>
+    <div class="form-floating mb-3">
+      <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña"
+        formControlName="password" required />
+      <label for="password" class="form-label">Contraseña</label>
+      @if (isValidField('password')) {
+      <small class="text-danger">{{ passwordErrors }}</small>
+      }
+    </div>
+
+    <div>
+      <a [routerLink]="['../','forgot-password']" [relativeTo]="activatedRoute" class="btn btn-link pe-5 me-5">Olvidé mi
+        contraseña</a>
+      <button type="submit" class="btn btn-outline-danger">Login</button>
+    </div>
+    <input type="hidden" id="device_name" formControlName="device_name" />
+    </form>
   </section>
-</form>
 }

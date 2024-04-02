@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { AuthService } from '../../services/auth.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'app-pass-change',
@@ -26,6 +27,7 @@ export class PassChangeComponent {
     return '';
   }
 
+  loader = this.lbs.useRef();
   miFormulario: FormGroup = this.fb.group( {
     current_password: [ , [ Validators.required, Validators.minLength( 6 ) ] ],
     password: [ , [ Validators.required, Validators.minLength( 6 ) ] ],
@@ -40,6 +42,7 @@ export class PassChangeComponent {
     private as: AlertService,
     private authService: AuthService,
     private fb: FormBuilder,
+    private lbs: LoadingBarService,
     private router: Router,
     private validatorService: ValidatorService
   ) {
@@ -55,13 +58,16 @@ export class PassChangeComponent {
   }
 
   submitPassChange () {
+    this.loader.start();
     this.authService.passwordChange( this.miFormulario.value )
       .subscribe( {
         next: () => {
+          this.loader.complete();
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
           this.as.subscriptionAlert( subscriptionMessageTitle.PASSCHANGED, subscriptionMessageIcon.SUCCESS );
         },
         error: ( err ) => {
+          this.loader.complete();
           this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
         }
       } )
