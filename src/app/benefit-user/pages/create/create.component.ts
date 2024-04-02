@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of } from 'rxjs';
@@ -10,12 +10,14 @@ import { Calendar } from 'primeng/calendar';
 import { Dropdown } from 'primeng/dropdown';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
+
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { UserService } from 'src/app/user/services/user.service';
 import { BenefitDetail } from '../../../benefit-detail/interfaces/benefit-detail.interface';
 import { Benefit } from '../../../benefit/interfaces/benefit.interface';
 import { BenefitService } from '../../../benefit/services/benefit.service';
 import { Dependency } from '../../../dependency/interfaces/dependency.interface';
+import { Preference } from '../../../shared/interfaces/Preferences.interface';
 import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from '../../../shared/services/alert-service.service';
 import { User } from '../../../user/interfaces/user.interface';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
@@ -27,9 +29,10 @@ import { BenefitUserService } from '../../services/benefit-user.service';
   styles: [
   ]
 } )
-export class CreateComponent implements OnInit, AfterViewInit {
+export class CreateComponent implements OnInit {
 
-  @ViewChild( 'calendar' ) calendar!: Calendar;
+  @ViewChild( 'benefitBeginTime' ) benefitBeginTime!: Calendar;
+  @ViewChild( 'benefitEndTime' ) benefitEndTime!: Calendar;
   @ViewChild( 'benefit' ) benefit!: Dropdown;
   es: any = {
     firstDayOfWeek: 1,
@@ -44,14 +47,14 @@ export class CreateComponent implements OnInit, AfterViewInit {
 
   benefits?: Benefit[];
   benefit_details?: BenefitDetail[];
+  benefit_settings?: Preference[];
   benefitDetailSpinner: boolean = true;
   createForm: FormGroup = this.fb.group( {
-    benefit_begin_time: [ '' ],
+    benefit_begin_time: [ { value: new Date(), disabled: true }, Validators.required ],
     benefit_detail_id: [ { value: '', disabled: true }, Validators.required ],
-    benefit_end_time: [ '' ],
+    benefit_end_time: [ { value: new Date(), disabled: true }, Validators.required ],
     benefit_id: [ { value: '', disabled: true }, Validators.required ],
     user_id: [ '', Validators.required ],
-    rangeDates: [ { value: '', disabled: true }, Validators.required ],
     request_comment: [ '' ],
   }, {
     validators: this.validatorService.maxDateGreaterThanMinDate( 'benefit_begin_time', 'benefit_end_time' )
@@ -61,6 +64,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
   dependencies!: Dependency[];
   disabledDays: number[] = [];
   disableSubmitBtn: boolean = false;
+  isFullDay: any
   loader = this.lbs.useRef();
   nodes!: any[];
   numberOfMonths: number = 1;
@@ -68,6 +72,7 @@ export class CreateComponent implements OnInit, AfterViewInit {
   user?: User;
   users?: User[];
   userAndBenefitSpinner: boolean = true;
+  usesDateRanges: any;
 
   get userIdErrors (): string {
     const errors = this.createForm.get( 'user_id' )?.errors;
@@ -95,11 +100,21 @@ export class CreateComponent implements OnInit, AfterViewInit {
 
   get benefitBeginTimeErrors (): string {
     const errors = this.createForm.get( 'benefit_begin_time' )?.errors;
+    if ( !errors ) return '';
     if ( errors![ 'required' ] ) {
       return 'El campo es obligatorio';
     }
     if ( errors![ 'maxDateGreaterThanMinDate' ] ) {
-      return 'El beneficio solicitado indica que las fechas son un rango. Asegúrate de haber seleccionado inicio y fin del beneficio solicitado';
+      return 'La fecha de inicio no puede ser mayor o igual a la fecha de fin';
+    }
+    return '';
+  }
+
+  get benefitEndTimeErrors (): string {
+    const errors = this.createForm.get( 'benefit_end_time' )?.errors;
+    if ( !errors ) return '';
+    if ( errors![ 'required' ] ) {
+      return 'El campo es obligatorio';
     }
     return '';
   }
@@ -109,7 +124,6 @@ export class CreateComponent implements OnInit, AfterViewInit {
     private as: AlertService,
     private benefitService: BenefitService,
     private benefitUserService: BenefitUserService,
-    private changeDetectorRef: ChangeDetectorRef,
     private fb: FormBuilder,
     private lbs: LoadingBarService,
     private pgConfig: PrimeNGConfig,
@@ -149,7 +163,6 @@ export class CreateComponent implements OnInit, AfterViewInit {
             }
             this.fillBenefitDetail( simulatedEvent );
             this.createForm.get( 'benefit_id' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].benefits.id );
-            this.createForm.get( 'rangeDates' )?.setValue( new Date( this.currentUserBenefits!.benefit_user[ 0 ].benefit_begin_time ) );
             this.createForm.get( 'benefit_id' )?.disable();
           }
           this.loader.complete();
@@ -166,41 +179,30 @@ export class CreateComponent implements OnInit, AfterViewInit {
       } );
   }
 
-  ngAfterViewInit (): void {
-    this.calendar.currentHour = new Date().getHours();
-    this.calendar.currentMinute = 0;
-  }
-
-  ngAfterViewChecked (): void {
-    this.changeDetectorRef.detectChanges();
-  }
-
   isValidField ( campo: string ) {
     return this.createForm.controls[ campo ].errors
       && this.createForm.controls[ campo ].touched;
   }
 
   save () {
-
     if ( this.createForm.invalid ) {
       this.createForm.markAllAsTouched();
       return;
     }
     if ( this.currentUserBenefits?.id ) {
       this.benefitUserService.update( this.currentUserBenefits!.benefit_user[ 0 ].id, this.createForm.getRawValue() )
-        .subscribe(
-          {
-            next: () => {
-              this.disableSubmitBtn = false;
-              this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
-              this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
-              this.router.navigate( [ '../../', 'show', this.currentUserBenefits!.benefit_user[ 0 ].id ], { relativeTo: this.activatedRoute } );
-            },
-            error: ( { error } ) => {
-              this.disableSubmitBtn = false;
-              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
-            }
-          } );
+        .subscribe( {
+          next: () => {
+            this.disableSubmitBtn = false;
+            this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
+            this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
+            this.router.navigate( [ '../../', 'show', this.currentUserBenefits!.benefit_user[ 0 ].id ], { relativeTo: this.activatedRoute } );
+          },
+          error: ( { error } ) => {
+            this.disableSubmitBtn = false;
+            this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+          }
+        } );
     }
     else {
       this.benefitUserService.create( this.createForm.value )
@@ -221,15 +223,32 @@ export class CreateComponent implements OnInit, AfterViewInit {
   }
 
   fillBenefitDetail ( event: any ) {
-    this.createForm.get( 'benefit_detail_id' )!.reset( '' );
+    this.createForm.get( 'benefit_detail_id' )!.reset();
     this.createForm.get( 'benefit_detail_id' )!.disable();
-    this.createForm.get( 'rangeDates' )!.reset( '' );
-    this.createForm.get( 'rangeDates' )!.disable();
+    this.createForm.get( 'benefit_begin_time' )!.reset();
+    this.createForm.get( 'benefit_begin_time' )!.disable();
+    this.createForm.get( 'benefit_end_time' )!.reset();
+    this.createForm.get( 'benefit_end_time' )!.disable();
     this.benefitDetailSpinner = false;
-    this.benefitService.show( event.value || event )
+    combineLatest( {
+      benefit_details: this.benefitService.show( event.value || event ),
+      benefit_settings: this.benefitService.showSettings( event.value || event )
+    } )
       .subscribe(
         {
-          next: ( benefit_details ) => {
+          next: ( { benefit_details, benefit_settings } ) => {
+            let benefitSettings: any = benefit_settings;
+            let keys = Object.keys( benefitSettings[ 0 ] );
+            this.benefit_settings = keys.map( ( key: any ) => {
+              return {
+                name: key,
+                title: benefitSettings[ 0 ][ key ].title,
+                description: benefitSettings[ 0 ][ key ].description,
+                values: benefitSettings[ 0 ][ key ]
+              }
+            } );
+            this.isFullDay = this.benefit_settings.find( setting => setting.name === 'is_full_day' )?.values;
+            this.usesDateRanges = this.benefit_settings.find( setting => setting.name === 'uses_daterange' )?.values;
             this.benefit_details = Object.values( benefit_details )[ 0 ].benefit_detail;
             if ( this.createForm.get( 'benefit_id' )!.valid ) {
               this.benefitDetailSpinner = true;
@@ -239,73 +258,64 @@ export class CreateComponent implements OnInit, AfterViewInit {
               this.createForm.get( 'request_comment' )?.setValue( this.currentUserBenefits!.benefit_user[ 0 ].request_comment );
               this.createForm.get( 'request_comment' )?.disable();
               this.benefitDetailSpinner = true;
-              this.createForm.get( 'rangeDates' )!.enable();
+              this.createForm.get( 'benefit_begin_time' )!.enable();
+              this.createForm.get( 'benefit_end_time' )!.enable();
             }
             this.createForm.get( 'benefit_detail_id' )!.enable();
+            this.initCalendar( event );
           },
           error: ( { error } ) => {
             this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
           }
         }
-      );
-    this.initCalendar( event );
+    );
   }
 
   initCalendar ( event: any ) {
-    this.createForm.get( 'rangeDates' )!.reset( '' );
+    let initialDate = new Date();
+    let finalDate = new Date();
+    this.createForm.get( 'benefit_begin_time' )!.reset();
+    this.createForm.get( 'benefit_end_time' )!.reset();
     let permissionName = event.originalEvent.target.textContent;
     if ( event.originalEvent && permissionName == "Mi Viernes" ) {
       this.disabledDays = [ 0, 1, 2, 3, 4, 6 ];
-      this.calendar.currentHour = 13;
-      this.calendar.currentMinute = 0;
+      initialDate.setHours( 13, 0, 0, 0 );
+      finalDate.setHours( 13, 0, 0, 0 );
     } else {
       this.disabledDays = [];
-      this.calendar.currentHour = 7;
-      this.calendar.currentMinute = 0;
+      initialDate.setHours( 7, 0, 0, 0 );
+      finalDate.setHours( 7, 0, 0, 0 );
     }
-    if ( event.originalEvent && ( permissionName == "Mis Vacaciones" || permissionName == "Permiso Especial" ) ) {
-      this.calendar.selectionMode = 'range'
-      this.numberOfMonths = 2;
-    }
-    else {
-      this.calendar.selectionMode = 'single'
-      this.numberOfMonths = 1;
-    }
-    this.calendar.currentSecond = 0;
-    this.calendar.updateTime();
-    this.calendar.updateUI();
+    this.createForm.get( 'benefit_begin_time' )?.setValue( initialDate );
+    this.createForm.get( 'benefit_end_time' )?.setValue( finalDate );
   }
 
-  enableCalendar ( event: any ) {
-    this.createForm.get( 'rangeDates' )!.enable();
-    let benefitDetail = event.originalEvent.target.textContent;
-    if ( benefitDetail === 'Tarde' ) {
-      this.calendar.currentHour = 13;
-      this.calendar.currentMinute = 0;
-    } else {
-      this.calendar.currentHour = 7;
-      this.calendar.currentMinute = 0;
-    }
-    this.calendar.updateTime();
-    this.calendar.updateUI();
+  enableCalendar () {
+    this.createForm.get( 'benefit_begin_time' )!.enable();
+    this.createForm.get( 'benefit_end_time' )!.enable();
+    this.setCalendarDates();
+    if ( !this.usesDateRanges ) this.createForm.get( 'benefit_end_time' )!.disable();
+
   }
 
   setCalendarDates () {
-    let date = this.createForm.get( 'rangeDates' )?.value;
-    let permissionName = this.benefit.containerViewChild?.nativeElement.innerText;
-    if ( date instanceof Array ) {
-      let initialDate = new Date( date[ 0 ] );
-      let finalDate = new Date( date[ 1 ] );
-      finalDate.setDate( finalDate.getDate() + 1 );
-      if ( permissionName === "Mis Vacaciones" ) {
-        initialDate.setHours( 0, 0, 0, 0 );
-        finalDate.setHours( 0, 0, 0, 0 );
-      }
-      this.createForm.get( 'benefit_begin_time' )?.setValue( initialDate );
-      this.createForm.get( 'benefit_end_time' )?.setValue( finalDate );
-    } else {
-      this.createForm.get( 'benefit_begin_time' )?.setValue( new Date( date ) );
-      this.createForm.get( 'benefit_end_time' )?.setValue( addHours( new Date( date ), this.selectedBenefitDetail!.time_hours ) );
+    let initialDate = new Date( this.createForm.get( 'benefit_begin_time' )?.value );
+    let finalDate = new Date( this.createForm.get( 'benefit_end_time' )?.value );
+    if ( !this.usesDateRanges && this.selectedBenefitDetail ) {
+      finalDate = initialDate;
+      finalDate = addHours( finalDate, this.selectedBenefitDetail!.time_hours );
     }
+    const regex = new RegExp( '([\\D ]+)(?<startHour>[\\d]+):(?<startMinute>[\\d]+)([\\D ]+)(?<endHour>[\\d]+):(?<endMinute>[\\d]+)([\\D ]*)' );
+    if ( this.selectedBenefitDetail && regex.test( this.selectedBenefitDetail.name ) ) {
+      const { groups: { startHour, startMinute, endHour, endMinute } }: any = regex.exec( this.selectedBenefitDetail.name );
+      initialDate.setHours( startHour, startMinute, 0, 0 );
+      finalDate.setHours( endHour, endMinute, 0, 0 );
+    }
+    if ( this.isFullDay ) {
+      initialDate.setHours( 0, 0, 0, 0 );
+      finalDate.setHours( 0, 0, 0, 0 );
+    }
+    this.createForm.get( 'benefit_begin_time' )?.setValue( initialDate );
+    this.createForm.get( 'benefit_end_time' )?.setValue( finalDate );
   }
 }

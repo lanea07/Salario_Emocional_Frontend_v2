@@ -6,7 +6,7 @@
         {
             "label": "git pull",
             "type": "shell",
-            "command": "git pull; echo 'Repository pulled'",
+            "command": "git pull",
             "runOptions": {
                 "runOn": "folderOpen"
             }
