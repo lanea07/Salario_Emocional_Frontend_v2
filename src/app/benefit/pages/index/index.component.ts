@@ -64,6 +64,7 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
           {
             title: 'Configuraciones',
             data: 'benefit_detail',
+            name: 'benefit_detail.name',
             render: function ( data: any, type: any, full: any ) {
               return data.map( ( detail: any ) => detail.name ).join( '<br>' );
             }
