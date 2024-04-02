@@ -311,6 +311,15 @@ export class CreateComponent implements OnInit {
       initialDate.setHours( startHour, startMinute, 0, 0 );
       finalDate.setHours( endHour, endMinute, 0, 0 );
     }
+    if ( this.selectedBenefitDetail && this.selectedBenefitDetail.name === 'Mañana' ) {
+      initialDate.setHours( 7, 0, 0, 0 );
+      finalDate = initialDate;
+      finalDate = addHours( finalDate, this.selectedBenefitDetail!.time_hours );
+    } else if ( this.selectedBenefitDetail && this.selectedBenefitDetail.name === 'Tarde' ) {
+      initialDate.setHours( 13, 0, 0, 0 );
+      finalDate = initialDate;
+      finalDate = addHours( finalDate, this.selectedBenefitDetail!.time_hours );
+    }
     if ( this.isFullDay ) {
       initialDate.setHours( 0, 0, 0, 0 );
       finalDate.setHours( 0, 0, 0, 0 );
