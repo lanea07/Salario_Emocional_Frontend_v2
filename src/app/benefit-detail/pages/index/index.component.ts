@@ -1,12 +1,13 @@
 import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { BenefitDetailService } from '../../services/benefit-detail.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import es_CO from '../../../shared/Datatables-langs/es-CO.json';
-import { LoadingBarService } from '@ngx-loading-bar/core';
 import { Subject } from 'rxjs';
+
+import { LoadingBarService } from '@ngx-loading-bar/core';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
+import { MessageService } from 'primeng/api';
+
+import es_CO from '../../../shared/Datatables-langs/es-CO.json';
+import { BenefitDetailService } from '../../services/benefit-detail.service';
 
 @Component( {
   selector: 'benefitdetail-index',
@@ -23,10 +24,10 @@ export class IndexComponent implements OnInit, AfterViewInit {
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private benefitDetailService: BenefitDetailService,
     private lbs: LoadingBarService,
     private router: Router,
+    private ms: MessageService,
   ) { }
 
   ngOnInit (): void {
@@ -48,7 +49,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
             },
             error: ( err ) => {
               this.router.navigate( [ 'basic', 'benefit-employee' ] );
-              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
+              this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } )
             }
           } );
       },

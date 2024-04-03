@@ -1,11 +1,12 @@
 import { HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from '../services/alert-service.service';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+
 
 export const tokenInterceptor: HttpInterceptorFn = ( req: HttpRequest<unknown>, next: HttpHandlerFn ) => {
-  const as = inject( AlertService );
+  const ms = inject( MessageService );
   const router = inject( Router );
   const token = localStorage.getItem( 'token' );
   const modifiedReq = req.clone( {
@@ -18,7 +19,7 @@ export const tokenInterceptor: HttpInterceptorFn = ( req: HttpRequest<unknown>, 
       catchError( err => {
         if ( err instanceof HttpErrorResponse ) {
           if ( err.status === 401 && token ) {
-            as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.WARNING, "Sesión Caducada." );
+            ms.add( { severity: 'warn', summary: 'Aviso', detail: 'Sesión caducada. Vuelve a iniciar sesión' } )
             router.navigate( [ 'login' ] );
           }
         }

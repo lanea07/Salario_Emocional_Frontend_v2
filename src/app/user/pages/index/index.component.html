@@ -5,8 +5,9 @@
   </div>
 </div>
 <ng-template #dataTableOptions let-data="adtData">
-  <div>
-    <a [routerLink]="['..', 'show', data.id]" [relativeTo]="activatedRoute" class="mx-1 badge rounded-pill text-bg-warning">
+  <div class="d-flex flex-column flex-sm-row">
+    <a [routerLink]="['..', 'show', data.id]" [relativeTo]="activatedRoute"
+      class="mx-1 my-1 my-sm-0 badge rounded-pill text-bg-warning">
       Detalles
       <i class="fa-solid fa-circle-info fa-fade"></i>
     </a>

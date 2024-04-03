@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
 
+import { MessageService } from 'primeng/api';
+
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { HelpersService } from 'src/app/shared/services/helpers.service';
 import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
@@ -24,10 +25,10 @@ export class ShowComponent {
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private authService: AuthService,
     private benefitService: BenefitService,
     public helpers: HelpersService,
+    private ms: MessageService,
   ) { }
 
   ngOnInit () {
@@ -42,15 +43,13 @@ export class ShowComponent {
           this.filePoliticas = this.benefit?.politicas_path ? this.benefit.politicas_path : '';
           this.loaded = true;
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
 
     this.authService.validarAdmin()
       .subscribe( {
-        next: ( isAdmin: any ) => {
-          this.isAdmin = isAdmin.admin;
-        },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        next: ( isAdmin: any ) => this.isAdmin = isAdmin.admin,
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 }

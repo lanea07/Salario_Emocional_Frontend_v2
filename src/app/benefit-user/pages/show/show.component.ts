@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 
-import Swal from 'sweetalert2';
+import { LoadingBarService } from '@ngx-loading-bar/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
-import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'benefitemployee-show',
@@ -24,10 +23,11 @@ export class ShowComponent implements OnInit {
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private benefitUserService: BenefitUserService,
+    private cs: ConfirmationService,
     private lbs: LoadingBarService,
     private router: Router,
+    private ms: MessageService,
   ) { }
 
   ngOnInit (): void {
@@ -45,39 +45,35 @@ export class ShowComponent implements OnInit {
           },
           error: err => {
             this.router.navigate( [ 'benefit-employee', 'index' ], { relativeTo: this.activatedRoute } );
-            this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
+            this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } );
             this.loader.complete();
-            this.loaded = true;  
+            this.loaded = true;
           }
         }
       );
   }
 
   deleteBenefit ( eventID: number ) {
-    Swal.fire( {
-      title: 'Eliminar beneficio?',
-      text: 'Confirme que desea eliminar el beneficio.',
-      icon: 'question',
-      showClass: {
-        popup: 'animate__animated animate__fadeIn'
-      },
-      hideClass: {
-        popup: 'animate__animated animate__fadeOutUp'
-      },
-      showConfirmButton: true,
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-    } ).then( ( result ) => {
-      if ( result.isConfirmed ) {
+    this.cs.confirm( {
+      message: 'Estás Seguro? Esta acción no se puede deshacer.',
+      header: 'Confirmar...',
+      icon: 'fa-solid fa-triangle-exclamation',
+      acceptIcon: "none",
+      rejectIcon: "none",
+      acceptButtonStyleClass: "btn btn-danger",
+      rejectButtonStyleClass: "btn btn-link",
+      accept: () => {
         this.benefitUserService.destroy( eventID )
           .subscribe( {
-            next: resp => {
-              this.as.subscriptionAlert( subscriptionMessageTitle.ELIMINADO, subscriptionMessageIcon.SUCCESS );
+            next: () => {
+              this.ms.add( { severity: 'success', summary: 'Eliminado' } );
               this.router.navigate( [ 'benefit-employee', 'index' ] );
             },
-            error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+            error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
           } )
+      },
+      reject: () => {
+        this.ms.add( { severity: 'info', summary: 'Operación Cancelada' } );
       }
     } );
   }

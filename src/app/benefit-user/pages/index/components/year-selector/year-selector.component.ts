@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import { MessageService } from 'primeng/api';
+
 import { BenefitUserService } from '../../../../services/benefit-user.service';
 
 @Component( {
@@ -18,9 +19,9 @@ export class YearSelectorComponent implements AfterViewInit {
   } );
 
   constructor (
-    private as: AlertService,
     private benefitUserService: BenefitUserService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private ms: MessageService,
   ) { }
 
   ngAfterViewInit (): void {
@@ -31,8 +32,8 @@ export class YearSelectorComponent implements AfterViewInit {
     this.benefitUserService.downloadReport( this.viewBenefitUser.value )
       .subscribe(
         {
-          next: () => this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.INFO, 'El reporte fue programado y será enviado a tu correo. Revisa tu bandeja de correo no deseado si es necesario.' ),
-          error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          next: () => this.ms.add( { severity: 'info', summary: 'Creado', detail: 'El reporte fue programado y sera enviado a tu correo. Revisa tu bandeja de Correo No Deseado si es necesario' } ),
+          error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
         }
       )
   }

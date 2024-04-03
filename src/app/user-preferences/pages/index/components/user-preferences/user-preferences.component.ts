@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { combineLatest } from 'rxjs';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+
+import { MessageService } from 'primeng/api';
 
 import { Preference } from 'src/app/shared/interfaces/Preferences.interface';
 import { UserPreferencesService } from 'src/app/user-preferences/services/user-preferences.service';
@@ -21,8 +22,8 @@ export class UserPreferencesComponent {
   loaded: boolean = false;
 
   constructor (
-    private as: AlertService,
     private fb: FormBuilder,
+    private ms: MessageService,
     private userPreferencesService: UserPreferencesService,
   ) {
     this.user_id = parseInt( localStorage.getItem( 'uid' )! );
@@ -78,10 +79,10 @@ export class UserPreferencesComponent {
     this.userPreferencesService.update( this.user_id, this.preferencesForm.value )
       .subscribe( {
         next: ( response ) => {
-          this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS, response.message )
+          this.ms.add( { severity: 'success', summary: 'Actualizado' } )
           this.loaded = true;
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } )
 
   }

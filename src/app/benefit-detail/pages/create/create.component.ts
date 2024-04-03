@@ -3,10 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 
-import Swal from 'sweetalert2';
+import { MessageService } from 'primeng/api';
 
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
 
@@ -48,10 +47,10 @@ export class CreateComponent {
 
   constructor (
     private activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private benefitDetailService: BenefitDetailService,
     private fb: FormBuilder,
     private router: Router,
+    private ms: MessageService,
     private validatorService: ValidatorService
   ) { }
 
@@ -60,7 +59,7 @@ export class CreateComponent {
 
     this.benefitDetailService.index()
       .subscribe( {
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } )
 
     if ( !this.router.url.includes( 'edit' ) ) {
@@ -80,7 +79,7 @@ export class CreateComponent {
         },
         error: ( { error } ) => {
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } );
         }
       } );
 
@@ -102,11 +101,11 @@ export class CreateComponent {
         .subscribe(
           {
             next: () => {
-              this.router.navigate( [ `../show`, this.benefitDetail?.id ], { relativeTo: this.activatedRoute } )
-              this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
+              this.router.navigate( [ `../show`, this.benefitDetail?.id ], { relativeTo: this.activatedRoute } );
+              this.ms.add( { severity: 'success', summary: 'Actualizado' } );              
             },
             error: ( { error } ) => {
-              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+              this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } );
               this.disableSubmitBtn = false;
             }
           }
@@ -118,11 +117,11 @@ export class CreateComponent {
         .subscribe( {
           next: ( { id } ) => {
             this.router.navigate( [ `../show`, id ], { relativeTo: this.activatedRoute } );
-            this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS );
+            this.ms.add( { severity: 'success', summary: 'Success' } );
           },
           error: ( { error } ) => {
             this.disableSubmitBtn = false;
-            this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+            this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } );
           }
         } );
     }

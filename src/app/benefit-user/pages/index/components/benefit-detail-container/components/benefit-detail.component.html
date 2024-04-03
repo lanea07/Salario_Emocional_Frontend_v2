@@ -15,8 +15,8 @@
             @if (userBenefits.length > 0) {
             <ul class="list-group">
                 @for (item of userBenefits; track item) {
-                <button type="button" class="list-group-item list-group-item-action">{{ item }}</button>
-
+                    <a [routerLink]="['../../','show', item['benefit'].id]" [relativeTo]="activatedRoute" type="button"
+                        class="list-group-item list-group-item-action" target="_blank">{{ item['value'] }}</a>
                 }
             </ul>
             } @else {

@@ -2,14 +2,14 @@ import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } f
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
+import { LoadingBarService } from '@ngx-loading-bar/core';
 import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
+import { MessageService } from 'primeng/api';
 
-import { LoadingBarService } from '@ngx-loading-bar/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DropdownComponentEventType } from 'src/app/benefit-user/interfaces/dropdown-component-event-type';
 import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../../../shared/Datatables-langs/es-CO.json';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
 import { BenefitDecisionComponent } from '../benefit-decision/benefit-decision.component';
@@ -34,12 +34,12 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
 
   constructor (
     private activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private benefitUserService: BenefitUserService,
     private dialogService: DialogService,
     private lbs: LoadingBarService,
     private messagingService: MessagingService,
     private router: Router,
+    private ms: MessageService,
   ) { }
 
   ngOnInit (): void {
@@ -56,7 +56,7 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
               },
               error: ( err ) => {
                 this.router.navigate( [ 'basic', 'benefit-employee' ] );
-                this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
+                this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } )
               }
             } );
         },
@@ -121,7 +121,7 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
             } );
           }
         },
-        error: ( err ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.statusText )
+        error: ( err ) => this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } )
       } );
   }
 

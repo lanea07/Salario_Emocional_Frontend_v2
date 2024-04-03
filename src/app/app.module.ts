@@ -12,6 +12,8 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './shared/interceptors/token.interceptor';
+import { PrimengModule } from './primeng/primeng.module';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 registerLocaleData( es );
 
@@ -24,6 +26,7 @@ registerLocaleData( es );
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
+    PrimengModule,
     SharedModule
   ],
   providers: [
@@ -31,6 +34,8 @@ registerLocaleData( es );
       withInterceptors( [ tokenInterceptor ] ),
     ),
     { provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: { locale: 'es', dateFormat: 'medium', timezone: 'es-CO' } },
+    ConfirmationService,
+    MessageService,
   ],
   bootstrap: [ AppComponent ],
 } )
