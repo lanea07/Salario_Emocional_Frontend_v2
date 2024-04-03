@@ -1,9 +1,9 @@
 <!-- Toolbar -->
 <p-toolbar styleClass="mb-4">
-    <div class="row w-100 d-flex flex-column flex-lg-row">
+    <div class="w-100 d-flex flex-column flex-lg-row">
         <div class="col col-lg-11">
             <form [formGroup]="formGroup">
-                <div class="row d-flex flex-column flex-xl-row">
+                <div class="d-flex flex-column flex-xl-row">
                     <div class="col m-1">
                         <p-calendar styleClass="border-0 w-100" inputStyleClass="border-0 w-100" formControlName="year" view="year"
                             dateFormat="yy" inputId="yearpicker" (ngModelChange)="getBenefits()"></p-calendar>
@@ -20,17 +20,17 @@
                     </div>
                     <div class="col m-1">
                         <p-dropdown styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id"
-                            formControlName="dependency_id" [options]="dependencies" placeholder="-- Seleccione Dependencia --"
-                            (onChange)="getBenefits()"></p-dropdown>
+                            formControlName="dependency_id" [options]="dependencies"
+                            placeholder="-- Seleccione Dependencia --" (onChange)="getBenefits()"></p-dropdown>
                     </div>
                     <div class="col m-1">
                         <p-dropdown styleClass="border-0 w-100" optionLabel="name" optionValue="value" formControlName="is_approved"
                             [options]="status" placeholder="-- Seleccione Estado --" (onChange)="getBenefits()"></p-dropdown>
                     </div>
-                    </div>
+                </div>
             </form>
         </div>
-        <div class="col col-lg-1 mt-1 px-3 d-flex flex-column justify-content-evenly">
+        <div class="col col-lg-1 mt-1 px-0 px-lg-3 d-flex flex-column justify-content-evenly">
             <button class="btn btn-outline-secondary border" type="button" (click)="resetForm()">
                 <span [ngClass]="{'d-none': !loaded}">
                     <i class="fa-solid fa-rotate-right"></i>

@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { LoadingBarService } from '@ngx-loading-bar/core';
+import { MessageService } from 'primeng/api';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { AuthService } from '../../services/auth.service';
-import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'app-pass-change',
@@ -39,11 +39,11 @@ export class PassChangeComponent {
   showScreen: boolean = false;
 
   constructor (
-    private as: AlertService,
     private authService: AuthService,
     private fb: FormBuilder,
     private lbs: LoadingBarService,
     private router: Router,
+    private ms: MessageService,
     private validatorService: ValidatorService
   ) {
     this.authService.validarRequirePassChange()
@@ -64,11 +64,11 @@ export class PassChangeComponent {
         next: () => {
           this.loader.complete();
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
-          this.as.subscriptionAlert( subscriptionMessageTitle.PASSCHANGED, subscriptionMessageIcon.SUCCESS );
+          this.ms.add( { severity: 'success', summary: 'Contraseña Cambiada' } )
         },
         error: ( err ) => {
           this.loader.complete();
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
+          this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } )
         }
       } )
   }

@@ -7,14 +7,20 @@ import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { UserService } from '../../services/user.service';
+import { MessageService } from 'primeng/api';
 
 @Component( {
   selector: 'user-index',
   templateUrl: './index.component.html',
-  styles: []
+  styles: [
+    `
+      a {
+        cursor: pointer;
+      }
+    `
+  ]
 } )
 export class IndexComponent implements OnInit, AfterViewInit {
 
@@ -29,9 +35,9 @@ export class IndexComponent implements OnInit, AfterViewInit {
   constructor (
     public activatedRoute: ActivatedRoute,
     private authService: AuthService,
-    private as: AlertService,
     private lbs: LoadingBarService,
     private router: Router,
+    private ms: MessageService,
     private userService: UserService,
   ) { }
 
@@ -55,7 +61,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
                   this.loader.complete();
                 },
                 error: err => {
-                  this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
+                  this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } );
                 }
               } );
         },
@@ -102,7 +108,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
           },
           {
             className: 'all',
-            targets: [ -1 ]
+            targets: [ 0, -1 ]
           }
         ],
         responsive: true,
@@ -134,10 +140,8 @@ export class IndexComponent implements OnInit, AfterViewInit {
 
   loginAs ( id: number ) {
     this.authService.loginAs( id ).subscribe( {
-      next: ( resp ) => this.router.navigate( [ 'basic' ] ),
-      error: ( { error } ) => {
-        this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
-      },
+      next: () => this.router.navigate( [ 'basic' ] ),
+      error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } ),
     } );
   }
 

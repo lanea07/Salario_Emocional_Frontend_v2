@@ -2,9 +2,8 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 
-import Swal from 'sweetalert2';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { Position } from '../../interfaces/position.interface';
 import { PositionService } from '../../services/position.service';
 
@@ -21,9 +20,10 @@ export class ShowComponent {
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private as: AlertService,
+    private cs: ConfirmationService,
     private positionService: PositionService,
     private router: Router,
+    private ms: MessageService,
   ) { }
 
   ngOnInit () {
@@ -38,41 +38,36 @@ export class ShowComponent {
         },
         error: ( { error } ) => {
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
         }
       } );
   }
 
   destroy () {
-    Swal.fire( {
-      title: 'Está seguro?',
-      text: 'Al eliminar el usuario se eliminará todo registro de la base de datos',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Eliminar!',
-      showClass: {
-        popup: 'animate__animated animate__fadeIn'
-      },
-      hideClass: {
-        popup: 'animate__animated animate__fadeOutUp'
-      }
-    } ).then( ( result ) => {
-      if ( result.isConfirmed ) {
+    this.cs.confirm( {
+      message: 'Estás Seguro? Esta acción no se puede deshacer.',
+      header: 'Confirmar...',
+      icon: 'fa-solid fa-triangle-exclamation',
+      acceptIcon: "none",
+      rejectIcon: "none",
+      acceptButtonStyleClass: "btn btn-danger",
+      rejectButtonStyleClass: "btn btn-link",
+      accept: () => {
         this.positionService.destroy( this.position?.id )
           .subscribe(
             {
               next: () => {
                 this.router.navigate( [ 'positions' ] );
-                this.as.subscriptionAlert( subscriptionMessageTitle.ELIMINADO, subscriptionMessageIcon.SUCCESS );
+                this.ms.add( { severity: 'success', summary: 'Eliminado' } )
               },
               error: ( { error } ) => {
-                this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+                this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
               }
             } );
-      };
+      },
+      reject: () => {
+        this.ms.add( { severity: 'info', summary: 'Operación Cancelada' } );
+      }
     } );
   }
-
 }

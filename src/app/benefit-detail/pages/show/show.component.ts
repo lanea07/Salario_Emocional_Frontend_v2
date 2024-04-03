@@ -2,12 +2,11 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 
-import Swal from 'sweetalert2';
+import { MessageService } from 'primeng/api';
 
+import { AuthService } from 'src/app/auth/services/auth.service';
 import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component( {
   selector: 'benefitdetail-show',
@@ -24,9 +23,9 @@ export class ShowComponent {
   constructor (
     public activatedRoute: ActivatedRoute,
     private authService: AuthService,
-    private as: AlertService,
     private benefitDetailService: BenefitDetailService,
     private router: Router,
+    private ms: MessageService,
   ) { }
 
   ngOnInit () {
@@ -41,7 +40,7 @@ export class ShowComponent {
         },
         error: ( { error } ) => {
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
         }
       } );
 
@@ -50,7 +49,7 @@ export class ShowComponent {
         next: ( isAdmin: any ) => {
           this.isAdmin = isAdmin.admin;
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 

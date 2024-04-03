@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnChanges, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { combineLatest } from 'rxjs';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
+import { MessageService } from 'primeng/api';
 
 import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { BenefitUser, BenefitUserElement } from '../../../../interfaces/benefit-user.interface';
-import { MessagingService } from '../../../../services/messaging.service';
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
-import { combineLatest } from 'rxjs';
 import { BenefitService } from 'src/app/benefit/services/benefit.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { BenefitUserElement } from '../../../../interfaces/benefit-user.interface';
+import { MessagingService } from '../../../../services/messaging.service';
 
 @Component( {
   selector: 'my-team',
@@ -31,13 +31,13 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnDestroy {
   } );
 
   constructor (
-    private as: AlertService,
     private benefitService: BenefitService,
     private benefitUserService: BenefitUserService,
     private changeDetectorRef: ChangeDetectorRef,
     private fb: FormBuilder,
     private lbs: LoadingBarService,
     private messagingService: MessagingService,
+    private ms: MessageService,
   ) { }
 
   ngOnDestroy (): void {
@@ -70,9 +70,7 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnDestroy {
           this.loaded = true;
           this.loader.complete();
         },
-        error: ( { error } ) => {
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
-        }
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
     }
   }

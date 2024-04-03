@@ -5,9 +5,9 @@ import { Subject } from 'rxjs';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { DependencyService } from '../../services/dependency.service';
+import { MessageService } from 'primeng/api';
 
 @Component( {
   selector: 'user-index',
@@ -24,10 +24,10 @@ export class IndexComponent implements OnInit, AfterViewInit {
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private lbs: LoadingBarService,
     private dependencyService: DependencyService,
     private router: Router,
+    private ms: MessageService,
   ) { }
 
   ngOnInit (): void {
@@ -50,9 +50,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
                   } );
                   this.loader.complete();
                 },
-                error: ( { error } ) => {
-                  this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
-                }
+                error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
               } );
         },
         autowidth: true,

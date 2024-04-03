@@ -13,6 +13,7 @@
   <!-- Modal -->
   <div class="card flex justify-content-center">
     <p-dialog header="Header" [(visible)]="visible" [style]="{ width: '50vw' }">
+      <p-confirmDialog appendTo="body"></p-confirmDialog>
       <ng-template pTemplate="header">
         <h5 class="modal-title">Detalle del Beneficio</h5>
       </ng-template>
@@ -42,7 +43,7 @@
           </a>
         }
         @if (isAdmin) {
-          <a class="btn btn-outline-danger" (click)="deleteBenefit( modalData?.id )">
+          <a class="btn btn-outline-danger" (click)="deleteBenefit( $event, modalData?.id )">
             Eliminar
           </a>
         }

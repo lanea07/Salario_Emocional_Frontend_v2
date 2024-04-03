@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.service';
 import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 
 @Component( {
   selector: 'app-benefit-decision',
@@ -22,12 +22,13 @@ export class BenefitDecisionComponent {
   } );
 
   constructor (
-    private as: AlertService,
+
     private benefitUserService: BenefitUserService,
+    private config: DynamicDialogConfig,
     private fb: FormBuilder,
     private messagingService: MessagingService,
     private ref: DynamicDialogRef,
-    private config: DynamicDialogConfig
+    private ms: MessageService,
   ) {
     this.benefitUser = this.config.data;
   }
@@ -56,7 +57,7 @@ export class BenefitDecisionComponent {
           // TODO: This is not closing modal
         this.ref.close();
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 }

@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { er } from '@fullcalendar/core/internal-common';
+
+import { MessageService } from 'primeng/api';
+
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+
 
 @Component( {
   selector: 'update-password',
@@ -66,9 +68,9 @@ export class UpdatePasswordComponent {
   }
 
   constructor (
-    private as: AlertService,
     private authService: AuthService,
     private fb: FormBuilder,
+    private ms: MessageService,
   ) { }
 
   isValidField ( campo: string ) {
@@ -85,10 +87,10 @@ export class UpdatePasswordComponent {
     this.authService.passwordChange( this.passwordForm.value )
       .subscribe( {
         next: ( response ) => {
-          this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS )
+          this.ms.add( { severity: 'success', summary: 'Actualizado' } )
           this.loaded = true;
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 }

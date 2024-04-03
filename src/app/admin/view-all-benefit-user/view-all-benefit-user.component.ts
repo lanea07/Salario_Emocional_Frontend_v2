@@ -3,21 +3,21 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, combineLatest } from 'rxjs';
 
+import { LoadingBarService } from '@ngx-loading-bar/core';
 import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { ChartData } from 'chart.js';
+import { MessageService } from 'primeng/api';
 
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
 import { Dependency } from 'src/app/dependency/interfaces/dependency.interface';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { User } from 'src/app/user/interfaces/user.interface';
 import { UserService } from 'src/app/user/services/user.service';
 import { BenefitService } from '../../benefit/services/benefit.service';
 import { DependencyService } from '../../dependency/services/dependency.service';
 import es_CO from '../../shared/Datatables-langs/es-CO.json';
 import { AdminService } from '../services/admin.service';
-import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component( {
   selector: 'app-view-all-benefit-user',
@@ -64,11 +64,11 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
   constructor (
     public activatedRoute: ActivatedRoute,
     private adminService: AdminService,
-    private as: AlertService,
     private benefitService: BenefitService,
     private dependencyService: DependencyService,
     private fb: FormBuilder,
     private lbs: LoadingBarService,
+    private ms: MessageService,
     private userService: UserService,
   ) { }
 
@@ -186,29 +186,39 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
           this.users = users;
 
           this.barChartData.labels = Object.keys( groupedBenefits ).map( ( key: any ) => key );
-          let values: number[] = this.barChartData.labels.map( ( arr: any ) => Object.values( groupedBenefits[ arr ] ).length );
+          let pending: number[] = this.barChartData.labels.map( ( arr: any ) => {
+            return Object.values( groupedBenefits[ arr ] ).filter( ( benefit: any ) => benefit.is_approved === 0 ).length
+          } );
+          let approved: number[] = this.barChartData.labels.map( ( arr: any ) => {
+            return Object.values( groupedBenefits[ arr ] ).filter( ( benefit: any ) => benefit.is_approved === 1 ).length
+          } );
+          let rejected: number[] = this.barChartData.labels.map( ( arr: any ) => {
+            return Object.values( groupedBenefits[ arr ] ).filter( ( benefit: any ) => benefit.is_approved === 2 ).length
+          } );
           let barChartDatasets: any[] = [];
-          barChartDatasets = [ {
-            data: values,
-            backgroundColor: [
-              '#FFC3A0',
-              '#FFD8A8',
-              '#B8D8FF',
-              '#C2FFD8',
-              '#FFEAB8',
-              '#B8FFE8',
-              '#FFF9C2',
-              '#B8F5FF',
-              '#FFB8F5',
-              '#FFC2B8',
-              '#E4FFC2',
-              '#C2B8FF',
-              '#FFB8D8',
-              '#FFD8B8',
-              '#E8B8FF',
-              '#FFE8B8',
-            ],
-          } ];
+          barChartDatasets = [
+            {
+              label: "Rechazados",
+              backgroundColor: "rgba(220,53,69,0.3)",
+              borderColor: "rgba(220,53,69,1)",
+              data: rejected,
+              borderWidth: 1,
+            },
+            {
+              label: "En Aprobación",
+              backgroundColor: "rgb(255, 193, 7,0.3)",
+              borderColor: "rgb(255, 193, 7,1)",
+              data: pending,
+              borderWidth: 1,
+            },
+            {
+              label: "Aprobados",
+              backgroundColor: "rgb(25, 135, 84,0.3)",
+              borderColor: "rgb(25, 135, 84,1)",
+              data: approved,
+              borderWidth: 1,
+            },
+          ];
           this.barChartData = {
             datasets: barChartDatasets,
             labels: this.barChartData.labels,
@@ -219,7 +229,7 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
           } );
           this.loader.complete();
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 
@@ -236,11 +246,13 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
       responsive: true,
       scales: {
         x: {
+          stacked: true,
           grid: {
             drawBorder: false
           }
         },
         y: {
+          stacked: true,
           beginAtZero: true,
           grid: {
             drawBorder: false
@@ -249,7 +261,7 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
       },
       plugins: {
         legend: {
-          display: false,
+          display: true,
         },
         datalabels: {
           anchor: 'end',

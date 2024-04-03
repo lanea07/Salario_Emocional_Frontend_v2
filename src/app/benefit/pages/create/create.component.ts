@@ -1,15 +1,16 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EMPTY, switchMap } from 'rxjs';
 
+import { MessageService } from 'primeng/api';
+
 import { BenefitDetail } from 'src/app/benefit-detail/interfaces/benefit-detail.interface';
 import { BenefitDetailService } from 'src/app/benefit-detail/services/benefit-detail.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import { HelpersService } from 'src/app/shared/services/helpers.service';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
-import { HelpersService } from 'src/app/shared/services/helpers.service';
 
 @Component( {
   selector: 'benefit-create',
@@ -49,12 +50,12 @@ export class CreateComponent implements OnInit {
 
   constructor (
     private activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private benefitDetailService: BenefitDetailService,
     private benefitService: BenefitService,
     public helpers: HelpersService,
     private fb: FormBuilder,
     private router: Router,
+    private ms: MessageService,
     private validatorService: ValidatorService
   ) { }
 
@@ -98,7 +99,7 @@ export class CreateComponent implements OnInit {
           }
           this.createForm.get( 'valid_id' )?.setValue( extractBenefit.valid_id );
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 
@@ -206,12 +207,12 @@ export class CreateComponent implements OnInit {
   }
 
   successAction () {
-    this.router.navigate( [ `../../show`, this.benefit?.id ], { relativeTo: this.activatedRoute } )
-    this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS )
+    this.router.navigate( [ `../../show`, this.benefit?.id ], { relativeTo: this.activatedRoute } );
+    this.ms.add( { severity: 'success', summary: 'Actualizado' } );
   }
 
   errorAction ( error: any ) {
     this.disableSubmitBtn = false;
-    this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+    this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } );
   }
 }

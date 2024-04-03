@@ -2,9 +2,9 @@ import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
+import { MessageService } from 'primeng/api';
 
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { User } from 'src/app/user/interfaces/user.interface';
 import { UserService } from 'src/app/user/services/user.service';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
@@ -27,10 +27,10 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges {
   year?: number = new Date().getFullYear();
 
   constructor (
-    private as: AlertService,
     private benefitUserService: BenefitUserService,
     private fb: FormBuilder,
     private lbs: LoadingBarService,
+    private ms: MessageService,
     private userService: UserService,
   ) { }
 
@@ -51,7 +51,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges {
           this.collaborators.sort( ( a, b ) => a.name.localeCompare( b.name ) );
           this.loader.complete();
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 
@@ -80,7 +80,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges {
           this.loader.complete();
           this.loaded = true;
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 

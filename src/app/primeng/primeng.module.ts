@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { AccordionModule } from 'primeng/accordion';
 import { CalendarModule } from 'primeng/calendar';
 import { ChartModule } from 'primeng/chart';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
@@ -12,6 +13,7 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { TabViewModule } from 'primeng/tabview';
+import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { TreeSelectModule } from 'primeng/treeselect';
@@ -24,6 +26,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
     AccordionModule,
     CalendarModule,
     ChartModule,
+    ConfirmDialogModule,
     DialogModule,
     DropdownModule,
     DynamicDialogModule,
@@ -33,6 +36,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
     SkeletonModule,
     TabMenuModule,
     TabViewModule,
+    ToastModule,
     ToolbarModule,
     TooltipModule,
     TreeSelectModule,

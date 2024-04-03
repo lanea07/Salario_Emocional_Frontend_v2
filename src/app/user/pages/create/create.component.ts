@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators }
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of, switchMap } from 'rxjs';
 
+import { MessageService } from 'primeng/api';
 
 import { Dependency } from '../../../dependency/interfaces/dependency.interface';
 import { DependencyService } from '../../../dependency/services/dependency.service';
@@ -10,7 +11,6 @@ import { Position } from '../../../position/interfaces/position.interface';
 import { PositionService } from '../../../position/services/position.service';
 import { Role } from '../../../role/interfaces/role.interface';
 import { RoleService } from '../../../role/services/role.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from '../../../shared/services/alert-service.service';
 import { ValidatorService } from '../../../shared/services/validator.service';
 import { User } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user.service';
@@ -65,13 +65,13 @@ export class CreateComponent implements OnInit {
 
   constructor (
     private activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private dependencyService: DependencyService,
     private fb: FormBuilder,
     private positionService: PositionService,
     private roleService: RoleService,
     private router: Router,
     private userService: UserService,
+    private ms: MessageService,
     private validatorService: ValidatorService
   ) { }
 
@@ -127,9 +127,7 @@ export class CreateComponent implements OnInit {
             this.createForm.get( 'birthdate' )?.setValue( this.user!.birthdate )
           }
         },
-        error: ( { error } ) => {
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.statusText );
-        }
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 
@@ -152,10 +150,10 @@ export class CreateComponent implements OnInit {
           {
             next: () => {
               this.router.navigate( [ `../show`, this.user?.id ], { relativeTo: this.activatedRoute } )
-              this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS )
+              this.ms.add( { severity: 'success', summary: 'Actualizado' } )
             },
             error: ( { error } ) => {
-              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+              this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
               this.disableSubmitBtn = false;
             }
           } );
@@ -165,10 +163,10 @@ export class CreateComponent implements OnInit {
           {
             next: ( userCreated ) => {
               this.router.navigate( [ `../show`, userCreated.id ], { relativeTo: this.activatedRoute } )
-              this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS )
+              this.ms.add( { severity: 'success', summary: 'Creado' } )
             },
             error: ( { error } ) => {
-              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+              this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
               this.disableSubmitBtn = false;
             }
           } );
@@ -246,7 +244,7 @@ export class CreateComponent implements OnInit {
             this.createForm.get( 'leader' )?.setValue( this.user.parent.id );
           }
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } )
     this.createForm.get( 'parent' )?.reset( '' );
     this.createForm.get( 'parent' )?.enable();

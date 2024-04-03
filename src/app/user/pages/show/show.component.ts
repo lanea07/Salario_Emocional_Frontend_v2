@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { mergeMap, switchMap } from 'rxjs';
 
-import Swal from 'sweetalert2';
+import { MessageService } from 'primeng/api';
 
 import { User } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { UserPreferencesService } from '../../../user-preferences/services/user-preferences.service';
 import { Preference } from 'src/app/shared/interfaces/Preferences.interface';
 
@@ -25,8 +24,8 @@ export class ShowComponent {
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private router: Router,
+    private ms: MessageService,
     private userService: UserService,
     private userPreferencesService: UserPreferencesService,
   ) { }
@@ -55,7 +54,7 @@ export class ShowComponent {
         },
         error: ( { error } ) => {
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
         }
       } );
   }

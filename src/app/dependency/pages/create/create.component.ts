@@ -3,10 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of, switchMap } from 'rxjs';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
+
 import { Dependency } from '../../interfaces/dependency.interface';
 import { DependencyService } from '../../services/dependency.service';
-import { LoadingBarService } from '@ngx-loading-bar/core';
+import { MessageService } from 'primeng/api';
 
 @Component( {
   selector: 'user-create',
@@ -39,11 +40,11 @@ export class CreateComponent implements OnInit {
 
   constructor (
     private activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private fb: FormBuilder,
     private dependencyService: DependencyService,
     private lbs: LoadingBarService,
     private router: Router,
+    private ms: MessageService,
   ) { }
 
   ngOnInit () {
@@ -71,7 +72,7 @@ export class CreateComponent implements OnInit {
         },
         error: ( { error } ) => {
           this.router.navigate( [ 'dependency' ] );
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
           this.loader.complete();
         }
       } );
@@ -96,10 +97,10 @@ export class CreateComponent implements OnInit {
           {
             next: () => {
               this.router.navigate( [ `../show`, this.dependency?.id ], { relativeTo: this.activatedRoute } )
-              this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS, 'Actualizado' );
+              this.ms.add( { severity: 'success', summary: 'Actualizado' } )
             },
             error: ( { error } ) => {
-              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+              this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
               this.disableSubmitBtn = false;
             }
           } );
@@ -113,10 +114,10 @@ export class CreateComponent implements OnInit {
           {
             next: dependencyCreated => {
               this.router.navigate( [ `../show`, dependencyCreated.id ], { relativeTo: this.activatedRoute } )
-              this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS, 'Creado' )
+              this.ms.add( { severity: 'success', summary: 'Creado' } )
             },
             error: ( { error } ) => {
-              this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+              this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
               this.disableSubmitBtn = false;
             }
           } );

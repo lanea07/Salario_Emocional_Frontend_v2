@@ -5,7 +5,7 @@ import { combineLatest, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { addHours } from 'date-fns';
-import { PrimeNGConfig } from 'primeng/api';
+import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { Calendar } from 'primeng/calendar';
 import { Dropdown } from 'primeng/dropdown';
 
@@ -18,7 +18,6 @@ import { Benefit } from '../../../benefit/interfaces/benefit.interface';
 import { BenefitService } from '../../../benefit/services/benefit.service';
 import { Dependency } from '../../../dependency/interfaces/dependency.interface';
 import { Preference } from '../../../shared/interfaces/Preferences.interface';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from '../../../shared/services/alert-service.service';
 import { User } from '../../../user/interfaces/user.interface';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
@@ -121,13 +120,13 @@ export class CreateComponent implements OnInit {
 
   constructor (
     private activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private benefitService: BenefitService,
     private benefitUserService: BenefitUserService,
     private fb: FormBuilder,
     private lbs: LoadingBarService,
     private pgConfig: PrimeNGConfig,
     private router: Router,
+    private ms: MessageService,
     private userService: UserService,
     private validatorService: ValidatorService,
   ) {
@@ -169,7 +168,7 @@ export class CreateComponent implements OnInit {
         },
         error: ( { error } ) => {
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
           this.loader.complete();
         }
       } );
@@ -194,27 +193,27 @@ export class CreateComponent implements OnInit {
         .subscribe( {
           next: () => {
             this.disableSubmitBtn = false;
-            this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS );
+            this.ms.add( { severity: 'success', summary: 'Actualizado' } )
             this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
             this.router.navigate( [ '../../', 'show', this.currentUserBenefits!.benefit_user[ 0 ].id ], { relativeTo: this.activatedRoute } );
           },
           error: ( { error } ) => {
             this.disableSubmitBtn = false;
-            this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+            this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
           }
         } );
     }
     else {
-      this.benefitUserService.create( this.createForm.value )
+      this.benefitUserService.create( this.createForm.getRawValue() )
         .subscribe( {
           next: () => {
             this.disableSubmitBtn = false;
-            this.as.subscriptionAlert( subscriptionMessageTitle.CREADO, subscriptionMessageIcon.SUCCESS );
+            this.ms.add( { severity: 'success', summary: 'Creado' } )
             this.createForm.reset();
             this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
           },
           error: ( { error } ) => {
-            this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+            this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
             this.disableSubmitBtn = false;
           }
         } );
@@ -265,7 +264,7 @@ export class CreateComponent implements OnInit {
             this.initCalendar( event );
           },
           error: ( { error } ) => {
-            this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+            this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
           }
         }
     );
@@ -295,7 +294,6 @@ export class CreateComponent implements OnInit {
     this.createForm.get( 'benefit_end_time' )!.enable();
     this.setCalendarDates();
     if ( !this.usesDateRanges ) this.createForm.get( 'benefit_end_time' )!.disable();
-
   }
 
   setCalendarDates () {
