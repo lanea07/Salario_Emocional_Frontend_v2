@@ -3,8 +3,8 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnChanges, SimpleChanges }
 import { LoadingBarService } from '@ngx-loading-bar/core';
 
 import { BenefitUser, BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
+import { MessageService } from 'primeng/api';
 
 @Component( {
   selector: 'my-benefits',
@@ -20,10 +20,10 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
   year?: number;
 
   constructor (
-    private as: AlertService,
     private benefitUserService: BenefitUserService,
     private changeDetectorRef: ChangeDetectorRef,
     private lbs: LoadingBarService,
+    private ms: MessageService,
   ) { }
 
   ngOnChanges ( changes: SimpleChanges ): void {
@@ -49,7 +49,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
             this.loaded = true;
             this.loader.complete();
           },
-          error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
         } );
     }
   }

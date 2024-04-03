@@ -22,7 +22,7 @@
     <div>
       <a [routerLink]="['../','forgot-password']" [relativeTo]="activatedRoute" class="btn btn-link pe-5 me-5">Olvidé mi
         contraseña</a>
-      <button type="submit" class="btn btn-outline-danger">Login</button>
+      <button type="submit" class="btn btn-outline-danger" [disabled]="disableLoginBtn">Login</button>
     </div>
     <input type="hidden" id="device_name" formControlName="device_name" />
     </form>

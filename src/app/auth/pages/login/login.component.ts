@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
+import { MessageService } from 'primeng/api';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component( {
@@ -15,9 +15,10 @@ import { AuthService } from '../../services/auth.service';
 
 export class LoginComponent {
 
+  disableLoginBtn: boolean = false;
   loginForm: FormGroup = this.fb.group( {
     email: [ '', [ Validators.required, Validators.email ] ],
-    password: [ '', [ Validators.required, Validators.minLength( 4 ) ] ],
+    password: [ '', [ Validators.required ] ],
     device_name: [ 'PC' ]
   } );
   loader = this.lbs.useRef();
@@ -41,10 +42,10 @@ export class LoginComponent {
 
   constructor (
     protected activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private authService: AuthService,
     private fb: FormBuilder,
     private lbs: LoadingBarService,
+    private ms: MessageService,
     private router: Router,
   ) {
     this.authService.validarToken()
@@ -54,10 +55,12 @@ export class LoginComponent {
   }
 
   login () {
+    this.disableLoginBtn = true;
     this.loader.start();
     if ( this.loginForm.invalid ) {
       this.loginForm.markAllAsTouched();
       this.loader.complete();
+      this.disableLoginBtn = false;
       return;
     }
     const { email, password, device_name } = this.loginForm.value;
@@ -65,23 +68,22 @@ export class LoginComponent {
       .subscribe( {
         next: () => {
           this.loader.complete();
-          this.router.navigate( [ 'basic' ] )
+          this.router.navigate( [ 'basic' ] );
         },
         error: ( { error } ) => {
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
           this.loader.complete();
+          this.disableLoginBtn = false;
         },
       } );
   }
 
   logout () {
-    this.authService.logout()
-      .subscribe();
+    this.authService.logout().subscribe();
   }
 
   isValidField ( campo: string ) {
     return this.loginForm.controls[ campo ].errors
       && this.loginForm.controls[ campo ].touched;
   }
-
 }

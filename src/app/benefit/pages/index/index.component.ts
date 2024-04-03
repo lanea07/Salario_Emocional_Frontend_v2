@@ -5,8 +5,8 @@ import { Subject } from 'rxjs';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
+import { MessageService } from 'primeng/api';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { BenefitService } from '../../services/benefit.service';
 
@@ -28,10 +28,10 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private lbs: LoadingBarService,
     private benefitService: BenefitService,
     private router: Router,
+    private ms: MessageService
   ) { }
 
   ngOnInit () {
@@ -54,7 +54,7 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
               },
               error: ( err ) => {
                 this.router.navigate( [ 'basic', 'benefit-employee' ] );
-                this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message )
+                this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } )
               }
           } );
         },

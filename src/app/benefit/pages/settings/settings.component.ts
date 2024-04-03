@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { combineLatest, switchMap } from 'rxjs';
+
+import { MessageService } from 'primeng/api';
 
 import { Preference } from 'src/app/shared/interfaces/Preferences.interface';
-import { BenefitService } from '../../services/benefit.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { combineLatest, switchMap } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 import { Benefit } from '../../interfaces/benefit.interface';
+import { BenefitService } from '../../services/benefit.service';
 
 @Component( {
   selector: 'settings',
@@ -23,9 +24,9 @@ export class SettingsComponent {
 
   constructor (
     private activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private benefitService: BenefitService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private ms: MessageService
   ) {
     combineLatest( {
       settingsDefault: this.benefitService.indexSettings(),
@@ -67,7 +68,8 @@ export class SettingsComponent {
           } );
           this.loaded = true;
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 
@@ -85,11 +87,11 @@ export class SettingsComponent {
     this.benefitService.updateSettings( this.benefit!.id, this.settingsForm.value )
       .subscribe( {
         next: ( response ) => {
-          this.as.subscriptionAlert( subscriptionMessageTitle.ACTUALIZADO, subscriptionMessageIcon.SUCCESS, response.message )
+          this.ms.add( { severity: 'success', summary: 'Actualizado', detail: response.message } )
           this.loaded = true;
         },
         error: ( { error } ) => {
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message );
+          this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
           this.loaded = true;
         }
       } );

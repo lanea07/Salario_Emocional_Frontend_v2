@@ -2,12 +2,12 @@ import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } f
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
+import { ADTSettings } from 'angular-datatables/src/models/settings';
+import { MessageService } from 'primeng/api';
+import { Subject } from 'rxjs';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { RoleService } from '../../services/role.service';
-import { Subject } from 'rxjs';
-import { ADTSettings } from 'angular-datatables/src/models/settings';
 
 @Component( {
   selector: 'role-index',
@@ -25,10 +25,10 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private lbs: LoadingBarService,
     private roleService: RoleService,
     private router: Router,
+    private ms: MessageService,
   ) { }
 
   ngOnInit (): void {
@@ -51,7 +51,7 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
               },
               error: ( err ) => {
                 this.router.navigate( [ 'basic', 'benefit-employee' ] );
-                this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
+                this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } );
               }
             } );
         },

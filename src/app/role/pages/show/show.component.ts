@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
 
+import { MessageService } from 'primeng/api';
 
 import { Role } from 'src/app/role/interfaces/role.interface';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
 import { RoleService } from '../../services/role.service';
 
 @Component( {
@@ -20,9 +20,8 @@ export class ShowComponent {
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private as: AlertService,
     private roleService: RoleService,
-    private router: Router,
+    private ms: MessageService,
   ) { }
 
   ngOnInit () {
@@ -35,7 +34,7 @@ export class ShowComponent {
           this.role = role;
           this.loaded = true;
         },
-        error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 

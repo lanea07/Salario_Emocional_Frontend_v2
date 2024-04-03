@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
-import { AuthService } from '../../services/auth.service';
 import { LoadingBarService } from '@ngx-loading-bar/core';
+import { MessageService } from 'primeng/api';
+
+import { AuthService } from '../../services/auth.service';
 
 @Component( {
   selector: 'app-forgot-password',
@@ -30,11 +31,11 @@ export class ForgotPasswordComponent {
   }
 
   constructor (
-    private as: AlertService,
     private authService: AuthService,
     private fb: FormBuilder,
     private lbs: LoadingBarService,
     private router: Router,
+    private ms: MessageService
   ) { }
 
   isValidField ( campo: string ) {
@@ -52,7 +53,7 @@ export class ForgotPasswordComponent {
         },
         error: ( { error } ) => {
           this.loader.complete();
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+          this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
         }
       } );
   }

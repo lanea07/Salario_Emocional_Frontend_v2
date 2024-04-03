@@ -1,4 +1,5 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
@@ -19,7 +20,7 @@ export class BenefitDetailComponent {
   barChartOptions: any;
   benefit?: Benefit;
   benefitSettings?: DefaultPreferences[] = [];
-  userBenefits: BenefitUserElement[] = [];
+  userBenefits: any;
   doughnutChartData: any;
   doughnutChartOptions: any;
   uses_barchart: boolean = false;
@@ -27,6 +28,7 @@ export class BenefitDetailComponent {
   max_allowed_hours: number = 0;
 
   constructor (
+    public activatedRoute: ActivatedRoute,
     private benefitService: BenefitService,
     public helpers: HelpersService,
   ) { }
@@ -65,7 +67,10 @@ export class BenefitDetailComponent {
   ngOnChanges ( changes: SimpleChanges ): void {
     this.benefit = this.data[ 0 ].benefits;
     this.userBenefits = this.data?.map( ( item: BenefitUserElement ) => {
-      return new Date( item.benefit_begin_time ).toLocaleDateString( 'es-CO', { year: 'numeric', month: 'long', day: 'numeric' } ) + ': ' + item.benefit_detail.name;
+      return {
+        'benefit': item,
+        'value': new Date( item.benefit_begin_time ).toLocaleDateString( 'es-CO', { year: 'numeric', month: 'long', day: 'numeric' } ) + ': ' + item.benefit_detail.name
+      };
     } );
     this.benefitService.showSettings( this.benefit!.id )
       .subscribe( ( data: DefaultPreferences ) => {
@@ -91,7 +96,9 @@ export class BenefitDetailComponent {
     barChartDatasets = [ {
       data: barChartData,
       label: 'Horas',
-      backgroundColor: "rgba(200, 16, 46, 0.5)"
+      backgroundColor: "rgba(200, 16, 46, 0.3)",
+      borderColor: "rgba(200, 16, 46, 1)",
+      borderWidth: 1,
     } ];
     this.barChartData = {
       labels: [ 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', "Dic" ],

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from 'src/app/user/interfaces/user.interface';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from '../services/alert-service.service';
 
 @Component( {
   selector: 'app-navbar',
@@ -16,7 +15,6 @@ export class NavbarComponent implements OnInit {
   user?: User;
 
   constructor (
-    public as: AlertService,
     public authService: AuthService,
     public router: Router
   ) {

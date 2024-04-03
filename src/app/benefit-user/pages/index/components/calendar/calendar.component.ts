@@ -8,12 +8,13 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import multiMonthPlugin from '@fullcalendar/multimonth';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import Swal from 'sweetalert2';
+import { ConfirmationService, MessageService } from 'primeng/api';
+
 
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.service';
-import { AlertService, subscriptionMessageIcon, subscriptionMessageTitle } from 'src/app/shared/services/alert-service.service';
+
 
 @Component( {
   selector: 'calendar-component',
@@ -59,9 +60,10 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
   constructor (
     public activatedRoute: ActivatedRoute,
     private authService: AuthService,
-    private as: AlertService,
     private benefitUserService: BenefitUserService,
-    private elementRef: ElementRef
+    private cs: ConfirmationService,
+    private elementRef: ElementRef,
+    private ms: MessageService,
   ) {
     this.authService.validarAdmin()
       .subscribe( {
@@ -69,7 +71,7 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
           this.isAdmin = resp.admin;
         },
         error: ( err ) => {
-          this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, err.error.message );
+          this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } );
         }
       } );
   }
@@ -157,31 +159,28 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
     }
   }
 
-  deleteBenefit ( eventID: number ) {
-    this.visible = false;
-    Swal.fire( {
-      title: 'Eliminar beneficio?',
-      text: 'Confirme que desea eliminar el beneficio.',
-      icon: 'question',
-      showClass: {
-        popup: 'animate__animated animate__fadeIn'
-      },
-      hideClass: {
-        popup: 'animate__animated animate__fadeOutUp'
-      },
-      showConfirmButton: true,
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-    } ).then( ( result ) => {
-      if ( result.isConfirmed ) {
+  deleteBenefit ( event: any, eventID: number ) {
+    this.cs.confirm( {
+      message: 'Estás Seguro? Esta acción no se puede deshacer.',
+      header: 'Confirmar...',
+      icon: 'fa-solid fa-triangle-exclamation',
+      acceptIcon: "none",
+      rejectIcon: "none",
+      acceptButtonStyleClass: "btn btn-danger",
+      rejectButtonStyleClass: "btn btn-link",
+      accept: () => {
         this.benefitUserService.destroy( eventID )
           .subscribe( {
             next: () => {
+              this.ms.add( { severity: 'success', summary: 'Eliminado' } );
               this.calendar.getApi().getEventById( eventID.toString() )?.remove();
+              this.visible = false;
             },
-            error: ( { error } ) => this.as.subscriptionAlert( subscriptionMessageTitle.ERROR, subscriptionMessageIcon.ERROR, error.message )
+            error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
           } )
+      },
+      reject: () => {
+        this.ms.add( { severity: 'info', summary: 'Operación Cancelada' } );
       }
     } );
   }
