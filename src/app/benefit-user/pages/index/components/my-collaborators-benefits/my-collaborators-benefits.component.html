@@ -8,13 +8,13 @@
     </form>
 </p-toolbar>
 @if(!loaded){
-<p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+    <skeleton></skeleton>
 }
 @else if(currentUser){
-<div class="row mb-3">
-    <benefit-detail-container [data]="currentUser"></benefit-detail-container>
+    <div class="row mb-3">
+        <benefit-detail-container [data]="currentUser"></benefit-detail-container>
     </div>
     <div class="row mb-3">
-    <calendar-component [year]="year!" [data]="calendarData"></calendar-component>
+        <calendar-component [year]="year!" [data]="calendarData"></calendar-component>
     </div>
 }

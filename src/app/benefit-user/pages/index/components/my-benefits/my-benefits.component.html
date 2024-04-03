@@ -2,7 +2,7 @@
   <year-selector (yearChanged)="getBenefitDetail($event)"></year-selector>
 </p-toolbar>
 @if (!loaded) {
-<p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+<skeleton></skeleton>
 }
 @else {
 <div class="row mb-3">
