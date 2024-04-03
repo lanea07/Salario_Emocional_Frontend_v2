@@ -9,9 +9,9 @@
 </p-toolbar>
 <div class="row mb-3">
     @if (!loaded) {
-    <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+        <skeleton></skeleton>
     }
     @else {
-    <calendar-component [year]="year!" [data]="calendarData"></calendar-component>
+        <calendar-component [year]="year!" [data]="calendarData"></calendar-component>
     }
 </div>

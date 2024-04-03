@@ -11,6 +11,8 @@ import { VacationsDatePipe } from './pipes/vacations-date.pipe';
 import { PluckJoinPipe } from './pipes/pluck-join.pipe';
 import { LoadingBarModule } from '@ngx-loading-bar/core';
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
+import { SkeletonComponent } from './skeleton/skeleton.component';
+import { PrimengModule } from '../primeng/primeng.module';
 
 @NgModule( {
   declarations: [
@@ -19,6 +21,7 @@ import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
     MainContainerComponent,
     NavbarComponent,
     PluckJoinPipe,
+    SkeletonComponent,
     TotalBancoHorasPipe,
     VacationsDatePipe,
   ],
@@ -26,6 +29,7 @@ import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
     CommonModule,
     LoadingBarModule,
     LoadingBarRouterModule,
+    PrimengModule,
     RouterModule,
   ],
   exports: [
@@ -34,6 +38,7 @@ import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
     MainContainerComponent,
     NavbarComponent,
     PluckJoinPipe,
+    SkeletonComponent,
     TotalBancoHorasPipe,
     VacationsDatePipe,
   ]
