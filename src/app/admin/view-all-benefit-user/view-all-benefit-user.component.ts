@@ -20,10 +20,10 @@ import es_CO from '../../shared/Datatables-langs/es-CO.json';
 import { AdminService } from '../services/admin.service';
 
 @Component( {
-  selector: 'app-view-all-benefit-user',
-  templateUrl: './view-all-benefit-user.component.html',
-  styles: [
-  ]
+    selector: 'app-view-all-benefit-user',
+    templateUrl: './view-all-benefit-user.component.html',
+    styles: [],
+    standalone: false
 } )
 export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
 

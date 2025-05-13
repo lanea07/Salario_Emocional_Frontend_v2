@@ -10,9 +10,10 @@ import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
 
 @Component( {
-  selector: 'benefitdetail-index',
-  templateUrl: './index.component.html',
-  styles: []
+    selector: 'benefitdetail-index',
+    templateUrl: './index.component.html',
+    styles: [],
+    standalone: false
 } )
 export class IndexComponent implements OnInit, AfterViewInit {
 

@@ -9,9 +9,10 @@ import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.s
 import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
 
 @Component( {
-  selector: 'app-benefit-decision',
-  templateUrl: './benefit-decision.component.html',
-  styles: ``
+    selector: 'app-benefit-decision',
+    templateUrl: './benefit-decision.component.html',
+    styles: ``,
+    standalone: false
 } )
 export class BenefitDecisionComponent {
 

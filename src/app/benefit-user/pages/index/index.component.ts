@@ -6,10 +6,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 
 @Component( {
-  selector: 'benefitemployee-index',
-  templateUrl: './index.component.html',
-  styles: [
-  ]
+    selector: 'benefitemployee-index',
+    templateUrl: './index.component.html',
+    styles: [],
+    standalone: false
 } )
 export class IndexComponent implements OnInit {
 

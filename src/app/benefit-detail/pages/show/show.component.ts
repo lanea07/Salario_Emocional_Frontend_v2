@@ -9,10 +9,10 @@ import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
 
 @Component( {
-  selector: 'benefitdetail-show',
-  templateUrl: './show.component.html',
-  styles: [
-  ]
+    selector: 'benefitdetail-show',
+    templateUrl: './show.component.html',
+    styles: [],
+    standalone: false
 } )
 export class ShowComponent {
 

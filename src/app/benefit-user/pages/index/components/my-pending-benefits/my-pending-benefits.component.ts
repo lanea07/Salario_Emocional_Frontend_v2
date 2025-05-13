@@ -11,10 +11,10 @@ import es_CO from '../../../../../shared/Datatables-langs/es-CO.json';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
 
 @Component( {
-  selector: 'my-pending-benefits',
-  templateUrl: './my-pending-benefits.component.html',
-  styles: [
-  ]
+    selector: 'my-pending-benefits',
+    templateUrl: './my-pending-benefits.component.html',
+    styles: [],
+    standalone: false
 } )
 export class MyPendingBenefitsComponent implements OnInit {
 

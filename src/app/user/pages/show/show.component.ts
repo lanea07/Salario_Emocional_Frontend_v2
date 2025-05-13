@@ -10,10 +10,10 @@ import { UserPreferencesService } from '../../../user-preferences/services/user-
 import { Preference } from 'src/app/shared/interfaces/Preferences.interface';
 
 @Component( {
-  selector: 'user-show',
-  templateUrl: './show.component.html',
-  styles: [
-  ]
+    selector: 'user-show',
+    templateUrl: './show.component.html',
+    styles: [],
+    standalone: false
 } )
 export class ShowComponent {
 

@@ -10,10 +10,10 @@ import { DependencyService } from '../../services/dependency.service';
 
 
 @Component( {
-  selector: 'dependency-show',
-  templateUrl: './show.component.html',
-  styles: [
-  ]
+    selector: 'dependency-show',
+    templateUrl: './show.component.html',
+    styles: [],
+    standalone: false
 } )
 export class ShowComponent {
 

@@ -12,10 +12,10 @@ import { BenefitUserElement } from '../../../../interfaces/benefit-user.interfac
 import { MessagingService } from '../../../../services/messaging.service';
 
 @Component( {
-  selector: 'my-team',
-  templateUrl: './my-team.component.html',
-  styles: [
-  ]
+    selector: 'my-team',
+    templateUrl: './my-team.component.html',
+    styles: [],
+    standalone: false
 } )
 export class MyTeamComponent implements AfterViewInit, OnChanges, OnDestroy {
 

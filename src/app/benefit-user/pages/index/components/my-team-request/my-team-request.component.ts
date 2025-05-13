@@ -16,10 +16,11 @@ import { BenefitDecisionComponent } from '../benefit-decision/benefit-decision.c
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 
 @Component( {
-  selector: 'my-team-request',
-  templateUrl: './my-team-request.component.html',
-  styles: [],
-  providers: [ DialogService ]
+    selector: 'my-team-request',
+    templateUrl: './my-team-request.component.html',
+    styles: [],
+    providers: [DialogService],
+    standalone: false
 } )
 export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy {
 

@@ -8,10 +8,10 @@ import { Role } from 'src/app/role/interfaces/role.interface';
 import { RoleService } from '../../services/role.service';
 
 @Component( {
-  selector: 'role-show',
-  templateUrl: './show.component.html',
-  styles: [
-  ]
+    selector: 'role-show',
+    templateUrl: './show.component.html',
+    styles: [],
+    standalone: false
 } )
 export class ShowComponent {
 

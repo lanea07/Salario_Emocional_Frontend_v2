@@ -3,9 +3,10 @@ import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, SimpleChang
 import { BenefitUser, UserBenefit } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 
 @Component( {
-  selector: 'benefit-detail-container ',
-  templateUrl: './benefit-detail-container.component.html',
-  styles: []
+    selector: 'benefit-detail-container ',
+    templateUrl: './benefit-detail-container.component.html',
+    styles: [],
+    standalone: false
 } )
 export class BenefitDetailContainerComponent implements OnChanges {
 

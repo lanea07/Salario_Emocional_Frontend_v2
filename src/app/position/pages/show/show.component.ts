@@ -8,10 +8,10 @@ import { Position } from '../../interfaces/position.interface';
 import { PositionService } from '../../services/position.service';
 
 @Component( {
-  selector: 'position-show',
-  templateUrl: './show.component.html',
-  styles: [
-  ]
+    selector: 'position-show',
+    templateUrl: './show.component.html',
+    styles: [],
+    standalone: false
 } )
 export class ShowComponent {
 

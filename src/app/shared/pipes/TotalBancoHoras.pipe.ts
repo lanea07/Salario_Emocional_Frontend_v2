@@ -3,7 +3,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 
 @Pipe( {
-  name: 'sum'
+    name: 'sum',
+    standalone: false
 } )
 export class TotalBancoHorasPipe implements PipeTransform {
 

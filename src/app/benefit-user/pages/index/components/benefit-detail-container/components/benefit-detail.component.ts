@@ -8,9 +8,10 @@ import { DefaultPreferences } from 'src/app/shared/interfaces/Preferences.interf
 import { HelpersService } from 'src/app/shared/services/helpers.service';
 
 @Component( {
-  selector: 'benefit-detail',
-  templateUrl: './benefit-detail.component.html',
-  styles: ``
+    selector: 'benefit-detail',
+    templateUrl: './benefit-detail.component.html',
+    styles: ``,
+    standalone: false
 } )
 export class BenefitDetailComponent {
 

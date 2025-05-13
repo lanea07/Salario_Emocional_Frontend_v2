@@ -17,9 +17,10 @@ import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.s
 
 
 @Component( {
-  selector: 'calendar-component',
-  templateUrl: './calendar.component.html',
-  styles: [],
+    selector: 'calendar-component',
+    templateUrl: './calendar.component.html',
+    styles: [],
+    standalone: false
 } )
 export class CalendarComponent implements OnChanges, AfterViewInit {
 

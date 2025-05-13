@@ -8,9 +8,10 @@ import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 
 @Component( {
-  selector: 'auth-login',
-  templateUrl: './login.component.html',
-  styles: [ `` ],
+    selector: 'auth-login',
+    templateUrl: './login.component.html',
+    styles: [``],
+    standalone: false
 } )
 
 export class LoginComponent {

@@ -16,9 +16,10 @@ import { User } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user.service';
 
 @Component( {
-  selector: 'user-create',
-  templateUrl: './create.component.html',
-  styles: []
+    selector: 'user-create',
+    templateUrl: './create.component.html',
+    styles: [],
+    standalone: false
 } )
 export class CreateComponent implements OnInit {
 

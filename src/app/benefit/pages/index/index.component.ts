@@ -11,10 +11,10 @@ import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { BenefitService } from '../../services/benefit.service';
 
 @Component( {
-  selector: 'benefit-index',
-  templateUrl: './index.component.html',
-  styles: [
-  ]
+    selector: 'benefit-index',
+    templateUrl: './index.component.html',
+    styles: [],
+    standalone: false
 } )
 export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
 

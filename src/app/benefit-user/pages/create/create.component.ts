@@ -23,10 +23,10 @@ import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
 
 @Component( {
-  selector: 'benefitemployee-create',
-  templateUrl: './create.component.html',
-  styles: [
-  ]
+    selector: 'benefitemployee-create',
+    templateUrl: './create.component.html',
+    styles: [],
+    standalone: false
 } )
 export class CreateComponent implements OnInit {
 

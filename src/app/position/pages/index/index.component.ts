@@ -10,10 +10,10 @@ import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { PositionService } from '../../services/position.service';
 
 @Component( {
-  selector: 'position-index',
-  templateUrl: './index.component.html',
-  styles: [
-  ]
+    selector: 'position-index',
+    templateUrl: './index.component.html',
+    styles: [],
+    standalone: false
 } )
 export class IndexComponent implements OnInit, AfterViewInit {
 

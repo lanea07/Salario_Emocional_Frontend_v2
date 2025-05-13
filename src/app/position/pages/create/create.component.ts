@@ -9,10 +9,10 @@ import { Position } from '../../interfaces/position.interface';
 import { PositionService } from '../../services/position.service';
 
 @Component( {
-  selector: 'position-create',
-  templateUrl: './create.component.html',
-  styles: [
-  ]
+    selector: 'position-create',
+    templateUrl: './create.component.html',
+    styles: [],
+    standalone: false
 } )
 export class CreateComponent {
 

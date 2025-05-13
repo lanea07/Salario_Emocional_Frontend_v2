@@ -9,10 +9,10 @@ import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
 
 @Component( {
-  selector: 'benefitemployee-show',
-  templateUrl: './show.component.html',
-  styles: [
-  ]
+    selector: 'benefitemployee-show',
+    templateUrl: './show.component.html',
+    styles: [],
+    standalone: false
 } )
 export class ShowComponent implements OnInit {
 

@@ -6,9 +6,10 @@ import { MessageService } from 'primeng/api';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
 
 @Component( {
-  selector: 'year-selector',
-  templateUrl: './year-selector.component.html',
-  styles: ``
+    selector: 'year-selector',
+    templateUrl: './year-selector.component.html',
+    styles: ``,
+    standalone: false
 } )
 export class YearSelectorComponent implements AfterViewInit {
 

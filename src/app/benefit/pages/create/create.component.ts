@@ -13,9 +13,10 @@ import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
 
 @Component( {
-  selector: 'benefit-create',
-  templateUrl: './create.component.html',
-  styles: []
+    selector: 'benefit-create',
+    templateUrl: './create.component.html',
+    styles: [],
+    standalone: false
 } )
 export class CreateComponent implements OnInit {
 

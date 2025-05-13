@@ -12,10 +12,10 @@ interface Options {
 }
 
 @Component( {
-  selector: 'datatables-dropdown-component',
-  templateUrl: './dropdown.component.html',
-  styles: [
-  ]
+    selector: 'datatables-dropdown-component',
+    templateUrl: './dropdown.component.html',
+    styles: [],
+    standalone: false
 } )
 export class DropdownComponent implements OnInit, OnDestroy {
 

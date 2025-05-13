@@ -12,15 +12,16 @@ import { UserService } from '../../services/user.service';
 import { MessageService } from 'primeng/api';
 
 @Component( {
-  selector: 'user-index',
-  templateUrl: './index.component.html',
-  styles: [
-    `
+    selector: 'user-index',
+    templateUrl: './index.component.html',
+    styles: [
+        `
       a {
         cursor: pointer;
       }
     `
-  ]
+    ],
+    standalone: false
 } )
 export class IndexComponent implements OnInit, AfterViewInit {
 

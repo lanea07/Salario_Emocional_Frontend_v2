@@ -9,10 +9,10 @@ import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component( {
-  selector: 'app-pass-change',
-  templateUrl: './pass-change.component.html',
-  styles: [
-  ]
+    selector: 'app-pass-change',
+    templateUrl: './pass-change.component.html',
+    styles: [],
+    standalone: false
 } )
 export class PassChangeComponent {
 

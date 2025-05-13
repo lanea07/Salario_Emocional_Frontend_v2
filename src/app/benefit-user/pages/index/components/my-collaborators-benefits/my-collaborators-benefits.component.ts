@@ -10,9 +10,10 @@ import { UserService } from 'src/app/user/services/user.service';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
 
 @Component( {
-  selector: 'my-collaborators-benefits',
-  templateUrl: './my-collaborators-benefits.component.html',
-  styles: []
+    selector: 'my-collaborators-benefits',
+    templateUrl: './my-collaborators-benefits.component.html',
+    styles: [],
+    standalone: false
 } )
 export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges {
 

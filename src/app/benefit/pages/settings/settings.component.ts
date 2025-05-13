@@ -10,9 +10,10 @@ import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
 
 @Component( {
-  selector: 'settings',
-  templateUrl: './settings.component.html',
-  styles: ``
+    selector: 'settings',
+    templateUrl: './settings.component.html',
+    styles: ``,
+    standalone: false
 } )
 export class SettingsComponent {
 

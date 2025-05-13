@@ -8,9 +8,10 @@ import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 
 @Component( {
-  selector: 'app-forgot-password',
-  templateUrl: './forgot-password.component.html',
-  styles: ``
+    selector: 'app-forgot-password',
+    templateUrl: './forgot-password.component.html',
+    styles: ``,
+    standalone: false
 } )
 export class ForgotPasswordComponent {
 

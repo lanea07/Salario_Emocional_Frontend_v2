@@ -4,10 +4,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/user/services/user.service';
 
 @Component( {
-  selector: 'profile-information',
-  templateUrl: './profile-information.component.html',
-  styles: [
-  ]
+    selector: 'profile-information',
+    templateUrl: './profile-information.component.html',
+    styles: [],
+    standalone: false
 } )
 export class ProfileInformationComponent {
 

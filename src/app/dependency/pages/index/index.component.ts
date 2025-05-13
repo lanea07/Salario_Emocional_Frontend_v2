@@ -10,9 +10,10 @@ import { DependencyService } from '../../services/dependency.service';
 import { MessageService } from 'primeng/api';
 
 @Component( {
-  selector: 'user-index',
-  templateUrl: './index.component.html',
-  styles: []
+    selector: 'user-index',
+    templateUrl: './index.component.html',
+    styles: [],
+    standalone: false
 } )
 export class IndexComponent implements OnInit, AfterViewInit {
 

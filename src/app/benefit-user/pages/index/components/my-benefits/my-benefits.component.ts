@@ -7,9 +7,10 @@ import { BenefitUserService } from '../../../../services/benefit-user.service';
 import { MessageService } from 'primeng/api';
 
 @Component( {
-  selector: 'my-benefits',
-  templateUrl: './my-benefits.component.html',
-  styles: []
+    selector: 'my-benefits',
+    templateUrl: './my-benefits.component.html',
+    styles: [],
+    standalone: false
 } )
 export class MyBenefitsComponent implements AfterViewInit, OnChanges {
 

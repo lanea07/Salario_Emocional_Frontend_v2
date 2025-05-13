@@ -8,10 +8,10 @@ import { Preference } from 'src/app/shared/interfaces/Preferences.interface';
 import { UserPreferencesService } from 'src/app/user-preferences/services/user-preferences.service';
 
 @Component( {
-  selector: 'user-preferences',
-  templateUrl: './user-preferences.component.html',
-  styles: [
-  ]
+    selector: 'user-preferences',
+    templateUrl: './user-preferences.component.html',
+    styles: [],
+    standalone: false
 } )
 export class UserPreferencesComponent {
 

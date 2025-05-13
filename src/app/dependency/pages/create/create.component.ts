@@ -10,9 +10,10 @@ import { DependencyService } from '../../services/dependency.service';
 import { MessageService } from 'primeng/api';
 
 @Component( {
-  selector: 'user-create',
-  templateUrl: './create.component.html',
-  styles: []
+    selector: 'user-create',
+    templateUrl: './create.component.html',
+    styles: [],
+    standalone: false
 } )
 export class CreateComponent implements OnInit {
 

@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { formatDate } from '@angular/common';
 
 @Pipe( {
-  name: 'vacationsDate'
+    name: 'vacationsDate',
+    standalone: false
 } )
 export class VacationsDatePipe implements PipeTransform {
 

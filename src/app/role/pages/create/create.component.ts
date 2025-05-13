@@ -9,10 +9,10 @@ import { Role } from '../../interfaces/role.interface';
 import { RoleService } from '../../services/role.service';
 
 @Component( {
-  selector: 'role-create',
-  templateUrl: './create.component.html',
-  styles: [
-  ]
+    selector: 'role-create',
+    templateUrl: './create.component.html',
+    styles: [],
+    standalone: false
 } )
 export class CreateComponent {
 

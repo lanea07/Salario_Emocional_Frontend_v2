@@ -10,10 +10,10 @@ import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
 
 @Component( {
-  selector: 'benefitdetail-create',
-  templateUrl: './create.component.html',
-  styles: [
-  ]
+    selector: 'benefitdetail-create',
+    templateUrl: './create.component.html',
+    styles: [],
+    standalone: false
 } )
 export class CreateComponent {
 

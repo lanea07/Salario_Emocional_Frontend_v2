@@ -7,10 +7,10 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 
 
 @Component( {
-  selector: 'update-password',
-  templateUrl: './update-password.component.html',
-  styles: [
-  ]
+    selector: 'update-password',
+    templateUrl: './update-password.component.html',
+    styles: [],
+    standalone: false
 } )
 export class UpdatePasswordComponent {
 

@@ -5,8 +5,9 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from 'src/app/user/interfaces/user.interface';
 
 @Component( {
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html'
+    selector: 'app-navbar',
+    templateUrl: './navbar.component.html',
+    standalone: false
 } )
 export class NavbarComponent implements OnInit {
 
