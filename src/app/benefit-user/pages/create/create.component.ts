@@ -5,7 +5,7 @@ import { combineLatest, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { addHours } from 'date-fns';
-import { MessageService, PrimeNGConfig } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { Calendar } from 'primeng/calendar';
 import { Dropdown } from 'primeng/dropdown';
 
@@ -124,7 +124,6 @@ export class CreateComponent implements OnInit {
     private benefitUserService: BenefitUserService,
     private fb: FormBuilder,
     private lbs: LoadingBarService,
-    private pgConfig: PrimeNGConfig,
     private router: Router,
     private ms: MessageService,
     private userService: UserService,
@@ -135,7 +134,6 @@ export class CreateComponent implements OnInit {
 
   ngOnInit (): void {
     this.loader.start();
-    this.pgConfig.setTranslation( this.es );
     combineLatest( {
       benefits: this.benefitService.indexAvailable(),
       benefitUser: this.router.url.includes( 'edit' ) ? this.activatedRoute.params.pipe(

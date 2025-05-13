@@ -8,7 +8,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { Textarea } from 'primeng/inputtextarea';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TabMenuModule } from 'primeng/tabmenu';
@@ -30,7 +30,7 @@ import { TreeSelectModule } from 'primeng/treeselect';
     DialogModule,
     DropdownModule,
     DynamicDialogModule,
-    InputTextareaModule,
+    Textarea,
     InputTextModule,
     PanelModule,
     SkeletonModule,

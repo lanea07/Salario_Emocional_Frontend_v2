@@ -14,6 +14,9 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './shared/interceptors/token.interceptor';
 import { PrimengModule } from './primeng/primeng.module';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { providePrimeNG } from 'primeng/config';
+import Lara from '@primeng/themes/lara';
+import { DataTablesModule } from 'angular-datatables';
 
 registerLocaleData( es );
 
@@ -23,6 +26,7 @@ registerLocaleData( es );
   ],
   imports: [
     AppRoutingModule,
+    DataTablesModule, 
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
@@ -36,6 +40,14 @@ registerLocaleData( es );
     { provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: { locale: 'es', dateFormat: 'medium', timezone: 'es-CO' } },
     ConfirmationService,
     MessageService,
+    providePrimeNG({
+      theme: {
+        preset: Lara,
+        options: {
+          darkModeSelector: false
+        }
+      }
+    })
   ],
   bootstrap: [ AppComponent ],
 } )

@@ -224,7 +224,7 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
             labels: this.barChartData.labels,
           };
           this.loaded = true;
-          this.datatableElement.dtInstance.then( ( dtInstance: DataTables.Api ) => {
+          this.datatableElement.dtInstance.then( ( dtInstance ) => {
             dtInstance.clear().rows.add( this.allBenefits ).draw();
           } );
           this.loader.complete();
