@@ -145,7 +145,7 @@ export class CreateComponent implements OnInit {
         next: ( { benefits, benefitUser, user } ) => {
           this.user = Object.values( user )[ 0 ];
           this.createForm.get( 'selectedNodes' )?.enable();
-          this.benefits = benefits;
+          this.benefits = benefits.data;
           this.createForm.get( 'benefit_id' )?.enable();
           this.userAndBenefitSpinner = false;
           if ( benefitUser ) {
@@ -234,7 +234,7 @@ export class CreateComponent implements OnInit {
       .subscribe(
         {
           next: ( { benefit_details, benefit_settings } ) => {
-            let benefitSettings: any = benefit_settings;
+            let benefitSettings: any = benefit_settings.data;
             let keys = Object.keys( benefitSettings[ 0 ] );
             this.benefit_settings = keys.map( ( key: any ) => {
               return {
@@ -246,7 +246,7 @@ export class CreateComponent implements OnInit {
             } );
             this.isFullDay = this.benefit_settings.find( setting => setting.name === 'is_full_day' )?.values;
             this.usesDateRanges = this.benefit_settings.find( setting => setting.name === 'uses_daterange' )?.values;
-            this.benefit_details = Object.values( benefit_details )[ 0 ].benefit_detail;
+            this.benefit_details = Object.values( benefit_details.data )[ 0 ].benefit_detail;
             if ( this.createForm.get( 'benefit_id' )!.valid ) {
               this.benefitDetailSpinner = true;
             }

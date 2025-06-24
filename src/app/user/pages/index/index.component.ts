@@ -6,10 +6,12 @@ import { LoadingBarService } from '@ngx-loading-bar/core';
 import { DataTableDirective } from 'angular-datatables';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
 
+import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
+import { DataTablesResponse } from '../../../shared/interfaces/DataTablesResponse.interface';
+import { User } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user.service';
-import { MessageService } from 'primeng/api';
 
 @Component( {
     selector: 'user-index',
@@ -51,13 +53,12 @@ export class IndexComponent implements OnInit, AfterViewInit {
         processing: true,
         ajax: ( dataTablesParameters: any, callback: any ) => {
           this.userService.datatable( dataTablesParameters )
-            .subscribe(
-              {
-                next: ( users: any ) => {
+            .subscribe({
+                next: ( response: DataTablesResponse<User[]> ) => {
                   callback( {
-                    data: users.original.data,
-                    recordsTotal: users.original.recordsTotal,
-                    recordsFiltered: users.original.recordsFiltered,
+                    data: response.data.original.data,
+                    recordsTotal: response.data.original.recordsTotal,
+                    recordsFiltered: response.data.original.recordsFiltered,
                   } );
                   this.loader.complete();
                 },

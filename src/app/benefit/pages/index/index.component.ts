@@ -9,12 +9,14 @@ import { MessageService } from 'primeng/api';
 
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { BenefitService } from '../../services/benefit.service';
+import { DataTablesResponse } from '../../../shared/interfaces/DataTablesResponse.interface';
+import { Benefit } from '../../interfaces/benefit.interface';
 
 @Component( {
-    selector: 'benefit-index',
-    templateUrl: './index.component.html',
-    styles: [],
-    standalone: false
+  selector: 'benefit-index',
+  templateUrl: './index.component.html',
+  styles: [],
+  standalone: false
 } )
 export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
 
@@ -44,11 +46,11 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
         ajax: ( dataTablesParameters: any, callback: any ) => {
           this.benefitService.datatable( dataTablesParameters )
             .subscribe( {
-              next: ( benefits: any ) => {
+              next: ( benefits: DataTablesResponse<Benefit[]> ) => {
                 callback( {
-                  data: benefits.original.data,
-                  recordsTotal: benefits.original.recordsTotal,
-                  recordsFiltered: benefits.original.recordsFiltered,
+                  data: benefits.data.original.data,
+                  recordsTotal: benefits.data.original.recordsTotal,
+                  recordsFiltered: benefits.data.original.recordsFiltered,
                 } );
                 this.loader.complete();
               },
@@ -56,7 +58,7 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
                 this.router.navigate( [ 'basic', 'benefit-employee' ] );
                 this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } )
               }
-          } );
+            } );
         },
         autoWidth: true,
         columns: [

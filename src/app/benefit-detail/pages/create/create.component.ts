@@ -8,6 +8,7 @@ import { MessageService } from 'primeng/api';
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
+import { BenefitDetails } from '../../interfaces/benefit-detail.interface';
 
 @Component( {
     selector: 'benefitdetail-create',
@@ -115,8 +116,8 @@ export class CreateComponent {
 
       this.benefitDetailService.create( this.createForm.value )
         .subscribe( {
-          next: ( { id } ) => {
-            this.router.navigate( [ `../show`, id ], { relativeTo: this.activatedRoute } );
+          next: ( { data }: BenefitDetails ) => {
+            this.router.navigate( [ `../show`, data[0].id ], { relativeTo: this.activatedRoute } );
             this.ms.add( { severity: 'success', summary: 'Success' } );
           },
           error: ( { error } ) => {

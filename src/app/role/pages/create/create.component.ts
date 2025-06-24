@@ -53,7 +53,7 @@ export class CreateComponent {
       )
       .subscribe( {
         next: ( role ) => {
-          const extractRoleDetail = role;
+          const extractRoleDetail = role.data[0];
           this.role = extractRoleDetail;
           this.createForm.get( 'name' )?.setValue( extractRoleDetail.name );
         },
@@ -95,8 +95,8 @@ export class CreateComponent {
       this.roleService.create( this.createForm.value )
         .subscribe(
           {
-            next: ( { id } ) => {
-              this.router.navigate( [ `../show`, id ], { relativeTo: this.activatedRoute } );
+            next: ( roles ) => {
+              this.router.navigate( [ `../show`, roles.data[0].id ], { relativeTo: this.activatedRoute } );
               this.ms.add( { severity: 'success', summary: 'Creado' } )
             },
             error: ( { error } ) => {

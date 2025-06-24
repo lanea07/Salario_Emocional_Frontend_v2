@@ -63,8 +63,8 @@ export class CreateComponent implements OnInit {
   ngOnInit () {
     this.benefitDetailService.index()
       .pipe(
-        switchMap( ( benefitDetails: BenefitDetail[] ) => {
-          this.benefitDetails = benefitDetails;
+        switchMap( ( benefitDetails ) => {
+          this.benefitDetails = benefitDetails.data;
           this.createForm.addControl( "benefitDetailFormGroup", this.buildBenefitDetailFormGroup( this.benefitDetails ) );
           return this.activatedRoute.params;
         } ),

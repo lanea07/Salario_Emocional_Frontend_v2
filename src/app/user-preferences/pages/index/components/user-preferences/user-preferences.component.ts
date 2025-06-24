@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
 
 import { MessageService } from 'primeng/api';
@@ -24,6 +25,7 @@ export class UserPreferencesComponent {
   constructor (
     private fb: FormBuilder,
     private ms: MessageService,
+    private router: Router,
     private userPreferencesService: UserPreferencesService,
   ) {
     this.user_id = parseInt( localStorage.getItem( 'uid' )! );
@@ -33,7 +35,7 @@ export class UserPreferencesComponent {
     } )
       .subscribe( {
         next: ( { preferencesDefault, userPreferences } ) => {
-          let defaultUserPreferences: any = preferencesDefault;
+          let defaultUserPreferences: any = preferencesDefault.data;
           let keys = Object.keys( defaultUserPreferences[ 0 ] );
           this.defaultPreferences = keys.map( ( key: any ) => {
             return {
@@ -44,7 +46,7 @@ export class UserPreferencesComponent {
             }
           } );
 
-          let CurrentUserPreferences: any = userPreferences;
+          let CurrentUserPreferences: any = userPreferences.data;
           keys = Object.keys( CurrentUserPreferences[ 0 ] );
           this.userPreferences = keys.map( ( key: any ) => {
             return {
@@ -55,11 +57,15 @@ export class UserPreferencesComponent {
             }
           } );
 
-          Object.keys( preferencesDefault[ 0 ] ).forEach( ( preference: any ) => {
+          Object.keys( preferencesDefault.data[ 0 ] ).forEach( ( preference: any ) => {
             let value = this.userPreferences?.find( ( userPreference: any ) => userPreference.name === preference )?.values;
             this.preferencesForm.addControl( preference, new FormControl( value, [ Validators.required ] ) );
           } );
           this.loaded = true;
+        },
+        error: (error) => {
+          this.ms.add({ severity: 'error', summary: 'Error', detail: error.error.message });
+          return router.navigate( [ 'basic' ] );
         }
       } );
   }

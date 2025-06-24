@@ -1,96 +1,180 @@
 <div class="row mt-5">
-  <div class="col">
-    <form [formGroup]="createForm" (ngSubmit)="save()">
-      <div class="row mb-3">
-        <p-panel header="Redimir nuevo Beneficio">
-          <div class="px-2 d-flex flex-column justify-content-evenly">
-
-            <!-- Beneficios -->
+    <div class="col">
+        <form [formGroup]="createForm" (ngSubmit)="save()">
             <div class="row mb-3">
-              <label for="benefit_id">*Selecciona un beneficio</label>
-              <div class="p-inputgroup">
-                <p-dropdown #benefit class="w-100" styleClass="w-100" optionLabel="name" optionValue="id"
-                  formControlName="benefit_id" [options]="benefits" placeholder="-- Seleccione Beneficio --"
-                  (onChange)="fillBenefitDetail($event)"></p-dropdown>
-                @if (userAndBenefitSpinner) {
-                <span class="p-inputgroup-addon">
-                  <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-                </span>
-                }
-              </div>
-              @if (isValidField('benefit_id')) {
-              <small class="text-danger">{{ benefitIdErrors }}</small>
-              }
+                <p-panel header="Redimir nuevo Beneficio">
+                    <div class="px-2 d-flex flex-column justify-content-evenly">
+                        <!-- Beneficios -->
+                        <div class="row mb-3">
+                            <label for="benefit_id"
+                                >*Selecciona un beneficio</label
+                            >
+                            <div class="p-inputgroup">
+                                <p-select
+                                    #benefit
+                                    class="w-100"
+                                    styleClass="w-100"
+                                    optionLabel="name"
+                                    optionValue="id"
+                                    formControlName="benefit_id"
+                                    [options]="benefits"
+                                    placeholder="-- Seleccione Beneficio --"
+                                    (onChange)="fillBenefitDetail($event)"
+                                ></p-select>
+                                @if (userAndBenefitSpinner) {
+                                <span class="p-inputgroup-addon">
+                                    <i
+                                        class="fa-solid fa-spinner fa-spin fa-xs"
+                                    ></i>
+                                </span>
+                                }
+                            </div>
+                            @if (isValidField('benefit_id')) {
+                            <small class="text-danger">{{
+                                benefitIdErrors
+                            }}</small>
+                            }
+                        </div>
+
+                        <!-- Detalles - Beneficios -->
+                        <div class="row mb-3">
+                            <label for="benefit_detail_id"
+                                >*Selecciona un Detalle</label
+                            >
+                            <div class="p-inputgroup">
+                                <p-select
+                                    class="w-100"
+                                    styleClass="w-100"
+                                    optionLabel="name"
+                                    optionValue="id"
+                                    formControlName="benefit_detail_id"
+                                    [options]="benefit_details"
+                                    placeholder="-- Seleccione Detalle --"
+                                    (onChange)="enableCalendar()"
+                                ></p-select>
+                                @if (!benefitDetailSpinner) {
+                                <span class="p-inputgroup-addon">
+                                    <i
+                                        class="fa-solid fa-spinner fa-spin fa-xs"
+                                    ></i>
+                                </span>
+                                }
+                            </div>
+                            @if (isValidField('benefit_detail_id')) {
+                            <small class="text-danger">{{
+                                benefitDetailIdErrors
+                            }}</small>
+                            }
+                        </div>
+
+                        <!-- benefit_begin_time & benefit_end_time -->
+                        <div class="row mb-3">
+                            <div class="col-12 col-md-6">
+                                <label for="benefit_begin_time"
+                                    >*Selecciona una fecha de inicio</label
+                                >
+                                <p-datepicker
+                                    [ngClass]="{
+                                        'ng-invalid ng-dirty':
+                                            isValidField('benefit_begin_time')
+                                    }"
+                                    styleClass="w-100"
+                                    #benefitBeginTime
+                                    [showTime]="true"
+                                    formControlName="benefit_begin_time"
+                                    selectionMode="single"
+                                    [readonlyInput]="true"
+                                    [disabledDays]="disabledDays"
+                                    [numberOfMonths]="numberOfMonths"
+                                    appendTo="body"
+                                    [baseZIndex]="2000"
+                                    [hideOnDateTimeSelect]="false"
+                                    (onSelect)="setCalendarDates()"
+                                ></p-datepicker>
+                                @if (isValidField('benefit_begin_time')) {
+                                <small class="text-danger">{{
+                                    benefitBeginTimeErrors
+                                }}</small>
+                                }
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="benefit_end_time"
+                                    >*Selecciona una fecha de
+                                    finalización</label
+                                >
+                                <p-datepicker
+                                    [ngClass]="{
+                                        'ng-invalid ng-dirty':
+                                            isValidField('benefit_end_time')
+                                    }"
+                                    styleClass="w-100"
+                                    #benefitEndTime
+                                    [showTime]="true"
+                                    formControlName="benefit_end_time"
+                                    selectionMode="single"
+                                    [readonlyInput]="true"
+                                    [disabledDays]="disabledDays"
+                                    [numberOfMonths]="numberOfMonths"
+                                    appendTo="body"
+                                    [baseZIndex]="2000"
+                                    [hideOnDateTimeSelect]="false"
+                                    (onSelect)="setCalendarDates()"
+                                ></p-datepicker>
+                                @if (isValidField('benefit_end_time')) {
+                                <small class="text-danger">{{
+                                    benefitEndTimeErrors
+                                }}</small>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label
+                                for="request_comment"
+                                class="text-body-tertiary"
+                                >Comentarios</label
+                            >
+                            <textarea
+                                class="w-100"
+                                styleClass="w-100"
+                                pTextarea
+                                formControlName="request_comment"
+                                id="request_comment"
+                                [autoResize]="true"
+                                rows="1"
+                            ></textarea>
+                        </div>
+
+                        <div class="text-end text-body-tertiary">
+                            @if (user?.parent?.name ) {
+                            <small
+                                >Tu beneficio será decidido por:
+                                {{ user?.parent?.name }}</small
+                            >
+                            } @else {
+                            <small
+                                >No tienes un colaborador superior asignado, tu
+                                beneficio será aprobado automaticamente</small
+                            >
+                            }
+                        </div>
+                    </div>
+                </p-panel>
             </div>
 
-            <!-- Detalles - Beneficios -->
-            <div class="row mb-3">
-              <label for="benefit_detail_id">*Selecciona un Detalle</label>
-              <div class="p-inputgroup">
-                <p-dropdown class="w-100" styleClass="w-100" optionLabel="name" optionValue="id" formControlName="benefit_detail_id"
-                  [options]="benefit_details" placeholder="-- Seleccione Detalle --" (onChange)="enableCalendar()"></p-dropdown>
-                @if (!benefitDetailSpinner) {
-                <span class="p-inputgroup-addon">
-                  <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
-                </span>
-                }
-              </div>
-              @if (isValidField('benefit_detail_id')) {
-              <small class="text-danger">{{ benefitDetailIdErrors }}</small>
-              }
-            </div>
-
-            <!-- benefit_begin_time & benefit_end_time -->
-            <div class="row mb-3">
-              <div class="col-12 col-md-6">
-                <label for="benefit_begin_time">*Selecciona una fecha de inicio</label>
-                <p-calendar [ngClass]="{'ng-invalid ng-dirty': isValidField('benefit_begin_time') }" styleClass="w-100"
-                  #benefitBeginTime [showTime]="true" formControlName="benefit_begin_time" selectionMode="single"
-                  [readonlyInput]="true" [disabledDays]="disabledDays" [numberOfMonths]="numberOfMonths" appendTo="body"
-                  [baseZIndex]="2000" [hideOnDateTimeSelect]="false" (onSelect)="setCalendarDates()"></p-calendar>
-                @if (isValidField('benefit_begin_time')) {
-                <small class="text-danger">{{ benefitBeginTimeErrors }}</small>
-                }
-              </div>
-              <div class="col-12 col-md-6">
-                <label for="benefit_end_time">*Selecciona una fecha de finalización</label>
-                <p-calendar [ngClass]="{'ng-invalid ng-dirty': isValidField('benefit_end_time') }" styleClass="w-100" #benefitEndTime
-                  [showTime]="true" formControlName="benefit_end_time" selectionMode="single" [readonlyInput]="true"
-                  [disabledDays]="disabledDays" [numberOfMonths]="numberOfMonths" appendTo="body" [baseZIndex]="2000"
-                  [hideOnDateTimeSelect]="false" (onSelect)="setCalendarDates()"></p-calendar>
-                @if (isValidField('benefit_end_time')) {
-                <small class="text-danger">{{ benefitEndTimeErrors }}</small>
-                }
-              </div>
-              </div>
+            <input type="hidden" formControlName="benefit_begin_time" />
+            <input type="hidden" formControlName="benefit_end_time" />
+            <input type="hidden" formControlName="user_id" />
 
             <div class="mb-3">
-              <label for="request_comment" class="text-body-tertiary">Comentarios</label>
-              <textarea class="w-100" styleClass="w-100" pInputTextarea formControlName="request_comment" id="request_comment"
-                [autoResize]="true" rows="1"></textarea>
+                <button
+                    class="btn btn-success float-end"
+                    type="submit"
+                    [disabled]="disableSubmitBtn"
+                >
+                    {{ currentUserBenefits?.id ? "Actualizar" : "Crear" }}
+                </button>
             </div>
-
-            <div class="text-end text-body-tertiary">
-              @if (user?.parent?.name ) {
-              <small>Tu beneficio será decidido por: {{ user?.parent?.name }}</small>
-              }
-              @else {
-              <small>No tienes un colaborador superior asignado, tu beneficio será aprobado automaticamente</small>
-              }
-              </div>
-              </div>
-              </p-panel>
-              </div>
-
-      <input type="hidden" formControlName="benefit_begin_time" />
-      <input type="hidden" formControlName="benefit_end_time" />
-      <input type="hidden" formControlName="user_id" />
-
-      <div class="mb-3">
-        <button class="btn btn-success float-end" type="submit" [disabled]="disableSubmitBtn">
-          {{ currentUserBenefits?.id ? "Actualizar" : "Crear" }}
-        </button>
-      </div>
-      </form>
-      </div>
+        </form>
+    </div>
 </div>

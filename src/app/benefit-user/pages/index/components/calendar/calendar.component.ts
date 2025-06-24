@@ -66,7 +66,7 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
     private elementRef: ElementRef,
     private ms: MessageService,
   ) {
-    this.authService.validarAdmin()
+    this.authService.validarActions([1])
       .subscribe( {
         next: ( resp: any ) => {
           this.isAdmin = resp.admin;

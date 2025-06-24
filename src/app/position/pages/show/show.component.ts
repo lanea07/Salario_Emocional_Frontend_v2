@@ -32,8 +32,8 @@ export class ShowComponent {
         switchMap( ( { id } ) => this.positionService.show( id ) )
       )
       .subscribe( {
-        next: ( position ) => {
-          this.position = position;
+        next: ( positions ) => {
+          this.position = positions.data[0];
           this.loaded = true;
         },
         error: ( { error } ) => {

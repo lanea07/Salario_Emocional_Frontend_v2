@@ -63,10 +63,12 @@ export class SettingsComponent {
             }
           } );
 
-          Object.keys( settingsDefault[ 0 ] ).forEach( ( preference: any ) => {
-            let value = this.benefitSettings?.find( ( userPreference: any ) => userPreference.name === preference )?.values;
-            this.settingsForm.addControl( preference, new FormControl( value, [ Validators.required ] ) );
-          } );
+          if (Array.isArray(settingsDefault.data) && settingsDefault.data.length > 0) {
+            Object.keys(settingsDefault.data[0]).forEach((preference: any) => {
+              let value = this.benefitSettings?.find((userPreference: any) => userPreference.name === preference)?.values;
+              this.settingsForm.addControl(preference, new FormControl(value, [Validators.required]));
+            });
+          }
           this.loaded = true;
         },
 

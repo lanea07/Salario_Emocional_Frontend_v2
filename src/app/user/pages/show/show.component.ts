@@ -35,7 +35,7 @@ export class ShowComponent {
       .pipe(
         switchMap( ( { id } ) => this.userService.show( id ) ),
         switchMap( ( user ) => {
-          this.user = Object.values( user )[ 0 ];
+          this.user = Object.values( user.data )[ 0 ];
           this.loaded = true;
           this.user?.roles?.forEach( role => this.roles.push( role.name ) );
           return this.userPreferencesService.show( this.user!.id )
@@ -43,7 +43,7 @@ export class ShowComponent {
       )
       .subscribe( {
         next: ( userPreferences ) => {
-          let CurrentUserPreferences: any = userPreferences;
+          let CurrentUserPreferences: any = userPreferences.data;
           let keys = Object.keys( CurrentUserPreferences[ 0 ] );
           this.userPreferences = keys.map( ( key: any ) => {
             return {

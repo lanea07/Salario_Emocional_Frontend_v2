@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 
 import { UserService } from 'src/app/user/services/user.service';
 
@@ -19,13 +20,14 @@ export class ProfileInformationComponent {
 
   constructor (
     private fb: FormBuilder,
+    private ms: MessageService,
     private userService: UserService,
   ) {
     this.user_id = localStorage.getItem( 'uid' );
     this.userService.show( this.user_id )
       .subscribe( {
         next: ( user: any ) => {
-          this.profileForm.reset( user[ 0 ] );
+          this.profileForm.reset( user.data[ 0 ] );
         }
       } )
     this.profileForm.controls[ 'name' ].disable();

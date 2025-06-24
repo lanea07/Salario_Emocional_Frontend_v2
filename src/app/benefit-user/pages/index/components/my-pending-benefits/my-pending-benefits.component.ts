@@ -9,6 +9,8 @@ import { MessageService } from 'primeng/api';
 
 import es_CO from '../../../../../shared/Datatables-langs/es-CO.json';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
+import { DataTablesResponse } from '../../../../../shared/interfaces/DataTablesResponse.interface';
+import { BenefitUser } from '../../../../interfaces/benefit-user.interface';
 
 @Component( {
     selector: 'my-pending-benefits',
@@ -42,8 +44,12 @@ export class MyPendingBenefitsComponent implements OnInit {
           this.loader.start();
           this.BenefitUserService.indexNonApproved( Number.parseInt( localStorage.getItem( 'uid' )! ) )
             .subscribe( {
-              next: ( benefitUser ) => {
-                callback( { data: benefitUser[ 0 ].benefit_user } );
+              next: ( response: DataTablesResponse<BenefitUser[]> ) => {
+                callback( { 
+                  data: response.data.original.data ,
+                  recordsTotal: response.data.original.recordsTotal,
+                  recordsFiltered: response.data.original.recordsFiltered,
+                } );
                 this.loader.complete();
               },
               error: ( err ) => {
@@ -54,8 +60,8 @@ export class MyPendingBenefitsComponent implements OnInit {
         },
         autoWidth: true,
         columns: [
-          { title: 'Beneficio', data: 'benefits.name' },
-          { title: 'Detalle', data: 'benefit_detail.name' },
+          { title: 'Beneficio', data: 'benefit_user[0].benefits.name' },
+          { title: 'Detalle', data: 'benefit_user[0].benefit_detail.name' },
           {
             title: 'Solicitado',
             data: function ( data: any, type: any, full: any ) {
@@ -65,7 +71,7 @@ export class MyPendingBenefitsComponent implements OnInit {
           {
             title: 'Fecha y hora de redención',
             data: function ( data: any, type: any, full: any ) {
-              return new Date( data.benefit_begin_time ).toLocaleString( 'es-CO' );
+              return new Date( data.benefit_user[0].benefit_begin_time ).toLocaleString( 'es-CO' );
             }
           },
           {

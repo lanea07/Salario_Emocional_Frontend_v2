@@ -1,10 +1,10 @@
 <p-toolbar styleClass="mb-4">
     <year-selector (yearChanged)="getBenefitDetail($event)"></year-selector>
     <form [formGroup]="form">
-        <p-dropdown styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id" [options]="benefits"
+        <p-select styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id" [options]="benefits"
             formControlName="benefit" placeholder="-- Filtrar Beneficio --" filterBy="name" [showClear]="true"
             (onChange)="getBenefitDetail(year)">
-        </p-dropdown>
+        </p-select>
     </form>
 </p-toolbar>
 <div class="row mb-3">

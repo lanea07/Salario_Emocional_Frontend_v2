@@ -10,10 +10,10 @@ const routes: Routes = [ {
   path: '',
   component: MainComponent,
   children: [
-    { path: 'login', component: LoginComponent, title: 'Login' },
+    { path: '', component: LoginComponent, title: 'Login' },
     { path: 'password-change', component: PassChangeComponent, title: 'Cambiar Contraseña' },
     { path: 'forgot-password', component: ForgotPasswordComponent, title: 'Olvidar Contraseña' },
-    { path: '**', redirectTo: 'login' },
+    { path: '**', redirectTo: '' },
   ]
 } ];
 

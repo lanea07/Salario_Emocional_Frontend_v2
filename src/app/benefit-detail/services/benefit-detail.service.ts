@@ -1,40 +1,39 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { environment } from 'src/environments/environment';
-import { BenefitDetail } from '../interfaces/benefit-detail.interface';
+import { ApiV1Response } from '../../shared/interfaces/ApiV1Response.interface';
+import { BenefitDetail, BenefitDetails } from '../interfaces/benefit-detail.interface';
+import { DataTablesResponse } from '../../shared/interfaces/DataTablesResponse.interface';
 
 @Injectable( {
   providedIn: 'root'
 } )
 export class BenefitDetailService {
 
-  apiBaseUrl = environment.apiBaseUrl;
-
   constructor ( private http: HttpClient ) { }
 
-  index (): Observable<BenefitDetail[]> {
-    return this.http.get<BenefitDetail[]>( `${ this.apiBaseUrl }/benefitdetail`, { withCredentials: true } )
+  index (): Observable<BenefitDetails> {
+    return this.http.get<BenefitDetails>( `/benefit-detail`, { withCredentials: true } )
   }
 
-  show ( id: number ): Observable<BenefitDetail> {
-    return this.http.get<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail/${ id }`, { withCredentials: true } )
+  show ( id: number ): Observable<BenefitDetails> {
+    return this.http.get<BenefitDetails>( `/benefit-detail/${ id }`, { withCredentials: true } )
   }
 
-  create ( formValues: any ): Observable<BenefitDetail> {
-    return this.http.post<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail`, formValues, { withCredentials: true } );
+  create ( formValues: any ): Observable<BenefitDetails> {
+    return this.http.post<BenefitDetails>( `/benefit-detail`, formValues, { withCredentials: true } );
   }
 
   update ( id: number | undefined, formValues: any ) {
-    return this.http.put<BenefitDetail>( `${ this.apiBaseUrl }/benefitdetail/${ id }`, formValues, { withCredentials: true } );
+    return this.http.put<BenefitDetails>( `/benefit-detail/${ id }`, formValues, { withCredentials: true } );
   }
 
   destroy ( id: number | undefined ) {
-    return this.http.delete( `${ this.apiBaseUrl }/benefitdetail/${ id }`, { withCredentials: true } );
+    return this.http.delete( `/benefit-detail/${ id }`, { withCredentials: true } );
   }
 
-  datatable ( datatableParameters: any ) {
-    return this.http.post( `${ this.apiBaseUrl }/benefitdetail/datatable`, datatableParameters, { withCredentials: true } );
+  datatable ( datatableParameters: any ): Observable<DataTablesResponse<BenefitDetail[]>> {
+    return this.http.post<DataTablesResponse<BenefitDetail[]>>( `/benefit-detail/datatable`, datatableParameters, { withCredentials: true } );
   }
 }

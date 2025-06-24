@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
 import { BenefitService } from 'src/app/benefit/services/benefit.service';
-import { DefaultPreferences } from 'src/app/shared/interfaces/Preferences.interface';
+import { DefaultPreference, DefaultPreferences } from 'src/app/shared/interfaces/Preferences.interface';
 import { HelpersService } from 'src/app/shared/services/helpers.service';
 
 @Component( {
@@ -20,7 +20,7 @@ export class BenefitDetailComponent {
   barChartData: any;
   barChartOptions: any;
   benefit?: Benefit;
-  benefitSettings?: DefaultPreferences[] = [];
+  benefitSettings?: DefaultPreference[] = [];
   userBenefits: any;
   doughnutChartData: any;
   doughnutChartOptions: any;
@@ -75,7 +75,7 @@ export class BenefitDetailComponent {
     } );
     this.benefitService.showSettings( this.benefit!.id )
       .subscribe( ( data: DefaultPreferences ) => {
-        this.benefitSettings = data[ 0 ];
+        this.benefitSettings = data.data;
         this.uses_barchart = ( this.benefitSettings as { [ key: string ]: any } )[ 'uses_barchart' ];
         this.uses_doughnutchart = ( this.benefitSettings as { [ key: string ]: any } )[ 'uses_doughnutchart' ];
         this.max_allowed_hours = ( this.benefitSettings as { [ key: string ]: any } )[ 'max_allowed_hours' ];

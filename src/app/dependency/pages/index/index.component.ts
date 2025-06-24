@@ -4,10 +4,12 @@ import { Subject } from 'rxjs';
 
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { ADTSettings } from 'angular-datatables/src/models/settings';
+import { MessageService } from 'primeng/api';
 
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
+import { DataTablesResponse } from '../../../shared/interfaces/DataTablesResponse.interface';
+import { Dependency } from '../../interfaces/dependency.interface';
 import { DependencyService } from '../../services/dependency.service';
-import { MessageService } from 'primeng/api';
 
 @Component( {
     selector: 'user-index',
@@ -42,12 +44,12 @@ export class IndexComponent implements OnInit, AfterViewInit {
           this.dependencyService.datatable( dataTablesParameters )
             .subscribe(
               {
-                next: ( dependency: any ) => {
+                next: ( dependency: DataTablesResponse<Dependency[]> ) => {
                   callback( {
-                    draw: dependency.original.draw,
-                    recordsTotal: dependency.original.recordsTotal,
-                    recordsFiltered: dependency.original.recordsFiltered,
-                    data: dependency.original.data
+                    draw: dependency.data.original.draw,
+                    recordsTotal: dependency.data.original.recordsTotal,
+                    recordsFiltered: dependency.data.original.recordsFiltered,
+                    data: dependency.data.original.data
                   } );
                   this.loader.complete();
                 },

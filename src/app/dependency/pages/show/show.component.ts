@@ -37,11 +37,10 @@ export class ShowComponent {
       )
       .subscribe( {
         next: ( dependency ) => {
-          this.dependency = Object.values( dependency )[ 0 ];
+          this.dependency = Object.values( dependency.data )[ 0 ];
           this.loaded = true;
         },
         error: ( { error } ) => {
-          this.router.navigate( [ 'basic', 'benefit-employee' ] );
           this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
         }
       } );

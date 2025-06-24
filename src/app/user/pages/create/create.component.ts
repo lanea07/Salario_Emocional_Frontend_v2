@@ -89,18 +89,18 @@ export class CreateComponent implements OnInit {
     } )
       .subscribe( {
         next: ( { dependencies, positions, roles, user } ) => {
-          this.dependencies = dependencies;
-          this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependencies[ 0 ] ) ];
-          this.positions = positions;
-          this.roles = roles;
+          this.dependencies = dependencies.data;
+          this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependencies.data[ 0 ] ) ];
+          this.positions = positions.data;
+          this.roles = roles.data;
           this.loaded = true;
-          this.createForm.addControl( "rolesFormGroup", this.buildChecksFormGroup( roles ) );
-          this.user = user;
+          this.createForm.addControl( "rolesFormGroup", this.buildChecksFormGroup( roles.data ) );
+          this.user = user?.data[0];
           if ( this.user ) {
             this.user = Object.values( this.user )[ 0 ];
             this.createForm.get( 'name' )?.setValue( this.user!.name );
             this.createForm.get( 'email' )?.setValue( this.user!.email );
-            let dependency = this.dependencyService.flattenDependency( dependencies[ 0 ] ).find( ( dependency: any ) => dependency.id === this.user!.dependency.id );
+            let dependency = this.dependencyService.flattenDependency( dependencies.data[ 0 ] ).find( ( dependency: any ) => dependency.id === this.user!.dependency.id );
             this.createForm.get( 'dependency_id' )?.setValue( this.dependencyService.makeNode( dependency! ) );
             this.fillColaboradores(
               {
@@ -163,7 +163,7 @@ export class CreateComponent implements OnInit {
         .subscribe(
           {
             next: ( userCreated ) => {
-              this.router.navigate( [ `../show`, userCreated.id ], { relativeTo: this.activatedRoute } )
+              this.router.navigate( [ `../show`, userCreated.data[0].id ], { relativeTo: this.activatedRoute } )
               this.ms.add( { severity: 'success', summary: 'Creado' } )
             },
             error: ( { error } ) => {
@@ -236,7 +236,7 @@ export class CreateComponent implements OnInit {
     this.dependencyService.dependencyAncestors( id )
       .subscribe( {
         next: ( dependencies ) => {
-          let dependenciesArray = this.dependencyService.flattenDependency( dependencies[ 0 ] )
+          let dependenciesArray = this.dependencyService.flattenDependency( dependencies.data[ 0 ] )
           this.users = dependenciesArray.flatMap( ( dependency: Dependency ) => {
             return dependency.users.filter( ( user: User ) => user.valid_id );
           } );

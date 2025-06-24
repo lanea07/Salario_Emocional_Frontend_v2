@@ -1,36 +1,13 @@
 import { User } from "src/app/user/interfaces/user.interface";
+import { ApiV1Response } from "../../shared/interfaces/ApiV1Response.interface";
 
-export interface AuthResponse {
+export interface AuthResponse extends ApiV1Response<AuthData>{
+}
+
+export interface AuthData {
   token: string;
-  message: string;
-  errors: Errors;
-  can: Can;
-  id: number;
+  expires_in: number;
+  actions: number[];
   user: User;
-  simulated?: boolean;
-  admin: boolean;
-}
-
-export interface Errors {
-  email: string[];
-}
-
-export interface ValidToken {
-  valid: boolean;
-  message: string;
-}
-
-interface Can {
-  id: number;
-  name: string;
-  created_at: Date;
-  updated_at: Date;
-  pivot: Pivot;
-}
-
-interface Pivot {
-  user_id: number;
-  role_id: number;
-  created_at: Date;
-  updated_at: Date;
+  simulated: boolean;
 }

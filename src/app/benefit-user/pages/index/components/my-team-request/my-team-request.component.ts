@@ -11,16 +11,18 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DropdownComponentEventType } from 'src/app/benefit-user/interfaces/dropdown-component-event-type';
 import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
 import es_CO from '../../../../../shared/Datatables-langs/es-CO.json';
+import { DataTablesResponse } from '../../../../../shared/interfaces/DataTablesResponse.interface';
+import { BenefitUserElement } from '../../../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
 import { BenefitDecisionComponent } from '../benefit-decision/benefit-decision.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 
 @Component( {
-    selector: 'my-team-request',
-    templateUrl: './my-team-request.component.html',
-    styles: [],
-    providers: [DialogService],
-    standalone: false
+  selector: 'my-team-request',
+  templateUrl: './my-team-request.component.html',
+  styles: [],
+  providers: [ DialogService ],
+  standalone: false
 } )
 export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy {
 
@@ -51,8 +53,12 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
           this.loader.start();
           this.benefitUserService.indexCollaboratorsNonApproved()
             .subscribe( {
-              next: ( benefitUser ) => {
-                callback( { data: benefitUser } );
+              next: ( response: DataTablesResponse<BenefitUserElement[]> ) => {
+                callback( {
+                  data: response.data.original.data,
+                  recordsTotal: response.data.original.recordsTotal,
+                  recordsFiltered: response.data.original.recordsFiltered,
+                } );
                 this.loader.complete();
               },
               error: ( err ) => {
@@ -85,7 +91,7 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
           }
         ],
         responsive: true,
-        columnDefs: [ 
+        columnDefs: [
           {
             className: 'all',
             targets: [ -1 ]

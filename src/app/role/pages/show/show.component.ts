@@ -31,7 +31,7 @@ export class ShowComponent {
       )
       .subscribe( {
         next: ( role ) => {
-          this.role = role;
+          this.role = role.data[0];
           this.loaded = true;
         },
         error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )

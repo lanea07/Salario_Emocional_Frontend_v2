@@ -180,10 +180,10 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
     } )
       .subscribe( {
         next: ( { allBenefits, benefits, dependencies, groupedBenefits, users } ) => {
-          this.fillBenefits( allBenefits );
-          this.benefits = benefits;
-          this.dependencies = dependencies;
-          this.users = users;
+          this.fillBenefits( allBenefits.data );
+          this.benefits = benefits.data;
+          this.dependencies = dependencies.data;
+          this.users = users.data;
 
           this.barChartData.labels = Object.keys( groupedBenefits ).map( ( key: any ) => key );
           let pending: number[] = this.barChartData.labels.map( ( arr: any ) => {

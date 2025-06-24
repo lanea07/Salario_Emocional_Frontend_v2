@@ -65,8 +65,8 @@ export class MyTeamComponent implements AfterViewInit, OnChanges, OnDestroy {
       .subscribe( {
         next: ( { benefits, benefitUser } ) => {
           this.calendarData = [];
-          this.calendarData = benefitUser[ 0 ].descendants_and_self.flatMap( user => user.benefit_user );
-          this.benefits = benefits;
+          this.calendarData = benefitUser.data[ 0 ].descendants_and_self.flatMap( user => user.benefit_user );
+          this.benefits = benefits.data;
           this.loaded = true;
           this.loader.complete();
         },

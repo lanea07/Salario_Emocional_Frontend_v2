@@ -10,10 +10,10 @@ import { DependencyService } from '../../services/dependency.service';
 import { MessageService } from 'primeng/api';
 
 @Component( {
-    selector: 'user-create',
-    templateUrl: './create.component.html',
-    styles: [],
-    standalone: false
+  selector: 'user-create',
+  templateUrl: './create.component.html',
+  styles: [],
+  standalone: false
 } )
 export class CreateComponent implements OnInit {
 
@@ -58,10 +58,10 @@ export class CreateComponent implements OnInit {
     } )
       .subscribe( {
         next: ( { dependencies, dependency } ) => {
-        this.dependencies = dependencies;
-        this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependencies[ 0 ] ) ];
+          this.dependencies = dependencies.data;
+          this.nodes = [ this.dependencyService.buildDependencyTreeNode( dependencies.data[ 0 ] ) ];
           if ( dependency ) {
-            this.dependency = Object.values( dependency )[ 0 ];
+            this.dependency = Object.values( dependency.data )[ 0 ];
             let parent = this.dependencyService.flattenDependency( { ...this.dependencies[ 0 ] } ).find( ( dependency: any ) => dependency.id === this.dependency?.parent_id );
             this.createForm.reset( {
               name: this.dependency?.name,
@@ -114,7 +114,7 @@ export class CreateComponent implements OnInit {
         .subscribe(
           {
             next: dependencyCreated => {
-              this.router.navigate( [ `../show`, dependencyCreated.id ], { relativeTo: this.activatedRoute } )
+              this.router.navigate( [ `../show`, dependencyCreated.data[ 0 ].id ], { relativeTo: this.activatedRoute } )
               this.ms.add( { severity: 'success', summary: 'Creado' } )
             },
             error: ( { error } ) => {

@@ -8,11 +8,11 @@ export const isAdminGuard: CanMatchFn = ( route, segments ) => {
   const router: Router = inject( Router );
   const authService = inject( AuthService );
   return forkJoin( {
-    isAdmin: authService.validarAdmin(),
+    isAdmin: authService.validarActions([1]),
   } )
     .pipe(
       map( ( { isAdmin } ) => {
-        return isAdmin.admin || router.createUrlTree( [ 'basic', 'benefit-employee' ] );
+        return isAdmin || router.createUrlTree( [ 'basic', 'benefit-employee' ] );
       } )
     )
 };

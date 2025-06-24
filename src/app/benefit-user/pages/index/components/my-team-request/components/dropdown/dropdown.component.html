@@ -1,5 +1,5 @@
 <form [formGroup]="formGroup">
-    <p-dropdown #dropdown [showClear]="true" formControlName="selectedAction" [options]="options" optionLabel="label"
+    <p-select #dropdown [showClear]="true" formControlName="selectedAction" [options]="options" optionLabel="label"
         optionValue="action"
-        placeholder="Acciones" (onChange)="emitEvent($event)"></p-dropdown>
+        placeholder="Acciones" (onChange)="emitEvent($event)"></p-select>
 </form>

@@ -11,7 +11,7 @@ import { User } from 'src/app/user/interfaces/user.interface';
 } )
 export class NavbarComponent implements OnInit {
 
-  isAdmin: boolean = false;
+  isAdmin: boolean | undefined = false;
   isSimulated: boolean = false;
   user?: User;
 
@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit (): void {
     this.isSimulated = JSON.parse( localStorage.getItem( 'simulated' )! );
-    this.isAdmin = JSON.parse( localStorage.getItem( 'admin' )! );
+    this.isAdmin = this.authService.getuser()?.actions.includes(1);
     this.user = JSON.parse( localStorage.getItem( 'user' )! );
   }
 

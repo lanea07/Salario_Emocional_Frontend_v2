@@ -9,7 +9,6 @@ export class HelpersService {
 
   constructor (
     private domSanitizer: DomSanitizer,
-    private http: HttpClient,
   ) { }
 
   imgFromSVG ( svg?: string ) {

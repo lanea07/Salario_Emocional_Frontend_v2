@@ -41,18 +41,21 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges {
     this.userService.userDescendants()
       .subscribe( {
         next: ( currentUser ) => {
+          this.loader.complete();
           this.loaded = true;
           if ( !currentUser ) {
             this.loader.complete();
             return;
           };
-          this.collaborators = currentUser[ 0 ].descendants.filter( ( user ) => {
+          this.collaborators = currentUser.data[0]?.descendants.filter( ( user ) => {
             return user.id !== Number.parseInt( localStorage.getItem( 'uid' )! );
           } );
           this.collaborators.sort( ( a, b ) => a.name.localeCompare( b.name ) );
-          this.loader.complete();
         },
-        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
+        error: ( { error } ) => {
+          this.loader.complete();
+          this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } );
+        }
       } );
   }
 
@@ -73,15 +76,18 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges {
     this.benefitUserService.showByUserID( this.formGroup.value.user_id, this.year! )
       .subscribe( {
         next: ( benefitUser ) => {
-          this.currentUser = benefitUser[ 0 ]
+          this.loader.complete();
+          this.loaded = true;
+          this.currentUser = benefitUser.data[ 0 ]
           if ( this.currentUser ) {
             this.calendarData = [];
             this.calendarData = this.currentUser.benefit_user;
           }
-          this.loader.complete();
-          this.loaded = true;
         },
-        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
+        error: ( { error } ) => {
+          this.loader.complete();
+          this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } );
+        }
       } );
   }
 

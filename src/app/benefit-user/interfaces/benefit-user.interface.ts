@@ -1,6 +1,10 @@
 import { BenefitDetail } from "src/app/benefit-detail/interfaces/benefit-detail.interface";
 import { Benefit } from "src/app/benefit/interfaces/benefit.interface";
 import { Dependency } from "src/app/dependency/interfaces/dependency.interface";
+import { ApiV1Response } from "../../shared/interfaces/ApiV1Response.interface";
+
+export interface BenefitUsers extends ApiV1Response<BenefitUser[]>{
+}
 
 export interface BenefitUser {
   id: number;
@@ -18,6 +22,9 @@ export interface BenefitUser {
   benefit_user: BenefitUserElement[];
   dependency: Dependency;
   descendants_and_self: BenefitUser[];
+}
+
+export interface BenefitUserElements extends ApiV1Response<BenefitUserElement[]>{
 }
 
 export interface BenefitUserElement {

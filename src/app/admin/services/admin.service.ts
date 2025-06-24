@@ -1,28 +1,26 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
-import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
-import { environment } from 'src/environments/environment';
+import { BenefitUserElement, BenefitUserElements } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 
 @Injectable( {
   providedIn: 'root'
 } )
 export class AdminService {
 
-  apiBaseUrl = environment.apiBaseUrl;
-
   constructor (
     private http: HttpClient,
   ) { }
 
-  getAllBenefitUser ( data: any ) {
+  getAllBenefitUser ( data: any ): Observable<BenefitUserElements> {
     let params = this.cleanParams( data );
-    return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/admin/getAllBenefitUser`, { params, withCredentials: true } )
+    return this.http.get<BenefitUserElements>( `/admin/getAllBenefitUser`, { params, withCredentials: true } )
   }
 
   getAllGroupedBenefits ( data: any ) {
     let params = this.cleanParams( data );
-    return this.http.get<BenefitUserElement[]>( `${ this.apiBaseUrl }/admin/getAllGroupedBenefits`, { params, withCredentials: true } )
+    return this.http.get<BenefitUserElement[]>( `/admin/getAllGroupedBenefits`, { params, withCredentials: true } )
   }
 
   cleanParams ( data: any ): HttpParams {

@@ -43,10 +43,10 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
       this.loader.start();
       this.benefitUserService.index( Number.parseInt( localStorage.getItem( 'uid' )! ), this.year! )
         .subscribe( {
-          next: ( benefitUser ) => {
+          next: ( benefitUsers ) => {
             this.calendarData = [];
-            this.calendarData = benefitUser[ 0 ].benefit_user;
-            this.benefitUser = benefitUser[ 0 ];
+            this.calendarData = benefitUsers.data[0].benefit_user;
+            this.benefitUser = benefitUsers.data[0];
             this.loaded = true;
             this.loader.complete();
           },

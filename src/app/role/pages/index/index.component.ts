@@ -50,7 +50,6 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.loader.complete();
               },
               error: ( err ) => {
-                this.router.navigate( [ 'basic', 'benefit-employee' ] );
                 this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } );
               }
             } );

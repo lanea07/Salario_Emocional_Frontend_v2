@@ -5,27 +5,27 @@
             <form [formGroup]="formGroup">
                 <div class="d-flex flex-column flex-xl-row">
                     <div class="col m-1">
-                        <p-calendar styleClass="border-0 w-100" inputStyleClass="border-0 w-100" formControlName="year" view="year"
-                            dateFormat="yy" inputId="yearpicker" (ngModelChange)="getBenefits()"></p-calendar>
+                        <p-datepicker styleClass="border-0 w-100" inputStyleClass="border-0 w-100" formControlName="year" view="year"
+                            dateFormat="yy" inputId="yearpicker" (ngModelChange)="getBenefits()"></p-datepicker>
                     </div>
                     <div class="col m-1">
-                        <p-dropdown styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id"
+                        <p-select styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id"
                             formControlName="benefit_id" [options]="benefits" placeholder="-- Seleccione Beneficio --"
-                            (onChange)="getBenefits()"></p-dropdown>
+                            (onChange)="getBenefits()"></p-select>
                     </div>
                     <div class="col m-1">
-                        <p-dropdown styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id"
+                        <p-select styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id"
                             formControlName="user_id" [options]="users" placeholder="-- Seleccione Colaborador --"
-                            (onChange)="getBenefits()"></p-dropdown>
+                            (onChange)="getBenefits()"></p-select>
                     </div>
                     <div class="col m-1">
-                        <p-dropdown styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id"
+                        <p-select styleClass="border-0 w-100" [filter]="true" optionLabel="name" optionValue="id"
                             formControlName="dependency_id" [options]="dependencies"
-                            placeholder="-- Seleccione Dependencia --" (onChange)="getBenefits()"></p-dropdown>
+                            placeholder="-- Seleccione Dependencia --" (onChange)="getBenefits()"></p-select>
                     </div>
                     <div class="col m-1">
-                        <p-dropdown styleClass="border-0 w-100" optionLabel="name" optionValue="value" formControlName="is_approved"
-                            [options]="status" placeholder="-- Seleccione Estado --" (onChange)="getBenefits()"></p-dropdown>
+                        <p-select styleClass="border-0 w-100" optionLabel="name" optionValue="value" formControlName="is_approved"
+                            [options]="status" placeholder="-- Seleccione Estado --" (onChange)="getBenefits()"></p-select>
                     </div>
                 </div>
             </form>

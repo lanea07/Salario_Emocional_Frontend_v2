@@ -8,6 +8,8 @@ import { MessageService } from 'primeng/api';
 
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
+import { DataTablesResponse } from '../../../shared/interfaces/DataTablesResponse.interface';
+import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
 
 @Component( {
     selector: 'benefitdetail-index',
@@ -40,11 +42,11 @@ export class IndexComponent implements OnInit, AfterViewInit {
       ajax: ( dataTablesParameters: any, callback: any ) => {
         this.benefitDetailService.datatable( dataTablesParameters )
           .subscribe( {
-            next: ( benefitDetails: any ) => {
+            next: ( benefitDetails: DataTablesResponse<BenefitDetail[]> ) => {
               callback( {
-                data: benefitDetails.original.data,
-                recordsTotal: benefitDetails.original.recordsTotal,
-                recordsFiltered: benefitDetails.original.recordsFiltered,
+                data: benefitDetails.data.original.data,
+                recordsTotal: benefitDetails.data.original.recordsTotal,
+                recordsFiltered: benefitDetails.data.original.recordsFiltered,
               } );
               this.loader.complete();
             },

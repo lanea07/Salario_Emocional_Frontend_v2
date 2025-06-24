@@ -35,7 +35,7 @@ export class ShowComponent {
       )
       .subscribe( {
         next: ( benefitDetail ) => {
-          this.benefitDetail = Object.values( benefitDetail )[ 0 ];
+          this.benefitDetail = Object.values( benefitDetail.data )[ 0 ];
           this.loaded = true;
         },
         error: ( { error } ) => {
@@ -44,7 +44,7 @@ export class ShowComponent {
         }
       } );
 
-    this.authService.validarAdmin()
+    this.authService.validarActions([1])
       .subscribe( {
         next: ( isAdmin: any ) => {
           this.isAdmin = isAdmin.admin;

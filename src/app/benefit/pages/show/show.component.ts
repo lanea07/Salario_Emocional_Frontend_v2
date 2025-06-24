@@ -38,7 +38,7 @@ export class ShowComponent {
       )
       .subscribe( {
         next: ( benefit ) => {
-          this.benefit = Object.values( benefit )[ 0 ];
+          this.benefit = Object.values( benefit.data )[ 0 ];
           this.details = this.benefit?.benefit_detail;
           this.filePoliticas = this.benefit?.politicas_path ? this.benefit.politicas_path : '';
           this.loaded = true;
@@ -46,7 +46,7 @@ export class ShowComponent {
         error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
 
-    this.authService.validarAdmin()
+    this.authService.validarActions([1])
       .subscribe( {
         next: ( isAdmin: any ) => this.isAdmin = isAdmin.admin,
         error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )

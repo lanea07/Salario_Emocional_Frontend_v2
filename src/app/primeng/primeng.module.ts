@@ -1,14 +1,13 @@
 import { NgModule } from '@angular/core';
 
 import { AccordionModule } from 'primeng/accordion';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { ChartModule } from 'primeng/chart';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { Textarea } from 'primeng/inputtextarea';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TabMenuModule } from 'primeng/tabmenu';
@@ -17,6 +16,7 @@ import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { TreeSelectModule } from 'primeng/treeselect';
+import { TextareaModule } from 'primeng/textarea';
 
 
 @NgModule( {
@@ -24,13 +24,13 @@ import { TreeSelectModule } from 'primeng/treeselect';
   imports: [],
   exports: [
     AccordionModule,
-    CalendarModule,
+    DatePickerModule,
     ChartModule,
     ConfirmDialogModule,
     DialogModule,
-    DropdownModule,
+    SelectModule,
     DynamicDialogModule,
-    Textarea,
+    TextareaModule,
     InputTextModule,
     PanelModule,
     SkeletonModule,

@@ -6,12 +6,13 @@ import { LoadingBarService } from '@ngx-loading-bar/core';
 import { MessageService } from 'primeng/api';
 
 import { AuthService } from '../../services/auth.service';
+import { ApiV1Response } from '../../../shared/interfaces/ApiV1Response.interface';
 
 @Component( {
-    selector: 'auth-login',
-    templateUrl: './login.component.html',
-    styles: [``],
-    standalone: false
+  selector: 'auth-login',
+  templateUrl: './login.component.html',
+  styles: [ `` ],
+  standalone: false
 } )
 
 export class LoginComponent {
@@ -51,7 +52,7 @@ export class LoginComponent {
   ) {
     this.authService.validarToken()
       .subscribe( {
-        next: ( resp ) => resp ? this.router.navigate( [ 'basic' ] ) : this.showScreen = true,
+        next: ( resp: ApiV1Response<boolean> ) => resp.data ? this.router.navigate( [ 'basic' ] ) : this.showScreen = true,
       } );
   }
 
@@ -67,8 +68,9 @@ export class LoginComponent {
     const { email, password, device_name } = this.loginForm.value;
     this.authService.login( email, password, device_name )
       .subscribe( {
-        next: () => {
+        next: ( data ) => {
           this.loader.complete();
+          this.authService.setUser( data.data )
           this.router.navigate( [ 'basic' ] );
         },
         error: ( { error } ) => {
