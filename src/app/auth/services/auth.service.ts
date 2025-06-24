@@ -28,7 +28,7 @@ export class AuthService {
         token,
         user: JSON.parse( userJson ),
         actions: JSON.parse( actionsJson ),
-        simulated: simulated === 'true',
+        simulated: simulated === 'false',
         expires_in: Number(expires_in)
       };
     }
@@ -109,7 +109,7 @@ export class AuthService {
             localStorage.setItem( 'token', response.data.token! );
             localStorage.setItem( 'user', JSON.stringify( response.data.user! ) );
             localStorage.setItem( 'uid', response.data.user.id!.toString() );
-            localStorage.setItem( 'simulated', false.toString() );
+            localStorage.setItem( 'simulated', response.data.simulated.toString() );
             localStorage.setItem( 'actions', JSON.stringify( response.data.actions ) );
           }
         } )

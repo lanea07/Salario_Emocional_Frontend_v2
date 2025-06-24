@@ -60,8 +60,8 @@ export class CreateComponent {
       .subscribe( {
         next: ( position ) => {
           const extractPositionDetail = position;
-          this.position = extractPositionDetail.data[0];
-          this.createForm.get( 'name' )?.setValue( extractPositionDetail.data[0].name );
+          this.position = extractPositionDetail.data;
+          this.createForm.get( 'name' )?.setValue( extractPositionDetail.data.name );
         },
         error: ( { error } ) => {
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
@@ -102,7 +102,7 @@ export class CreateComponent {
         .subscribe(
           {
             next: (  positions  ) => {
-              this.router.navigate( [ `../show`, positions.data[0].id ], { relativeTo: this.activatedRoute } );
+              this.router.navigate( [ `../show`, positions.data.id ], { relativeTo: this.activatedRoute } );
               this.ms.add( { severity: 'success', summary: 'Creado' } )
             },
             error: ( { error } ) => {

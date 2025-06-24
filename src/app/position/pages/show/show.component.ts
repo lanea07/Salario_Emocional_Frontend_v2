@@ -33,7 +33,7 @@ export class ShowComponent {
       )
       .subscribe( {
         next: ( positions ) => {
-          this.position = positions.data[0];
+          this.position = positions.data;
           this.loaded = true;
         },
         error: ( { error } ) => {

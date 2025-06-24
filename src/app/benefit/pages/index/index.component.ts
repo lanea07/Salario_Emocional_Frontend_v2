@@ -48,9 +48,9 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
             .subscribe( {
               next: ( benefits: DataTablesResponse<Benefit[]> ) => {
                 callback( {
-                  data: benefits.data.original.data,
-                  recordsTotal: benefits.data.original.recordsTotal,
-                  recordsFiltered: benefits.data.original.recordsFiltered,
+                  data: benefits.data.data,
+                  recordsTotal: benefits.data.recordsTotal,
+                  recordsFiltered: benefits.data.recordsFiltered,
                 } );
                 this.loader.complete();
               },

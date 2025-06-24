@@ -13,20 +13,20 @@ export class PositionService {
 
   constructor ( private http: HttpClient ) { }
 
-  index (): Observable<Positions> {
-    return this.http.get<Positions>( `/position`, { withCredentials: true } )
+  index (): Observable<Positions<Position[]>> {
+    return this.http.get<Positions<Position[]>>( `/position`, { withCredentials: true } )
   }
 
-  show ( id: number ): Observable<Positions> {
-    return this.http.get<Positions>( `/position/${ id }`, { withCredentials: true } )
+  show ( id: number ): Observable<Positions<Position>> {
+    return this.http.get<Positions<Position>>( `/position/${ id }`, { withCredentials: true } )
   }
 
-  create ( formValues: any ): Observable<Positions> {
-    return this.http.post<Positions>( `/position`, formValues, { withCredentials: true } );
+  create ( formValues: any ): Observable<Positions<Position>> {
+    return this.http.post<Positions<Position>>( `/position`, formValues, { withCredentials: true } );
   }
 
   update ( id: number | undefined, formValues: any ) {
-    return this.http.put<Positions>( `/position/${ id }`, formValues, { withCredentials: true } );
+    return this.http.put<Positions<Position>>( `/position/${ id }`, formValues, { withCredentials: true } );
   }
 
   destroy ( id: number | undefined ) {

@@ -4,14 +4,14 @@ import { switchMap } from 'rxjs';
 
 import { MessageService } from 'primeng/api';
 
-import { Role } from 'src/app/role/interfaces/role.interface';
+import { Role, Roles } from 'src/app/role/interfaces/role.interface';
 import { RoleService } from '../../services/role.service';
 
 @Component( {
-    selector: 'role-show',
-    templateUrl: './show.component.html',
-    styles: [],
-    standalone: false
+  selector: 'role-show',
+  templateUrl: './show.component.html',
+  styles: [],
+  standalone: false
 } )
 export class ShowComponent {
 
@@ -30,8 +30,8 @@ export class ShowComponent {
         switchMap( ( { id } ) => this.roleService.show( id ) )
       )
       .subscribe( {
-        next: ( role ) => {
-          this.role = role.data[0];
+        next: ( role: Roles<Role> ) => {
+          this.role = role.data;
           this.loaded = true;
         },
         error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )

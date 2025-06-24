@@ -56,9 +56,9 @@ export class IndexComponent implements OnInit, AfterViewInit {
             .subscribe({
                 next: ( response: DataTablesResponse<User[]> ) => {
                   callback( {
-                    data: response.data.original.data,
-                    recordsTotal: response.data.original.recordsTotal,
-                    recordsFiltered: response.data.original.recordsFiltered,
+                    data: response.data.data,
+                    recordsTotal: response.data.recordsTotal,
+                    recordsFiltered: response.data.recordsFiltered,
                   } );
                   this.loader.complete();
                 },

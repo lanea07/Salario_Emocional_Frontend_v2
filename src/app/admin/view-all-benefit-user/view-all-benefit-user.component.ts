@@ -185,15 +185,15 @@ export class ViewAllBenefitUserComponent implements OnInit, AfterViewInit {
           this.dependencies = dependencies.data;
           this.users = users.data;
 
-          this.barChartData.labels = Object.keys( groupedBenefits ).map( ( key: any ) => key );
+          this.barChartData.labels = Object.keys( groupedBenefits.data ).map( ( key: any ) => key );
           let pending: number[] = this.barChartData.labels.map( ( arr: any ) => {
-            return Object.values( groupedBenefits[ arr ] ).filter( ( benefit: any ) => benefit.is_approved === 0 ).length
+            return Object.values( groupedBenefits.data[ arr ] ).filter( ( benefit: any ) => benefit.is_approved === 0 ).length
           } );
           let approved: number[] = this.barChartData.labels.map( ( arr: any ) => {
-            return Object.values( groupedBenefits[ arr ] ).filter( ( benefit: any ) => benefit.is_approved === 1 ).length
+            return Object.values( groupedBenefits.data[ arr ] ).filter( ( benefit: any ) => benefit.is_approved === 1 ).length
           } );
           let rejected: number[] = this.barChartData.labels.map( ( arr: any ) => {
-            return Object.values( groupedBenefits[ arr ] ).filter( ( benefit: any ) => benefit.is_approved === 2 ).length
+            return Object.values( groupedBenefits.data[ arr ] ).filter( ( benefit: any ) => benefit.is_approved === 2 ).length
           } );
           let barChartDatasets: any[] = [];
           barChartDatasets = [

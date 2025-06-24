@@ -46,9 +46,9 @@ export class MyPendingBenefitsComponent implements OnInit {
             .subscribe( {
               next: ( response: DataTablesResponse<BenefitUser[]> ) => {
                 callback( { 
-                  data: response.data.original.data ,
-                  recordsTotal: response.data.original.recordsTotal,
-                  recordsFiltered: response.data.original.recordsFiltered,
+                  data: response.data.data ,
+                  recordsTotal: response.data.recordsTotal,
+                  recordsFiltered: response.data.recordsFiltered,
                 } );
                 this.loader.complete();
               },

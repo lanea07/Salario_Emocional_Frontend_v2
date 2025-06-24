@@ -46,10 +46,10 @@ export class IndexComponent implements OnInit, AfterViewInit {
               {
                 next: ( dependency: DataTablesResponse<Dependency[]> ) => {
                   callback( {
-                    draw: dependency.data.original.draw,
-                    recordsTotal: dependency.data.original.recordsTotal,
-                    recordsFiltered: dependency.data.original.recordsFiltered,
-                    data: dependency.data.original.data
+                    draw: dependency.data.draw,
+                    recordsTotal: dependency.data.recordsTotal,
+                    recordsFiltered: dependency.data.recordsFiltered,
+                    data: dependency.data.data
                   } );
                   this.loader.complete();
                 },

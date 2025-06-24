@@ -55,9 +55,9 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
             .subscribe( {
               next: ( response: DataTablesResponse<BenefitUserElement[]> ) => {
                 callback( {
-                  data: response.data.original.data,
-                  recordsTotal: response.data.original.recordsTotal,
-                  recordsFiltered: response.data.original.recordsFiltered,
+                  data: response.data.data,
+                  recordsTotal: response.data.recordsTotal,
+                  recordsFiltered: response.data.recordsFiltered,
                 } );
                 this.loader.complete();
               },
