@@ -5,24 +5,25 @@ import { switchMap } from 'rxjs';
 
 import { MessageService } from 'primeng/api';
 
-import { Role } from '../../interfaces/role.interface';
-import { RoleService } from '../../services/role.service';
+import { Permission } from '../../interfaces/permission.interface';
+import { PermissionService } from '../../services/permission.service';
 
 @Component( {
-    selector: 'role-create',
-    templateUrl: './create.component.html',
-    styles: [],
-    standalone: false
+  selector: 'permission-create',
+  templateUrl: './create.component.html',
+  styles: [],
+  standalone: false
 } )
 export class CreateComponent {
 
   createForm: FormGroup = this.fb.group( {
-    name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ]
+    name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
+    guard_name: [ 'api', [ Validators.required ] ]
   } );
   disableSubmitBtn: boolean = false;
-  role?: Role;
+  permission?: Permission;
 
-  get roleNameErrors (): string {
+  get permissionNameErrors (): string {
     const errors = this.createForm.get( 'name' )?.errors;
     if ( errors![ 'minlength' ] ) {
       return 'El nombre no cumple con el largo mínimo de 5 caracteres';
@@ -36,7 +37,7 @@ export class CreateComponent {
   constructor (
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
-    private roleService: RoleService,
+    private permissionService: PermissionService,
     private router: Router,
     private ms: MessageService,
   ) { }
@@ -49,13 +50,13 @@ export class CreateComponent {
 
     this.activatedRoute.params
       .pipe(
-        switchMap( ( { id } ) => this.roleService.show( id ) )
+        switchMap( ( { id } ) => this.permissionService.show( id ) )
       )
       .subscribe( {
-        next: ( role ) => {
-          const extractRoleDetail = role.data;
-          this.role = extractRoleDetail[0];
-          this.createForm.get( 'name' )?.setValue( extractRoleDetail[0].name );
+        next: ( permission ) => {
+          const extractPermissionDetail = permission.data;
+          this.permission = extractPermissionDetail;
+          this.createForm.get( 'name' )?.setValue( extractPermissionDetail.name );
         },
         error: ( { error } ) => {
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
@@ -76,12 +77,12 @@ export class CreateComponent {
       return;
     }
 
-    if ( this.role?.id ) {
-      this.roleService.update( this.role?.id, this.createForm.value )
+    if ( this.permission?.id ) {
+      this.permissionService.update( this.permission?.id, this.createForm.value )
         .subscribe(
           {
             next: () => {
-              this.router.navigate( [ `../show`, this.role?.id ], { relativeTo: this.activatedRoute } )
+              this.router.navigate( [ `../show`, this.permission?.id ], { relativeTo: this.activatedRoute } )
               this.ms.add( { severity: 'success', summary: 'Actualizado' } )
             },
             error: ( { error } ) => {
@@ -92,11 +93,11 @@ export class CreateComponent {
 
     } else {
 
-      this.roleService.create( this.createForm.value )
+      this.permissionService.create( this.createForm.value )
         .subscribe(
           {
-            next: ( roles ) => {
-              this.router.navigate( [ `../show`, roles.data.id ], { relativeTo: this.activatedRoute } );
+            next: ( permissions ) => {
+              this.router.navigate( [ `../show`, permissions.data.id ], { relativeTo: this.activatedRoute } );
               this.ms.add( { severity: 'success', summary: 'Creado' } )
             },
             error: ( { error } ) => {

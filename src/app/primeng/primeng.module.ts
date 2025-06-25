@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { AccordionModule } from 'primeng/accordion';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ChartModule } from 'primeng/chart';
+import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
@@ -26,6 +27,7 @@ import { TextareaModule } from 'primeng/textarea';
     AccordionModule,
     DatePickerModule,
     ChartModule,
+    CheckboxModule,
     ConfirmDialogModule,
     DialogModule,
     SelectModule,

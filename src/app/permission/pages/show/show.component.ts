@@ -4,34 +4,34 @@ import { switchMap } from 'rxjs';
 
 import { MessageService } from 'primeng/api';
 
-import { Role, Roles } from 'src/app/role/interfaces/role.interface';
-import { RoleService } from '../../services/role.service';
+import { Permission, Permissions } from 'src/app/permission/interfaces/permission.interface';
+import { PermissionService } from '../../services/permission.service';
 
 @Component( {
-  selector: 'role-show',
+  selector: 'permission-show',
   templateUrl: './show.component.html',
   styles: [],
   standalone: false
 } )
 export class ShowComponent {
 
-  role?: Role;
+  permission?: Permission;
   loaded: boolean = false;
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private roleService: RoleService,
+    private permissionService: PermissionService,
     private ms: MessageService,
   ) { }
 
   ngOnInit () {
     this.activatedRoute.params
       .pipe(
-        switchMap( ( { id } ) => this.roleService.show( id ) )
+        switchMap( ( { id } ) => this.permissionService.show( id ) )
       )
       .subscribe( {
-        next: ( role: Roles<Role[]> ) => {
-          this.role = role.data[0];
+        next: ( permission: Permissions<Permission> ) => {
+          this.permission = permission.data;
           this.loaded = true;
         },
         error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )

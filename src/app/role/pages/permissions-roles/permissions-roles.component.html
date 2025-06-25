@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col">
+        <form class="p-5" [formGroup]="form" (ngSubmit)="save()">
+            <div class="mb-3">
+                <p-panel
+                    [header]="
+                        'Relacion Rol - Permisos para el rol ' + role?.name
+                    "
+                >
+                    <div class="mb-3 form-floating">
+                        @for (permission of permissions; track $index) {
+                        <div>
+                            <p-checkbox
+                                [inputId]="permission.id.toString()"
+                                name="group"
+                                [value]="permission"
+                                formControlName="permissions"
+                            />
+                            <label [for]="permission.id" class="ml-2">
+                                {{ permission.name }}
+                            </label>
+                        </div>
+                        }
+                    </div>
+                </p-panel>
+            </div>
+
+            <div class="mb-3">
+                <button class="btn btn-success float-end" type="submit">
+                    {{ role?.id ? "Actualizar" : "Crear" }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<pre>
+    {{ this.form.value | json }}
+</pre>

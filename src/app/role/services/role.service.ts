@@ -16,8 +16,8 @@ export class RoleService {
     return this.http.get<Roles<Role[]>>( `/role`, { withCredentials: true } )
   }
 
-  show ( id: number ): Observable<Roles<Role>> {
-    return this.http.get<Roles<Role>>( `/role/${ id }`, { withCredentials: true } )
+  show ( id: number ): Observable<Roles<Role[]>> {
+    return this.http.get<Roles<Role[]>>( `/role/${ id }`, { withCredentials: true } )
   }
 
   create ( formValues: any ): Observable<Roles<Role>> {
