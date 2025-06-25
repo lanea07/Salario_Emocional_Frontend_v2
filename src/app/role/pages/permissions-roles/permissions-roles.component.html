@@ -1,23 +1,30 @@
 <form class="p-5" [formGroup]="form" (ngSubmit)="save()">
     <div class="mb-3">
-        <p-panel [header]="'Relacion Rol - Permisos para el rol ' + role?.name">
+        <p-panel [header]="'Relación Rol - Permisos para el rol ' + role?.name">
             <div class="mb-3 form-floating" formArrayName="permissions">
-                <div
-                    *ngFor="
-                        let permission of permissionsArray.controls;
-                        let i = index
-                    "
-                    [formGroupName]="i"
-                    class="mb-2"
-                >
+                @for (group of permissionsArray.controls; track $index) {
+
+                <!-- TODO: Try to change checkboxes to PrimeNg table with checkboxes and search https://primeng.org/table -->
+                <div [formGroupName]="$index" class="mb-2">
                     <p-checkbox
                         class="mx-2"
-                        [inputId]="'permission-' + permission.get('permission')?.value.id"
+                        [inputId]="
+                            'permission-' + group.get('permission')?.value.id
+                        "
                         formControlName="checked"
                         binary="true"
                     ></p-checkbox>
-                    <label class="mx-2" [for]="'permission-' + permission.get('permission')?.value.id" class="ml-2"> {{ permission.get('permission')?.value.name }} </label>
+
+                    <label
+                        class="mx-2"
+                        [for]="
+                            'permission-' + group.get('permission')?.value.id
+                        "
+                    >
+                        {{ group.get("permission")?.value.name }}
+                    </label>
                 </div>
+                }
             </div>
         </p-panel>
     </div>
