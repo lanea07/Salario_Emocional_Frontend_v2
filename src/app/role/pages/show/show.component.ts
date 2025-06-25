@@ -4,8 +4,9 @@ import { switchMap } from 'rxjs';
 
 import { MessageService } from 'primeng/api';
 
-import { Role, Roles } from 'src/app/role/interfaces/role.interface';
+import { Role } from 'src/app/role/interfaces/role.interface';
 import { RoleService } from '../../services/role.service';
+import { ApiV1Response } from '../../../shared/interfaces/ApiV1Response.interface';
 
 @Component( {
   selector: 'role-show',
@@ -30,7 +31,7 @@ export class ShowComponent {
         switchMap( ( { id } ) => this.roleService.show( id ) )
       )
       .subscribe( {
-        next: ( role: Roles<Role[]> ) => {
+        next: ( role: ApiV1Response<Role[]> ) => {
           this.role = role.data[0];
           this.loaded = true;
         },

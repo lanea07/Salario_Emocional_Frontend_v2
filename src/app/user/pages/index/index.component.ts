@@ -9,9 +9,10 @@ import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
-import { DataTablesResponse } from '../../../shared/interfaces/DataTablesResponse.interface';
+import { DataTable } from '../../../shared/interfaces/DataTablesResponse.interface';
 import { User } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user.service';
+import { ApiV1Response } from '../../../shared/interfaces/ApiV1Response.interface';
 
 @Component( {
     selector: 'user-index',
@@ -54,7 +55,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
         ajax: ( dataTablesParameters: any, callback: any ) => {
           this.userService.datatable( dataTablesParameters )
             .subscribe({
-                next: ( response: DataTablesResponse<User[]> ) => {
+                next: ( response: ApiV1Response<DataTable<User[]>> ) => {
                   callback( {
                     data: response.data.data,
                     recordsTotal: response.data.recordsTotal,

@@ -1,27 +1,26 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
-import { map, forkJoin, catchError, of } from 'rxjs';
+import { forkJoin, map } from 'rxjs';
 
 import { AuthService } from '../services/auth.service';
 
-export const authGuard: CanMatchFn = ( route, segments ) => {
-  const router = inject( Router );
+export const loginGuard: CanMatchFn = ( route, segments ) => {
   const authService = inject( AuthService );
+  const router = inject( Router );
   return forkJoin( {
+    validarToken: authService.validarToken(),
     requirePassChange: authService.validarRequirePassChange(),
-    userData: authService.getUserData()
   } )
     .pipe(
-      map( ( { requirePassChange, userData } ) => {
+      map( ( { validarToken, requirePassChange } ) => {
+        if ( !validarToken.data ) {
+          return true;
+        }
         if ( requirePassChange.data ) {
           // Redirect to the top-level password-change route
           return router.createUrlTree( [ 'auth', 'password-change' ] );
         }
-        authService.setUser( userData.data );
-        return true;
-      } ),
-      catchError( err => {
-        return of( false );
+        return router.createUrlTree( [ 'basic' ] );
       } )
     );
 };

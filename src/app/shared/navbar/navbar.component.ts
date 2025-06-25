@@ -19,13 +19,12 @@ export class NavbarComponent implements OnInit {
     public authService: AuthService,
     public router: Router
   ) {
-    this.user = JSON.parse( localStorage.getItem( 'user' )! );
   }
 
   ngOnInit (): void {
-    this.isSimulated = JSON.parse( localStorage.getItem( 'simulated' )! );
+    this.isSimulated = this.authService.getuser()?.simulated!;
     this.isAdmin = this.authService.getuser()?.actions.includes(1);
-    this.user = JSON.parse( localStorage.getItem( 'user' )! );
+    this.user = this.authService.getuser()?.user;
   }
 
   logout () {

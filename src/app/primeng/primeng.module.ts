@@ -11,6 +11,7 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
+import { TableModule } from 'primeng/table';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { TabViewModule } from 'primeng/tabview';
 import { ToastModule } from 'primeng/toast';
@@ -36,6 +37,7 @@ import { TextareaModule } from 'primeng/textarea';
     InputTextModule,
     PanelModule,
     SkeletonModule,
+    TableModule,
     TabMenuModule,
     TabViewModule,
     ToastModule,

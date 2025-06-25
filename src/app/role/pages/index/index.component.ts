@@ -8,8 +8,9 @@ import { Subject } from 'rxjs';
 
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { RoleService } from '../../services/role.service';
-import { DataTablesResponse } from '../../../shared/interfaces/DataTablesResponse.interface';
+import { DataTable } from '../../../shared/interfaces/DataTablesResponse.interface';
 import { Role } from '../../interfaces/role.interface';
+import { ApiV1Response } from '../../../shared/interfaces/ApiV1Response.interface';
 
 @Component( {
     selector: 'role-index',
@@ -43,7 +44,7 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
         ajax: ( dataTablesParameters: any, callback: any ) => {
           this.roleService.datatable( dataTablesParameters )
             .subscribe( {
-              next: ( response: DataTablesResponse<Role[]> ) => {
+              next: ( response: ApiV1Response<DataTable<Role[]>> ) => {
                 callback( {
                   data: response.data.data,
                   recordsTotal: response.data.recordsTotal,

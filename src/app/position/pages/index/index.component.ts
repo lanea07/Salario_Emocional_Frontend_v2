@@ -8,8 +8,9 @@ import { MessageService } from 'primeng/api';
 
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { PositionService } from '../../services/position.service';
-import { DataTablesResponse } from '../../../shared/interfaces/DataTablesResponse.interface';
+import { DataTable } from '../../../shared/interfaces/DataTablesResponse.interface';
 import { Position } from '../../interfaces/position.interface';
+import { ApiV1Response } from '../../../shared/interfaces/ApiV1Response.interface';
 
 @Component( {
     selector: 'position-index',
@@ -44,7 +45,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
       ajax: ( dataTablesParameters: any, callback: any ) => {
         this.positionService.datatable( dataTablesParameters )
           .subscribe( {
-            next: ( positions: DataTablesResponse<Position[]> ) => {
+            next: ( positions: ApiV1Response<DataTable<Position[]>> ) => {
               callback( {
                 data: positions.data.data,
                 recordsTotal: positions.data.recordsTotal,

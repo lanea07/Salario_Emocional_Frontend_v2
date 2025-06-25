@@ -7,9 +7,10 @@ import { ADTSettings } from 'angular-datatables/src/models/settings';
 import { MessageService } from 'primeng/api';
 
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
-import { DataTablesResponse } from '../../../shared/interfaces/DataTablesResponse.interface';
+import { DataTable } from '../../../shared/interfaces/DataTablesResponse.interface';
 import { Dependency } from '../../interfaces/dependency.interface';
 import { DependencyService } from '../../services/dependency.service';
+import { ApiV1Response } from '../../../shared/interfaces/ApiV1Response.interface';
 
 @Component( {
     selector: 'user-index',
@@ -44,7 +45,7 @@ export class IndexComponent implements OnInit, AfterViewInit {
           this.dependencyService.datatable( dataTablesParameters )
             .subscribe(
               {
-                next: ( dependency: DataTablesResponse<Dependency[]> ) => {
+                next: ( dependency: ApiV1Response<DataTable<Dependency[]>> ) => {
                   callback( {
                     draw: dependency.data.draw,
                     recordsTotal: dependency.data.recordsTotal,

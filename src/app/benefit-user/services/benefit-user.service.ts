@@ -2,8 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { DataTablesResponse } from '../../shared/interfaces/DataTablesResponse.interface';
-import { BenefitUser, BenefitUserElement, BenefitUsers } from '../interfaces/benefit-user.interface';
+import { BenefitUser, BenefitUserElement } from '../interfaces/benefit-user.interface';
+import { ApiV1Response } from '../../shared/interfaces/ApiV1Response.interface';
+import { DataTable } from '../../shared/interfaces/DataTablesResponse.interface';
 
 @Injectable( {
   providedIn: 'root'
@@ -12,20 +13,20 @@ export class BenefitUserService {
 
   constructor ( private http: HttpClient ) { }
 
-  public index ( id: number, year: number ): Observable<BenefitUsers> {
-    return this.http.get<BenefitUsers>( `/benefit-user?userId=${ id }&year=${ year }`, { withCredentials: true } )
+  public index ( id: number, year: number ): Observable<ApiV1Response<BenefitUser[]>> {
+    return this.http.get<ApiV1Response<BenefitUser[]>>( `/benefit-user?userId=${ id }&year=${ year }`, { withCredentials: true } )
   }
 
-  public show ( id: number ): Observable<BenefitUsers> {
-    return this.http.get<BenefitUsers>( `/benefit-user/${ id }`, { withCredentials: true } )
+  public show ( id: number ): Observable<ApiV1Response<BenefitUser[]>> {
+    return this.http.get<ApiV1Response<BenefitUser[]>>( `/benefit-user/${ id }`, { withCredentials: true } )
   }
 
-  public create ( formValues: any ): Observable<BenefitUsers> {
-    return this.http.post<BenefitUsers>( `/benefit-user`, formValues, { withCredentials: true } );
+  public create ( formValues: any ): Observable<ApiV1Response<BenefitUser[]>> {
+    return this.http.post<ApiV1Response<BenefitUser[]>>( `/benefit-user`, formValues, { withCredentials: true } );
   }
 
   public update ( id: number | undefined, formValues: any ) {
-    return this.http.put<BenefitUsers>( `/benefit-user/${ id }`, formValues, { withCredentials: true } );
+    return this.http.put<ApiV1Response<BenefitUser[]>>( `/benefit-user/${ id }`, formValues, { withCredentials: true } );
   }
 
   public destroy ( id: number ) {
@@ -36,17 +37,17 @@ export class BenefitUserService {
     return this.http.post( `/benefit-user/exportbenefits`, formValues, { withCredentials: true } );
   }
 
-  public indexNonApproved ( id: number ): Observable<DataTablesResponse<BenefitUser[]>> {
-    return this.http.get<DataTablesResponse<BenefitUser[]>>( `/benefit-user/indexnonapproved?userId=${ id }`, { withCredentials: true } )
+  public indexNonApproved ( id: number ): Observable<ApiV1Response<DataTable<BenefitUser[]>>> {
+    return this.http.get<ApiV1Response<DataTable<BenefitUser[]>>>( `/benefit-user/indexnonapproved?userId=${ id }`, { withCredentials: true } )
   }
 
-  public indexCollaboratorsNonApproved (): Observable<DataTablesResponse<BenefitUserElement[]>>{
-    return this.http.get<DataTablesResponse<BenefitUserElement[]>>( `/benefit-user/indexcollaboratorsnonapproved`, { withCredentials: true } )
+  public indexCollaboratorsNonApproved (): Observable<ApiV1Response<DataTable<BenefitUserElement[]>>>{
+    return this.http.get<ApiV1Response<DataTable<BenefitUserElement[]>>>( `/benefit-user/indexcollaboratorsnonapproved`, { withCredentials: true } )
   }
 
   public indexCollaborators ( year: number, benefit_id?: number ) {
     let params = this.cleanParams( { year, benefit_id } )
-    return this.http.get<BenefitUsers>( `/benefit-user/indexcollaborators`, { params, withCredentials: true } )
+    return this.http.get<ApiV1Response<BenefitUser[]>>( `/benefit-user/indexcollaborators`, { params, withCredentials: true } )
   }
 
   public decideBenefitUser ( formValues: any ) {
@@ -54,7 +55,7 @@ export class BenefitUserService {
   }
 
   public showByUserID ( user_id: number, year: number ) {
-    return this.http.get<BenefitUsers>( `/benefit-user/${ user_id }/${ year }`, { withCredentials: true } )
+    return this.http.get<ApiV1Response<BenefitUser[]>>( `/benefit-user/${ user_id }/${ year }`, { withCredentials: true } )
   }
 
   cleanParams ( data: any ): HttpParams {

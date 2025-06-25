@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 
 import { TreeNode } from 'primeng/api';
 
-import { Dependencies, Dependency } from '../interfaces/dependency.interface';
-import { DataTablesResponse } from '../../shared/interfaces/DataTablesResponse.interface';
-import { Position } from '../../position/interfaces/position.interface';
+import { Dependency } from '../interfaces/dependency.interface';
+import { ApiV1Response } from '../../shared/interfaces/ApiV1Response.interface';
+import { DataTable } from '../../shared/interfaces/DataTablesResponse.interface';
 
 @Injectable( {
   providedIn: 'root'
@@ -15,32 +15,32 @@ export class DependencyService {
 
   constructor ( private http: HttpClient ) { }
 
-  index (): Observable<Dependencies> {
-    return this.http.get<Dependencies>( `/dependency`, { withCredentials: true } )
+  index (): Observable<ApiV1Response<Dependency[]>> {
+    return this.http.get<ApiV1Response<Dependency[]>>( `/dependency`, { withCredentials: true } )
   }
 
-  show ( id: number ): Observable<Dependencies> {
-    return this.http.get<Dependencies>( `/dependency/${ id }`, { withCredentials: true } )
+  show ( id: number ): Observable<ApiV1Response<Dependency[]>> {
+    return this.http.get<ApiV1Response<Dependency[]>>( `/dependency/${ id }`, { withCredentials: true } )
   }
 
-  create ( formValues: any ): Observable<Dependencies> {
-    return this.http.post<Dependencies>( `/dependency`, formValues, { withCredentials: true } );
+  create ( formValues: any ): Observable<ApiV1Response<Dependency[]>> {
+    return this.http.post<ApiV1Response<Dependency[]>>( `/dependency`, formValues, { withCredentials: true } );
   }
 
   update ( id: number | undefined, formValues: any ) {
-    return this.http.put<Dependencies>( `/dependency/${ id }`, formValues, { withCredentials: true } );
+    return this.http.put<ApiV1Response<Dependency[]>>( `/dependency/${ id }`, formValues, { withCredentials: true } );
   }
 
   destroy ( id: number | undefined ) {
     return this.http.delete( `/dependency/${ id }`, { withCredentials: true } );
   }
 
-  getNonTreeValidDependencies (): Observable<Dependencies> {
-    return this.http.get<Dependencies>( `/dependency/getNonTreeValidDependencies`, { withCredentials: true } )
+  getNonTreeValidDependencies (): Observable<ApiV1Response<Dependency[]>> {
+    return this.http.get<ApiV1Response<Dependency[]>>( `/dependency/getNonTreeValidDependencies`, { withCredentials: true } )
   }
 
-  datatable ( dataTablesParameters: any ): Observable<DataTablesResponse<Dependency[]>> {
-    return this.http.post<DataTablesResponse<Dependency[]>>( `/dependency/datatable`, dataTablesParameters, { withCredentials: true } );
+  datatable ( dataTablesParameters: any ): Observable<ApiV1Response<DataTable<Dependency[]>>> {
+    return this.http.post<ApiV1Response<DataTable<Dependency[]>>>( `/dependency/datatable`, dataTablesParameters, { withCredentials: true } );
   }
 
 
@@ -83,8 +83,8 @@ export class DependencyService {
    * 
    * @returns Dependency[]
    */
-  public dependencyAncestors ( id: any ): Observable<Dependencies> {
-    return this.http.get<Dependencies>( `/dependency/dependencyAncestors/${ id }`, { withCredentials: true } )
+  public dependencyAncestors ( id: any ): Observable<ApiV1Response<Dependency[]>> {
+    return this.http.get<ApiV1Response<Dependency[]>>( `/dependency/dependencyAncestors/${ id }`, { withCredentials: true } )
   }
 
   /**

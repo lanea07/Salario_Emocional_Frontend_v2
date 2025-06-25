@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import { ApiV1Response } from '../../shared/interfaces/ApiV1Response.interface';
-import { AuthData, AuthResponse } from '../interfaces/auth.interface';
+import { AuthData } from '../interfaces/auth.interface';
 
 @Injectable( {
   providedIn: 'root'
@@ -16,23 +16,6 @@ export class AuthService {
   constructor (
     private http: HttpClient
   ) {
-    const userJson = localStorage.getItem( 'user' );
-    const token = localStorage.getItem( 'token' );
-    const actionsJson = localStorage.getItem( 'actions' );
-    const simulated = localStorage.getItem( 'simulated' );
-    const expires_in = localStorage.getItem( 'expires_in' );
-
-    let authData: AuthData | null = null;
-    if ( userJson && token && actionsJson && simulated !== null  ) {
-      authData = {
-        token,
-        user: JSON.parse( userJson ),
-        actions: JSON.parse( actionsJson ),
-        simulated: simulated === 'false',
-        expires_in: Number(expires_in)
-      };
-    }
-    this.userInformation = new BehaviorSubject<AuthData | null>( authData );
   }
 
   public setUser ( user: AuthData ) {
@@ -47,29 +30,12 @@ export class AuthService {
     const url = `/login`;
     const body = { email, password, device_name };
 
-    return this.http.post<AuthResponse>( url, body, { withCredentials: true } )
-      .pipe(
-        tap( response => {
-          if ( response.data.token ) {
-            localStorage.setItem( 'token', response.data.token! );
-            localStorage.setItem( 'user', JSON.stringify( response.data.user! ) );
-            localStorage.setItem( 'uid', response.data.user.id!.toString() );
-            localStorage.setItem( 'simulated', false.toString() );
-            localStorage.setItem( 'expires_in', response.data.expires_in.toString() );
-            localStorage.setItem( 'actions', JSON.stringify( response.data.actions ) );
-          }
-        } )
-      );
+    return this.http.post<ApiV1Response<AuthData>>( url, body, { withCredentials: true } );
   }
 
   logout () {
     const url = `/auth/logout`;
-    return this.http.post<AuthResponse>( url, [], { withCredentials: true } )
-      .pipe(
-        tap( resp => {
-          localStorage.clear();
-        } ),
-      );
+    return this.http.post<ApiV1Response<AuthData>>( url, [], { withCredentials: true } );
   }
 
   validarToken (): Observable<ApiV1Response<boolean>> {
@@ -102,22 +68,15 @@ export class AuthService {
     const device_name = 'PC';
     const body = { user_id, device_name };
 
-    return this.http.post<AuthResponse>( url, body, { withCredentials: true } )
-      .pipe(
-        tap( response => {
-          if ( response.data.token ) {
-            localStorage.setItem( 'token', response.data.token! );
-            localStorage.setItem( 'user', JSON.stringify( response.data.user! ) );
-            localStorage.setItem( 'uid', response.data.user.id!.toString() );
-            localStorage.setItem( 'simulated', response.data.simulated.toString() );
-            localStorage.setItem( 'actions', JSON.stringify( response.data.actions ) );
-          }
-        } )
-      );
+    return this.http.post<ApiV1Response<ApiV1Response<AuthData>>>( url, body, { withCredentials: true } );
   }
 
   forgotPassword ( formValues: any ) {
     const url = `/auth/forgot-password`;
     return this.http.post<boolean>( url, formValues, { withCredentials: true } )
+  }
+
+  public getUserData(): Observable<ApiV1Response<AuthData>> {
+    return this.http.get<ApiV1Response<AuthData>>('/auth/user');
   }
 }

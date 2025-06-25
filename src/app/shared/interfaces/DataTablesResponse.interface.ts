@@ -1,7 +1,4 @@
-import { ApiV1Response } from "./ApiV1Response.interface";
-
-export interface DataTablesResponse<T> extends ApiV1Response<DataTable<T>>{
-}
+import { ADTSettings } from 'angular-datatables/src/models/settings'
 
 export interface DataTable<T> {
     draw:            number;

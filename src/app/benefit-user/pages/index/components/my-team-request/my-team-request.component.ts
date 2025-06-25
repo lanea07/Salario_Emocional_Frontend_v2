@@ -11,11 +11,12 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DropdownComponentEventType } from 'src/app/benefit-user/interfaces/dropdown-component-event-type';
 import { MessagingService } from 'src/app/benefit-user/services/messaging.service';
 import es_CO from '../../../../../shared/Datatables-langs/es-CO.json';
-import { DataTablesResponse } from '../../../../../shared/interfaces/DataTablesResponse.interface';
+import { DataTable } from '../../../../../shared/interfaces/DataTablesResponse.interface';
 import { BenefitUserElement } from '../../../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
 import { BenefitDecisionComponent } from '../benefit-decision/benefit-decision.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { ApiV1Response } from '../../../../../shared/interfaces/ApiV1Response.interface';
 
 @Component( {
   selector: 'my-team-request',
@@ -53,7 +54,7 @@ export class MyTeamRequestComponent implements AfterViewInit, OnInit, OnDestroy 
           this.loader.start();
           this.benefitUserService.indexCollaboratorsNonApproved()
             .subscribe( {
-              next: ( response: DataTablesResponse<BenefitUserElement[]> ) => {
+              next: ( response: ApiV1Response<DataTable<BenefitUserElement[]>> ) => {
                 callback( {
                   data: response.data.data,
                   recordsTotal: response.data.recordsTotal,

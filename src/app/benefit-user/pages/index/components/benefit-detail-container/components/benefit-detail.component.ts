@@ -4,8 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
 import { BenefitService } from 'src/app/benefit/services/benefit.service';
-import { DefaultPreference, DefaultPreferences } from 'src/app/shared/interfaces/Preferences.interface';
+import { DefaultPreference } from 'src/app/shared/interfaces/Preferences.interface';
 import { HelpersService } from 'src/app/shared/services/helpers.service';
+import { ApiV1Response } from '../../../../../../shared/interfaces/ApiV1Response.interface';
 
 @Component( {
     selector: 'benefit-detail',
@@ -74,7 +75,7 @@ export class BenefitDetailComponent {
       };
     } );
     this.benefitService.showSettings( this.benefit!.id )
-      .subscribe( ( data: DefaultPreferences ) => {
+      .subscribe( ( data: ApiV1Response<DefaultPreference[]> ) => {
         this.benefitSettings = data.data;
         this.uses_barchart = ( this.benefitSettings as { [ key: string ]: any } )[ 'uses_barchart' ];
         this.uses_doughnutchart = ( this.benefitSettings as { [ key: string ]: any } )[ 'uses_doughnutchart' ];

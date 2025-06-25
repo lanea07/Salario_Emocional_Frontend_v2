@@ -8,13 +8,14 @@ import { MessageService } from 'primeng/api';
 import { Benefit } from 'src/app/benefit/interfaces/benefit.interface';
 import { ValidatorService } from 'src/app/shared/services/validator.service';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
-import { BenefitDetails } from '../../interfaces/benefit-detail.interface';
+import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
+import { ApiV1Response } from '../../../shared/interfaces/ApiV1Response.interface';
 
 @Component( {
-    selector: 'benefitdetail-create',
-    templateUrl: './create.component.html',
-    styles: [],
-    standalone: false
+  selector: 'benefitdetail-create',
+  templateUrl: './create.component.html',
+  styles: [],
+  standalone: false
 } )
 export class CreateComponent {
 
@@ -103,7 +104,7 @@ export class CreateComponent {
           {
             next: () => {
               this.router.navigate( [ `../show`, this.benefitDetail?.id ], { relativeTo: this.activatedRoute } );
-              this.ms.add( { severity: 'success', summary: 'Actualizado' } );              
+              this.ms.add( { severity: 'success', summary: 'Actualizado' } );
             },
             error: ( { error } ) => {
               this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } );
@@ -116,8 +117,8 @@ export class CreateComponent {
 
       this.benefitDetailService.create( this.createForm.value )
         .subscribe( {
-          next: ( { data }: BenefitDetails ) => {
-            this.router.navigate( [ `../show`, data[0].id ], { relativeTo: this.activatedRoute } );
+          next: ( { data }: ApiV1Response<BenefitDetail> ) => {
+            this.router.navigate( [ `../show`, data.id ], { relativeTo: this.activatedRoute } );
             this.ms.add( { severity: 'success', summary: 'Success' } );
           },
           error: ( { error } ) => {

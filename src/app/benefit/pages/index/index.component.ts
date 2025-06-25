@@ -9,8 +9,9 @@ import { MessageService } from 'primeng/api';
 
 import es_CO from '../../../shared/Datatables-langs/es-CO.json';
 import { BenefitService } from '../../services/benefit.service';
-import { DataTablesResponse } from '../../../shared/interfaces/DataTablesResponse.interface';
+import { DataTable } from '../../../shared/interfaces/DataTablesResponse.interface';
 import { Benefit } from '../../interfaces/benefit.interface';
+import { ApiV1Response } from '../../../shared/interfaces/ApiV1Response.interface';
 
 @Component( {
   selector: 'benefit-index',
@@ -46,7 +47,7 @@ export class IndexComponent implements AfterViewInit, OnInit, OnDestroy {
         ajax: ( dataTablesParameters: any, callback: any ) => {
           this.benefitService.datatable( dataTablesParameters )
             .subscribe( {
-              next: ( benefits: DataTablesResponse<Benefit[]> ) => {
+              next: ( benefits: ApiV1Response<DataTable<Benefit[]>> ) => {
                 callback( {
                   data: benefits.data.data,
                   recordsTotal: benefits.data.recordsTotal,

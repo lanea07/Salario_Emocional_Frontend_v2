@@ -1,8 +1,4 @@
 import { User } from "src/app/user/interfaces/user.interface";
-import { ApiV1Response } from "../../shared/interfaces/ApiV1Response.interface";
-
-export interface Dependencies extends ApiV1Response<Dependency[]>{
-}
 
 export interface Dependency {
     id: number;

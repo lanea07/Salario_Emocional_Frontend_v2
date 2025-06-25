@@ -1,10 +1,6 @@
 import { Dependency } from "../../dependency/interfaces/dependency.interface";
 import { Position } from '../../position/interfaces/position.interface';
 import { Role } from "../../role/interfaces/role.interface";
-import { ApiV1Response } from "../../shared/interfaces/ApiV1Response.interface";
-
-export interface Users extends ApiV1Response<User[]> {
-}
 
 export interface User {
   id: number;

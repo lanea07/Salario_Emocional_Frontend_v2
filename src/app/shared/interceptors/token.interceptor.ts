@@ -4,18 +4,20 @@ import { Router } from '@angular/router';
 import { catchError } from 'rxjs';
 
 import { MessageService } from 'primeng/api';
+import { AuthService } from '../../auth/services/auth.service';
 
 export const tokenInterceptor: HttpInterceptorFn = ( req: HttpRequest<unknown>, next: HttpHandlerFn ) => {
   const ms = inject( MessageService );
   const router = inject( Router );
-  const token = localStorage.getItem( 'token' );
+  const authService = inject( AuthService );
+  const token = authService.getuser()?.token;
   const version = 'v1';
   const lang = 'es';
 
   // Prepend /api to all relative URLs that are not external and don't already start with /api
   let apiUrl = req.url;
-  if (!apiUrl.startsWith('/api') && !apiUrl.startsWith('http')) {
-    apiUrl = '/api' + (apiUrl.startsWith('/') ? '' : '/') + apiUrl;
+  if ( !apiUrl.startsWith( '/api' ) && !apiUrl.startsWith( 'http' ) ) {
+    apiUrl = '/api' + ( apiUrl.startsWith( '/' ) ? '' : '/' ) + apiUrl;
   }
 
   const url = new URL( apiUrl, window.location.origin );

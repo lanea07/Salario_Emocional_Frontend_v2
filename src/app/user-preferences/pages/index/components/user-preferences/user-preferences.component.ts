@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
 
 import { Preference } from 'src/app/shared/interfaces/Preferences.interface';
 import { UserPreferencesService } from 'src/app/user-preferences/services/user-preferences.service';
+import { AuthService } from '../../../../../auth/services/auth.service';
 
 @Component( {
     selector: 'user-preferences',
@@ -23,12 +24,13 @@ export class UserPreferencesComponent {
   loaded: boolean = false;
 
   constructor (
+    private authService: AuthService,
     private fb: FormBuilder,
     private ms: MessageService,
     private router: Router,
     private userPreferencesService: UserPreferencesService,
   ) {
-    this.user_id = parseInt( localStorage.getItem( 'uid' )! );
+    this.user_id = this.authService.getuser()?.user.id!;
     combineLatest( {
       preferencesDefault: this.userPreferencesService.index(),
       userPreferences: this.userPreferencesService.show( this.user_id )
@@ -65,7 +67,7 @@ export class UserPreferencesComponent {
         },
         error: (error) => {
           this.ms.add({ severity: 'error', summary: 'Error', detail: error.error.message });
-          return router.navigate( [ 'basic' ] );
+          return this.router.navigate( [ 'basic' ] );
         }
       } );
   }

@@ -21,6 +21,7 @@ import { Preference } from '../../../shared/interfaces/Preferences.interface';
 import { User } from '../../../user/interfaces/user.interface';
 import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component( {
     selector: 'benefitemployee-create',
@@ -120,6 +121,7 @@ export class CreateComponent implements OnInit {
 
   constructor (
     private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
     private benefitService: BenefitService,
     private benefitUserService: BenefitUserService,
     private fb: FormBuilder,
@@ -129,7 +131,7 @@ export class CreateComponent implements OnInit {
     private userService: UserService,
     private validatorService: ValidatorService,
   ) {
-    this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
+    this.createForm.get( 'user_id' )?.setValue( this.authService.getuser()?.user.id! );
   }
 
   ngOnInit (): void {
@@ -192,7 +194,7 @@ export class CreateComponent implements OnInit {
           next: () => {
             this.disableSubmitBtn = false;
             this.ms.add( { severity: 'success', summary: 'Actualizado' } )
-            this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
+            this.createForm.get( 'user_id' )?.setValue( this.authService.getuser()?.user.id! );
             this.router.navigate( [ '../../', 'show', this.currentUserBenefits!.benefit_user[ 0 ].id ], { relativeTo: this.activatedRoute } );
           },
           error: ( { error } ) => {
@@ -208,7 +210,7 @@ export class CreateComponent implements OnInit {
             this.disableSubmitBtn = false;
             this.ms.add( { severity: 'success', summary: 'Creado' } )
             this.createForm.reset();
-            this.createForm.get( 'user_id' )?.setValue( localStorage.getItem( 'uid' ) );
+            this.createForm.get( 'user_id' )?.setValue( this.authService.getuser()?.user.id! );
           },
           error: ( { error } ) => {
             this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )

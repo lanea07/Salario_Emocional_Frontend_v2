@@ -8,6 +8,7 @@ import { BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user
 import { User } from 'src/app/user/interfaces/user.interface';
 import { UserService } from 'src/app/user/services/user.service';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
+import { AuthService } from '../../../../../auth/services/auth.service';
 
 @Component( {
     selector: 'my-collaborators-benefits',
@@ -28,6 +29,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges {
   year?: number = new Date().getFullYear();
 
   constructor (
+    private authService: AuthService,
     private benefitUserService: BenefitUserService,
     private fb: FormBuilder,
     private lbs: LoadingBarService,
@@ -48,7 +50,7 @@ export class MyCollaboratorsBenefitsComponent implements OnInit, OnChanges {
             return;
           };
           this.collaborators = currentUser.data[0]?.descendants.filter( ( user ) => {
-            return user.id !== Number.parseInt( localStorage.getItem( 'uid' )! );
+            return user.id !== this.authService.getuser()?.user.id!;
           } );
           this.collaborators.sort( ( a, b ) => a.name.localeCompare( b.name ) );
         },

@@ -9,8 +9,10 @@ import { MessageService } from 'primeng/api';
 
 import es_CO from '../../../../../shared/Datatables-langs/es-CO.json';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
-import { DataTablesResponse } from '../../../../../shared/interfaces/DataTablesResponse.interface';
+import { DataTable } from '../../../../../shared/interfaces/DataTablesResponse.interface';
 import { BenefitUser } from '../../../../interfaces/benefit-user.interface';
+import { ApiV1Response } from '../../../../../shared/interfaces/ApiV1Response.interface';
+import { AuthService } from '../../../../../auth/services/auth.service';
 
 @Component( {
     selector: 'my-pending-benefits',
@@ -30,6 +32,7 @@ export class MyPendingBenefitsComponent implements OnInit {
 
   constructor (
     public activatedRoute: ActivatedRoute,
+    private authService: AuthService,
     private BenefitUserService: BenefitUserService,
     private lbs: LoadingBarService,
     private router: Router,
@@ -42,9 +45,9 @@ export class MyPendingBenefitsComponent implements OnInit {
       this.dtOptions = {
         ajax: ( dataTablesParameters: any, callback: any ) => {
           this.loader.start();
-          this.BenefitUserService.indexNonApproved( Number.parseInt( localStorage.getItem( 'uid' )! ) )
+          this.BenefitUserService.indexNonApproved( this.authService.getuser()?.user.id! )
             .subscribe( {
-              next: ( response: DataTablesResponse<BenefitUser[]> ) => {
+              next: ( response: ApiV1Response<DataTable<BenefitUser[]>> ) => {
                 callback( { 
                   data: response.data.data ,
                   recordsTotal: response.data.recordsTotal,

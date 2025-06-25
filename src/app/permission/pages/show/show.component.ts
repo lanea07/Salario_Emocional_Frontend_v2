@@ -4,8 +4,9 @@ import { switchMap } from 'rxjs';
 
 import { MessageService } from 'primeng/api';
 
-import { Permission, Permissions } from 'src/app/permission/interfaces/permission.interface';
+import { Permission } from 'src/app/permission/interfaces/permission.interface';
 import { PermissionService } from '../../services/permission.service';
+import { ApiV1Response } from '../../../shared/interfaces/ApiV1Response.interface';
 
 @Component( {
   selector: 'permission-show',
@@ -30,7 +31,7 @@ export class ShowComponent {
         switchMap( ( { id } ) => this.permissionService.show( id ) )
       )
       .subscribe( {
-        next: ( permission: Permissions<Permission> ) => {
+        next: ( permission: ApiV1Response<Permission> ) => {
           this.permission = permission.data;
           this.loaded = true;
         },

@@ -5,6 +5,7 @@ import { LoadingBarService } from '@ngx-loading-bar/core';
 import { BenefitUser, BenefitUserElement } from 'src/app/benefit-user/interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../../../services/benefit-user.service';
 import { MessageService } from 'primeng/api';
+import { AuthService } from '../../../../../auth/services/auth.service';
 
 @Component( {
     selector: 'my-benefits',
@@ -21,6 +22,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
   year?: number;
 
   constructor (
+    private authService: AuthService,
     private benefitUserService: BenefitUserService,
     private changeDetectorRef: ChangeDetectorRef,
     private lbs: LoadingBarService,
@@ -41,7 +43,7 @@ export class MyBenefitsComponent implements AfterViewInit, OnChanges {
       this.loaded = false;
       this.year = event;
       this.loader.start();
-      this.benefitUserService.index( Number.parseInt( localStorage.getItem( 'uid' )! ), this.year! )
+      this.benefitUserService.index( this.authService.getuser()?.user.id!, this.year! )
         .subscribe( {
           next: ( benefitUsers ) => {
             this.calendarData = [];
