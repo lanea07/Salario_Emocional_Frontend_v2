@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, switchMap } from 'rxjs';
 
@@ -15,9 +15,9 @@ import { RoleService } from '../../services/role.service';
 } )
 export class PermissionsRolesComponent {
 
-  // get rolePermissions (): FormArray {
-  //   return this.form.get( 'permissions' ) as FormArray;
-  // }
+  get permissionsArray (): FormArray {
+    return this.form.get( 'permissions' ) as FormArray;
+  }
 
   public role?: Role;
   public permissions?: Permission[];
@@ -36,7 +36,7 @@ export class PermissionsRolesComponent {
   private initializeForm (): void {
     this.form = this.fb.group( {
       role_id: [ '', [ Validators.required ] ],
-      permissions: ['']
+      permissions: this.fb.array( [] ),
     } );
   }
 
@@ -51,8 +51,25 @@ export class PermissionsRolesComponent {
       )
       .subscribe( ( [ roles, permissions ] ) => {
         this.role = roles.data[ 0 ];
+        this.form.get('role_id')?.setValue(this.role.id);
         this.permissions = permissions.data;
+        this.addCheckboxes();
       } );
+  }
+
+  private addCheckboxes () {
+    this.permissions?.forEach( ( permission ) => this.addCheckbox( permission ) );
+  }
+
+  private addCheckbox ( permission: Permission ) {
+    const isChecked = !!this.role?.permissions?.some( p => p.id === permission.id );
+
+    const group = this.fb.group( {
+      checked: [ isChecked ],
+      permission: [ permission ],
+    } );
+
+    this.permissionsArray.push( group );
   }
 
   public save () {

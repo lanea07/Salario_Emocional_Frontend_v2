@@ -1,39 +1,32 @@
-<div class="row">
-    <div class="col">
-        <form class="p-5" [formGroup]="form" (ngSubmit)="save()">
-            <div class="mb-3">
-                <p-panel
-                    [header]="
-                        'Relacion Rol - Permisos para el rol ' + role?.name
+<form class="p-5" [formGroup]="form" (ngSubmit)="save()">
+    <div class="mb-3">
+        <p-panel [header]="'Relacion Rol - Permisos para el rol ' + role?.name">
+            <div class="mb-3 form-floating" formArrayName="permissions">
+                <div
+                    *ngFor="
+                        let permission of permissionsArray.controls;
+                        let i = index
                     "
+                    [formGroupName]="i"
+                    class="mb-2"
                 >
-                    <div class="mb-3 form-floating">
-                        @for (permission of permissions; track $index) {
-                        <div>
-                            <p-checkbox
-                                [inputId]="permission.id.toString()"
-                                name="group"
-                                [value]="permission"
-                                formControlName="permissions"
-                            />
-                            <label [for]="permission.id" class="ml-2">
-                                {{ permission.name }}
-                            </label>
-                        </div>
-                        }
-                    </div>
-                </p-panel>
+                    <p-checkbox
+                        class="mx-2"
+                        [inputId]="'permission-' + permission.get('permission')?.value.id"
+                        formControlName="checked"
+                        binary="true"
+                    ></p-checkbox>
+                    <label class="mx-2" [for]="'permission-' + permission.get('permission')?.value.id" class="ml-2"> {{ permission.get('permission')?.value.name }} </label>
+                </div>
             </div>
-
-            <div class="mb-3">
-                <button class="btn btn-success float-end" type="submit">
-                    {{ role?.id ? "Actualizar" : "Crear" }}
-                </button>
-            </div>
-        </form>
+        </p-panel>
     </div>
-</div>
 
-<pre>
-    {{ this.form.value | json }}
-</pre>
+    <div class="mb-3">
+        <button class="btn btn-success float-end" type="submit">
+            {{ role?.id ? "Actualizar" : "Crear" }}
+        </button>
+    </div>
+</form>
+
+<pre>{{ form.value | json }}</pre>
