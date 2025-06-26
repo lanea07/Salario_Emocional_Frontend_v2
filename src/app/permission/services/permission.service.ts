@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Permission } from 'src/app/permission/interfaces/permission.interface';
 import { DataTable } from '../../shared/interfaces/DataTablesResponse.interface';
 import { ApiV1Response } from '../../shared/interfaces/ApiV1Response.interface';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Injectable( {
   providedIn: 'root'

@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, switchMap } from 'rxjs';
 
+import { LoadingBarService } from '@ngx-loading-bar/core';
 import { Permission } from '../../../permission/interfaces/permission.interface';
 import { PermissionService } from '../../../permission/services/permission.service';
 import { Role } from '../../interfaces/role.interface';
 import { RoleService } from '../../services/role.service';
+import { Table } from 'primeng/table';
 
 @Component( {
   selector: 'app-permissions-roles',
@@ -19,13 +21,17 @@ export class PermissionsRolesComponent {
     return this.form.get( 'permissions' ) as FormArray;
   }
 
-  public role?: Role;
-  public permissions?: Permission[];
+  public role!: Role;
   public form!: FormGroup;
+  public permissions!: Permission[];
+  private loader = this.lbs.useRef();
+  public loading: Boolean = true;
+  public selectedPermissions: any;
 
   public constructor (
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
+    private lbs: LoadingBarService,
     private permissionService: PermissionService,
     private roleService: RoleService,
   ) {
@@ -41,6 +47,8 @@ export class PermissionsRolesComponent {
   }
 
   private populateForm (): void {
+    this.loading = true;
+    this.loader.start();
     this.activatedRoute.params
       .pipe(
         switchMap( ( { id } ) => {
@@ -49,30 +57,36 @@ export class PermissionsRolesComponent {
           return forkJoin( [ roles, permissions ] );
         } )
       )
-      .subscribe( ( [ roles, permissions ] ) => {
-        this.role = roles.data[ 0 ];
-        this.form.get('role_id')?.setValue(this.role.id);
-        this.permissions = permissions.data;
-        this.addCheckboxes();
+      .subscribe( {
+        next: ( [ roles, permissions ] ) => {
+          this.loader.stop();
+          this.loading = false;
+          this.role = roles.data[ 0 ];
+          this.form.get( 'role_id' )?.setValue( this.role.id );
+          this.permissions = permissions.data;
+          this.selectedPermissions = roles.data[ 0 ].permissions;
+
+        },
+        error: () => {
+          this.loader.stop();
+          this.loading = false;
+        }
       } );
   }
 
-  private addCheckboxes () {
-    this.permissions?.forEach( ( permission ) => this.addCheckbox( permission ) );
+  public reload (): void {
+    this.populateForm();
   }
 
-  private addCheckbox ( permission: Permission ) {
-    const isChecked = !!this.role?.permissions?.some( p => p.id === permission.id );
-
-    const group = this.fb.group( {
-      checked: [ isChecked ],
-      permission: [ permission ],
-    } );
-
-    this.permissionsArray.push( group );
+  public onGlobalFilter ( table: Table, event: Event ) {
+    table.filterGlobal( ( event.target as HTMLInputElement ).value, 'contains' );
   }
 
   public save () {
-
+    this.roleService.updateRolePermissions( this.role?.id, this.selectedPermissions )
+      .subscribe( {
+        next: ( response ) => console.log( response ),
+        error: ( response ) => console.log( response )
+      } );
   }
 }

@@ -19,7 +19,7 @@ import { ApiV1Response } from '../../../shared/interfaces/ApiV1Response.interfac
 } )
 export class CreateComponent {
 
-  benefitDetail?: Benefit;
+  benefitDetail?: BenefitDetail;
   createForm: FormGroup = this.fb.group( {
     name: [ '', [ Validators.required, Validators.minLength( 5 ) ] ],
     time_hours: [ '', [ Validators.required, this.validatorService.minIfFilled( 1 ) ] ]
@@ -74,7 +74,7 @@ export class CreateComponent {
       )
       .subscribe( {
         next: ( benefitDetail ) => {
-          const extractBenefitDetail = Object.values( benefitDetail )[ 0 ];
+          const extractBenefitDetail = Object.values( benefitDetail.data )[ 0 ];
           this.benefitDetail = extractBenefitDetail;
           this.createForm.get( 'name' )?.setValue( extractBenefitDetail.name );
           this.createForm.get( 'time_hours' )?.setValue( extractBenefitDetail.time_hours );

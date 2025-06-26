@@ -1,39 +1,60 @@
-<form class="p-5" [formGroup]="form" (ngSubmit)="save()">
-    <div class="mb-3">
-        <p-panel [header]="'Relación Rol - Permisos para el rol ' + role?.name">
-            <div class="mb-3 form-floating" formArrayName="permissions">
-                @for (group of permissionsArray.controls; track $index) {
+<p-toolbar styleClass="mb-6">
+    <ng-template #start>
+        <p-iconfield iconPosition="left" class="ml-auto">
+            <p-inputicon>
+                <i class="pi pi-search"></i>
+            </p-inputicon>
+            <input
+                pInputText
+                type="text"
+                (input)="onGlobalFilter(dt, $event)"
+                placeholder="Search keyword"
+            />
+        </p-iconfield>
+        <div>
+            <p-button
+                pTooltip="Actualizar listado"
+                type="button"
+                icon="fa fa-solid fa-refresh"
+                (click)="reload()"
+                text
+            />
+        </div>
+    </ng-template>
+    <ng-template #end>
+        <p-button
+            severity="success"
+            label="Guardar"
+            icon="fa fa-solid fa-lock"
+            (onClick)="save()"
+        />
+    </ng-template>
+</p-toolbar>
 
-                <!-- TODO: Try to change checkboxes to PrimeNg table with checkboxes and search https://primeng.org/table -->
-                <div [formGroupName]="$index" class="mb-2">
-                    <p-checkbox
-                        class="mx-2"
-                        [inputId]="
-                            'permission-' + group.get('permission')?.value.id
-                        "
-                        formControlName="checked"
-                        binary="true"
-                    ></p-checkbox>
-
-                    <label
-                        class="mx-2"
-                        [for]="
-                            'permission-' + group.get('permission')?.value.id
-                        "
-                    >
-                        {{ group.get("permission")?.value.name }}
-                    </label>
-                </div>
-                }
-            </div>
-        </p-panel>
-    </div>
-
-    <div class="mb-3">
-        <button class="btn btn-success float-end" type="submit">
-            {{ role?.id ? "Actualizar" : "Crear" }}
-        </button>
-    </div>
-</form>
-
-<pre>{{ form.value | json }}</pre>
+<p-table
+    #dt
+    dataKey="name"
+    [globalFilterFields]="['name']"
+    [value]="permissions"
+    [paginator]="true"
+    [rows]="5"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [loading]="loading"
+    [(selection)]="selectedPermissions"
+>
+    <ng-template #header>
+        <tr>
+            <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+            <th>Name</th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-permission>
+        <tr>
+            <td>
+                <p-tableCheckbox [value]="permission" />
+            </td>
+            <td>{{ permission.name }}</td>
+        </tr>
+    </ng-template>
+</p-table>

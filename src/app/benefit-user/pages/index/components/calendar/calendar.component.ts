@@ -17,17 +17,16 @@ import { BenefitUserService } from 'src/app/benefit-user/services/benefit-user.s
 
 
 @Component( {
-    selector: 'calendar-component',
-    templateUrl: './calendar.component.html',
-    styles: [],
-    standalone: false
+  selector: 'calendar-component',
+  templateUrl: './calendar.component.html',
+  styles: [],
+  standalone: false
 } )
 export class CalendarComponent implements OnChanges, AfterViewInit {
 
   @Input() data: BenefitUserElement[] = [];
   @Input() year: number = new Date().getFullYear().valueOf();
   @ViewChild( 'calendar' ) calendar!: FullCalendarComponent;
-  isAdmin: boolean = false;
   modalData?: any;
   visible: boolean = false;
 
@@ -60,21 +59,12 @@ export class CalendarComponent implements OnChanges, AfterViewInit {
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private authService: AuthService,
+    public authService: AuthService,
     private benefitUserService: BenefitUserService,
     private cs: ConfirmationService,
     private elementRef: ElementRef,
     private ms: MessageService,
   ) {
-    this.authService.validarActions([1])
-      .subscribe( {
-        next: ( resp: any ) => {
-          this.isAdmin = resp.admin;
-        },
-        error: ( err ) => {
-          this.ms.add( { severity: 'error', summary: 'Error', detail: err.error.message } );
-        }
-      } );
   }
 
   ngOnChanges ( changes: SimpleChanges ): void {

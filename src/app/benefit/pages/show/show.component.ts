@@ -10,22 +10,21 @@ import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
 
 @Component( {
-    selector: 'benefit-show',
-    templateUrl: './show.component.html',
-    styles: [],
-    standalone: false
+  selector: 'benefit-show',
+  templateUrl: './show.component.html',
+  styles: [],
+  standalone: false
 } )
 export class ShowComponent {
 
   benefit?: Benefit;
   details: any;
   filePoliticas: string = "";
-  isAdmin: boolean = false;
   loaded: boolean = false;
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private authService: AuthService,
+    public authService: AuthService,
     private benefitService: BenefitService,
     public helpers: HelpersService,
     private ms: MessageService,
@@ -43,12 +42,6 @@ export class ShowComponent {
           this.filePoliticas = this.benefit?.politicas_path ? this.benefit.politicas_path : '';
           this.loaded = true;
         },
-        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
-      } );
-
-    this.authService.validarActions([1])
-      .subscribe( {
-        next: ( isAdmin: any ) => this.isAdmin = isAdmin.admin,
         error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }

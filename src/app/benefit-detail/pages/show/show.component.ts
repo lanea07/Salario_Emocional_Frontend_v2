@@ -9,20 +9,19 @@ import { BenefitDetail } from '../../interfaces/benefit-detail.interface';
 import { BenefitDetailService } from '../../services/benefit-detail.service';
 
 @Component( {
-    selector: 'benefitdetail-show',
-    templateUrl: './show.component.html',
-    styles: [],
-    standalone: false
+  selector: 'benefitdetail-show',
+  templateUrl: './show.component.html',
+  styles: [],
+  standalone: false
 } )
 export class ShowComponent {
 
   benefitDetail?: BenefitDetail;
-  isAdmin!: boolean;
   loaded: boolean = false;
 
   constructor (
     public activatedRoute: ActivatedRoute,
-    private authService: AuthService,
+    public authService: AuthService,
     private benefitDetailService: BenefitDetailService,
     private router: Router,
     private ms: MessageService,
@@ -42,14 +41,6 @@ export class ShowComponent {
           this.router.navigate( [ 'basic', 'benefit-employee' ] );
           this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
         }
-      } );
-
-    this.authService.validarActions([1])
-      .subscribe( {
-        next: ( isAdmin: any ) => {
-          this.isAdmin = isAdmin.admin;
-        },
-        error: ( { error } ) => this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
       } );
   }
 

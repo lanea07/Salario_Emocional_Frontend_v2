@@ -13,10 +13,10 @@ import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
 
 @Component( {
-    selector: 'benefit-create',
-    templateUrl: './create.component.html',
-    styles: [],
-    standalone: false
+  selector: 'benefit-create',
+  templateUrl: './create.component.html',
+  styles: [],
+  standalone: false
 } )
 export class CreateComponent implements OnInit {
 
@@ -74,13 +74,13 @@ export class CreateComponent implements OnInit {
       )
       .subscribe( {
         next: benefit => {
-          const extractBenefit = Object.values( benefit )[ 0 ];
+          const extractBenefit = Object.values( benefit.data )[ 0 ];
           this.benefit = extractBenefit;
           this.createForm.get( 'name' )?.setValue( extractBenefit.name );
           if ( this.benefitDetailFormGroup ) {
             Object.keys( this.benefitDetailFormGroup.controls ).forEach( ( key: string ) => {
-              Object.values<Benefit>( extractBenefit.benefit_detail ).forEach( benefitDetail => {
-                if ( key === benefitDetail.id!.toString() ) {
+              Object.values<BenefitDetail>( extractBenefit.benefit_detail ).forEach( benefitDetail => {
+                if ( key == benefitDetail.id!.toString() ) {
                   this.benefitDetailFormGroup.get( key ).setValue( true );
                 }
               } );

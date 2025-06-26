@@ -16,10 +16,10 @@ import { User } from '../../interfaces/user.interface';
 import { UserService } from '../../services/user.service';
 
 @Component( {
-    selector: 'user-create',
-    templateUrl: './create.component.html',
-    styles: [],
-    standalone: false
+  selector: 'user-create',
+  templateUrl: './create.component.html',
+  styles: [],
+  standalone: false
 } )
 export class CreateComponent implements OnInit {
 
@@ -95,9 +95,8 @@ export class CreateComponent implements OnInit {
           this.roles = roles.data;
           this.loaded = true;
           this.createForm.addControl( "rolesFormGroup", this.buildChecksFormGroup( roles.data ) );
-          this.user = user?.data[0];
+          this.user = user?.data[ 0 ];
           if ( this.user ) {
-            this.user = Object.values( this.user )[ 0 ];
             this.createForm.get( 'name' )?.setValue( this.user!.name );
             this.createForm.get( 'email' )?.setValue( this.user!.email );
             let dependency = this.dependencyService.flattenDependency( dependencies.data[ 0 ] ).find( ( dependency: any ) => dependency.id === this.user!.dependency.id );
@@ -163,7 +162,7 @@ export class CreateComponent implements OnInit {
         .subscribe(
           {
             next: ( userCreated ) => {
-              this.router.navigate( [ `../show`, userCreated.data[0].id ], { relativeTo: this.activatedRoute } )
+              this.router.navigate( [ `../show`, userCreated.data[ 0 ].id ], { relativeTo: this.activatedRoute } )
               this.ms.add( { severity: 'success', summary: 'Creado' } )
             },
             error: ( { error } ) => {

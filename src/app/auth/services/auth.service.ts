@@ -13,9 +13,7 @@ export class AuthService {
 
   public userInformation: BehaviorSubject<AuthData | null> = new BehaviorSubject<AuthData | null>( null );
 
-  constructor (
-    private http: HttpClient
-  ) {
+  constructor ( private http: HttpClient ) {
   }
 
   public setUser ( user: AuthData ) {
@@ -48,9 +46,8 @@ export class AuthService {
       );
   }
 
-  validarActions ( actions: number[] ): Observable<boolean> {
-    const userActions = this.getuser()?.actions || [];
-    return of( actions.some( action => userActions.includes( action ) ) );
+  validarActions ( actions: number[] ): boolean {
+    return actions.some( action => this.getuser()?.actions.includes( action ) );
   }
 
   validarRequirePassChange (): Observable<ApiV1Response<boolean>> {
@@ -76,7 +73,7 @@ export class AuthService {
     return this.http.post<boolean>( url, formValues, { withCredentials: true } )
   }
 
-  public getUserData(): Observable<ApiV1Response<AuthData>> {
-    return this.http.get<ApiV1Response<AuthData>>('/auth/user');
+  public getUserData (): Observable<ApiV1Response<AuthData>> {
+    return this.http.get<ApiV1Response<AuthData>>( '/auth/user' );
   }
 }
