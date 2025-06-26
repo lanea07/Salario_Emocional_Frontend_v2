@@ -24,10 +24,10 @@ import { BenefitUserService } from '../../services/benefit-user.service';
 import { AuthService } from '../../../auth/services/auth.service';
 
 @Component( {
-    selector: 'benefitemployee-create',
-    templateUrl: './create.component.html',
-    styles: [],
-    standalone: false
+  selector: 'benefitemployee-create',
+  templateUrl: './create.component.html',
+  styles: [],
+  standalone: false
 } )
 export class CreateComponent implements OnInit {
 
@@ -145,13 +145,13 @@ export class CreateComponent implements OnInit {
     } )
       .subscribe( {
         next: ( { benefits, benefitUser, user } ) => {
-          this.user = Object.values( user )[ 0 ];
+          this.user = Object.values( user.data )[ 0 ];
           this.createForm.get( 'selectedNodes' )?.enable();
           this.benefits = benefits.data;
           this.createForm.get( 'benefit_id' )?.enable();
           this.userAndBenefitSpinner = false;
           if ( benefitUser ) {
-            this.currentUserBenefits = Object.values( benefitUser )[ 0 ];
+            this.currentUserBenefits = Object.values( benefitUser.data )[ 0 ];
             let simulatedEvent = {
               originalEvent: {
                 target: {
@@ -267,7 +267,7 @@ export class CreateComponent implements OnInit {
             this.ms.add( { severity: 'error', summary: 'Error', detail: error.message } )
           }
         }
-    );
+      );
   }
 
   initCalendar ( event: any ) {

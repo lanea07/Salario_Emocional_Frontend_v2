@@ -9,10 +9,10 @@ import { BenefitUser } from '../../interfaces/benefit-user.interface';
 import { BenefitUserService } from '../../services/benefit-user.service';
 
 @Component( {
-    selector: 'benefitemployee-show',
-    templateUrl: './show.component.html',
-    styles: [],
-    standalone: false
+  selector: 'benefitemployee-show',
+  templateUrl: './show.component.html',
+  styles: [],
+  standalone: false
 } )
 export class ShowComponent implements OnInit {
 
@@ -39,7 +39,7 @@ export class ShowComponent implements OnInit {
       .subscribe(
         {
           next: benefitUser => {
-            this.benefitUser = Object.values( benefitUser )[ 0 ];
+            this.benefitUser = Object.values( benefitUser.data )[ 0 ];
             this.loader.complete();
             this.loaded = true;
           },
