@@ -63,8 +63,8 @@ export class MyPendingBenefitsComponent implements OnInit {
         },
         autoWidth: true,
         columns: [
-          { title: 'Beneficio', data: 'benefit_user[0].benefits.name' },
-          { title: 'Detalle', data: 'benefit_user[0].benefit_detail.name' },
+          { title: 'Beneficio', data: 'benefits.name' },
+          { title: 'Detalle', data: 'benefit_detail.name' },
           {
             title: 'Solicitado',
             data: function ( data: any, type: any, full: any ) {
@@ -74,7 +74,7 @@ export class MyPendingBenefitsComponent implements OnInit {
           {
             title: 'Fecha y hora de redención',
             data: function ( data: any, type: any, full: any ) {
-              return new Date( data.benefit_user[0].benefit_begin_time ).toLocaleString( 'es-CO' );
+              return new Date( data.benefit_begin_time ).toLocaleString( 'es-CO' );
             }
           },
           {

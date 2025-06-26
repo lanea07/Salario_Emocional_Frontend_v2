@@ -48,7 +48,7 @@ export class PassChangeComponent {
   ) {
     this.authService.validarRequirePassChange()
       .subscribe( {
-        next: ( resp ) => resp ? this.showScreen = true : this.router.navigate( [ 'basic', 'benefit-employee' ] )
+        next: ( resp ) => resp.data ? this.showScreen = true : this.router.navigate( [ 'basic', 'benefit-employee' ] )
       } );
   }
 
