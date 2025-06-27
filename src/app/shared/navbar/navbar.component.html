@@ -1,50 +1,94 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top shadow-sm">
-  <div class="container-fluid">
-    <a class="navbar-brand">
-      <img src="./assets/images/app_logo.png" height="24px;">
-      <span class="navbar-brand ms-3">Salario Emocional</span>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/basic/benefit-employee/create" routerLinkActive="active">Redimir nuevo</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/basic/benefit-employee/index" routerLinkActive="active">
-            Panel de Información
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/basic/benefit/index" routerLinkActive="active">
-            Beneficios
-          </a>
-        </li>
-      </ul>
-      <ul class="navbar-nav mx-lg-1">
-        <li class="nav-item dropdown">
-          <a [ngClass]="{'text-bg-danger rounded-3': isSimulated}" class="nav-link dropdown-toggle" href="#"
-            role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            {{ isSimulated ? user?.name + ' (Simulado)' : user?.name }}
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a routerLink="/basic/user-preferences/index" class="dropdown-item">Mi Perfil</a></li>
-            @if (isAdmin) {
-              <li>
-                <a class="dropdown-item" routerLink="/admin">Panel Administrativo</a>
-              </li>
-            }
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item text-danger" (click)="logout()">Cerrar Sesión</a></li>
-          </ul>
-        </li>
-      </ul>
+    <div class="container-fluid">
+        <a class="navbar-brand">
+            <img src="./assets/images/app_logo.png" height="24px;" />
+            <span class="navbar-brand ms-3">Salario Emocional</span>
+        </a>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        routerLink="/basic/benefit-employee/create"
+                        routerLinkActive="active"
+                        >Redimir nuevo</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        routerLink="/basic/benefit-employee/index"
+                        routerLinkActive="active"
+                    >
+                        Panel de Información
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        routerLink="/basic/benefit/index"
+                        routerLinkActive="active"
+                    >
+                        Beneficios
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mx-lg-1">
+                <li class="nav-item dropdown">
+                    <a
+                        [ngClass]="{ 'text-bg-danger rounded-3': isSimulated }"
+                        class="nav-link dropdown-toggle"
+                        href="#"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        {{
+                            isSimulated
+                                ? user?.name + " (Simulado)"
+                                : user?.name
+                        }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a
+                                routerLink="/basic/user-preferences/index"
+                                class="dropdown-item"
+                                >Mi Perfil</a
+                            >
+                        </li>
+                        @if (isAdmin) {
+                        <li>
+                            <a class="dropdown-item" routerLink="/admin"
+                                >Panel Administrativo</a
+                            >
+                        </li>
+                        }
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li>
+                            <a
+                                class="dropdown-item text-danger"
+                                (click)="logout()"
+                                >Cerrar Sesión</a
+                            >
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>
 <ngx-loading-bar [includeSpinner]="false" color="#C8102E"></ngx-loading-bar>

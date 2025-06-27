@@ -8,31 +8,47 @@
                 </h5>
             </div>
         </ng-template>
-        <form [formGroup]="settingsForm" (ngSubmit)="save()" class="mt-6 space-y-6">
+        <form
+            [formGroup]="settingsForm"
+            (ngSubmit)="save()"
+            class="mt-6 space-y-6"
+        >
             @for (setting of defaultSettings; track setting) {
             <div class="mb-3 row">
                 <div class="col-4 d-flex justify-content-end">
                     {{ setting.title }}
                     <div class="ms-2" pTooltip="{{ setting.description }}">
-                        <i class="fa-regular fa-circle-question fa-xs text-body-tertiary"></i>
+                        <i
+                            class="fa-regular fa-circle-question fa-xs text-body-tertiary"
+                        ></i>
                     </div>
                 </div>
                 <div class="col-8">
                     @if(setting.name === 'cant_combine_with'){
-                    <select [ngClass]="{'invalid': isValidField(setting.name)}" class="form-select"
-                        aria-label="Default select example" id='{{setting.name}}' name='{{setting.name}}'
-                        formControlName="{{setting.name}}" multiple>
+                    <select
+                        [ngClass]="{ invalid: isValidField(setting.name) }"
+                        class="form-select"
+                        aria-label="Default select example"
+                        id="{{ setting.name }}"
+                        name="{{ setting.name }}"
+                        formControlName="{{ setting.name }}"
+                        multiple
+                    >
                         @for (value of setting.values; track value) {
-                        <option [ngValue]='value'>{{value}}</option>
+                        <option [ngValue]="value">{{ value }}</option>
                         }
                     </select>
-                    }
-                    @else {
-                    <select [ngClass]="{'invalid': isValidField(setting.name)}" class="form-select"
-                        aria-label="Default select example" id='{{setting.name}}' name='{{setting.name}}'
-                        formControlName="{{setting.name}}">
+                    } @else {
+                    <select
+                        [ngClass]="{ invalid: isValidField(setting.name) }"
+                        class="form-select"
+                        aria-label="Default select example"
+                        id="{{ setting.name }}"
+                        name="{{ setting.name }}"
+                        formControlName="{{ setting.name }}"
+                    >
                         @for (value of setting.values; track value) {
-                        <option [ngValue]='value'>{{value}}</option>
+                        <option [ngValue]="value">{{ value }}</option>
                         }
                     </select>
                     }
@@ -41,8 +57,7 @@
             }
             <div class="flex items-center">
                 <button class="btn btn-primary d-flex" type="submit">
-                    Actualizar
-                    @if (!loaded) {
+                    Actualizar @if (!loaded) {
                     <div class="ms-1">
                         <i class="fa-solid fa-spinner fa-spin fa-xs"></i>
                     </div>

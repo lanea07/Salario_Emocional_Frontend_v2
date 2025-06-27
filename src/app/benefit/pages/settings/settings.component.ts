@@ -10,10 +10,10 @@ import { Benefit } from '../../interfaces/benefit.interface';
 import { BenefitService } from '../../services/benefit.service';
 
 @Component( {
-    selector: 'settings',
-    templateUrl: './settings.component.html',
-    styles: ``,
-    standalone: false
+  selector: 'settings',
+  templateUrl: './settings.component.html',
+  styles: ``,
+  standalone: false
 } )
 export class SettingsComponent {
 
@@ -34,14 +34,14 @@ export class SettingsComponent {
       benefitSettings: this.activatedRoute.params.pipe(
         switchMap( ( { id } ) => this.benefitService.show( id ) ),
         switchMap( ( benefit ) => {
-          this.benefit = Object.values( benefit )[ 0 ];
+          this.benefit = Object.values( benefit.data )[ 0 ];
           return this.benefitService.showSettings( this.benefit!.id )
         } )
       )
     } )
       .subscribe( {
         next: ( { settingsDefault, benefitSettings } ) => {
-          let defaultBenefitService: any = settingsDefault;
+          let defaultBenefitService: any = settingsDefault.data;
           let keys = Object.keys( defaultBenefitService[ 0 ] );
           this.defaultSettings = keys.map( ( key: any ) => {
             return {
@@ -52,7 +52,7 @@ export class SettingsComponent {
             }
           } );
 
-          let CurrentUserSettings: any = benefitSettings;
+          let CurrentUserSettings: any = benefitSettings.data;
           keys = Object.keys( CurrentUserSettings[ 0 ] );
           this.benefitSettings = keys.map( ( key: any ) => {
             return {
@@ -63,11 +63,11 @@ export class SettingsComponent {
             }
           } );
 
-          if (Array.isArray(settingsDefault.data) && settingsDefault.data.length > 0) {
-            Object.keys(settingsDefault.data[0]).forEach((preference: any) => {
-              let value = this.benefitSettings?.find((userPreference: any) => userPreference.name === preference)?.values;
-              this.settingsForm.addControl(preference, new FormControl(value, [Validators.required]));
-            });
+          if ( Array.isArray( settingsDefault.data ) && settingsDefault.data.length > 0 ) {
+            Object.keys( settingsDefault.data[ 0 ] ).forEach( ( preference: any ) => {
+              let value = this.benefitSettings?.find( ( userPreference: any ) => userPreference.name === preference )?.values;
+              this.settingsForm.addControl( preference, new FormControl( value, [ Validators.required ] ) );
+            } );
           }
           this.loaded = true;
         },

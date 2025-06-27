@@ -52,19 +52,19 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular/build": "^19.2.11",
+    "@angular-devkit/build-angular": "^19.2.5",
     "@angular/cli": "~19.2.11",
     "@angular/compiler-cli": "^19.2.10",
     "@angular/localize": "^19.2.10",
     "@types/datatables.net-buttons": "^1.4.10",
-    "@types/jasmine": "~4.3.0",
+    "@types/jasmine": "~5.1.0",
     "@types/jquery": "^3.5.29",
-    "jasmine-core": "~4.6.0",
+    "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "*"
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.7.2"
   }
 }
