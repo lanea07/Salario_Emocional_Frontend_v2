@@ -12,7 +12,7 @@ import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 
 @NgModule( {
   declarations: [
-    LoginComponent,
+    // LoginComponent,
     MainComponent,
     PassChangeComponent,
     ForgotPasswordComponent

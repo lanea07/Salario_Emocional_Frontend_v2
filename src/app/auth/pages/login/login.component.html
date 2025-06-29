@@ -1,14 +1,9 @@
-@if (showScreen) {
+@if(showScreen){
 <section
     class="align-items-center bg-gradient d-flex flex-column p-5 rounded-4 shadow-lg"
 >
     <img src="./assets/images/app_logo.png" width="65" class="pb-5" />
-    <form
-        class="w-100"
-        autocomplete="off"
-        [formGroup]="loginForm"
-        (ngSubmit)="login()"
-    >
+    <form class="w-100" autocomplete="off" [formGroup]="loginForm">
         <div class="form-floating mb-3">
             <input
                 type="email"
@@ -51,6 +46,7 @@
                 type="submit"
                 class="btn btn-outline-danger"
                 [disabled]="disableLoginBtn"
+                (click)="login()"
             >
                 Login
             </button>
