@@ -1,8 +1,16 @@
-<form [formGroup]="viewBenefitUser" (ngSubmit)="downloadReport()">
-    <div class="input-group">
-        <span class="input-group-text">Año</span>
-        <p-datepicker formControlName="years" view="year" dateFormat="yy" inputId="yearpicker"
-            (onSelect)="emit()"></p-datepicker>
-        <button pButton type="submit" class="btn btn-outline-primary">Descargar</button>
-    </div>
+<form
+    [formGroup]="viewBenefitUser"
+    (ngSubmit)="downloadReport()"
+    class="d-flex flex-col"
+>
+    <p-datepicker
+        formControlName="years"
+        view="year"
+        dateFormat="yy"
+        inputId="yearpicker"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        (onSelect)="emit()"
+    />
+    <p-button type="submit" class="mx-2" label="Descargar" />
 </form>

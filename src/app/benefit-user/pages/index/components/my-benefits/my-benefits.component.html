@@ -1,14 +1,19 @@
 <p-toolbar styleClass="mb-4">
-  <year-selector (yearChanged)="getBenefitDetail($event)"></year-selector>
+    <year-selector
+        (yearChanged)="getBenefitDetail($event)"
+        class="d-flex w-100 justify-content-around justify-content-md-start"
+    />
 </p-toolbar>
 @if (!loaded) {
 <skeleton></skeleton>
-}
-@else {
+} @else {
 <div class="row mb-3">
-  <benefit-detail-container [data]="benefitUser"></benefit-detail-container>
+    <benefit-detail-container [data]="benefitUser"></benefit-detail-container>
 </div>
 <div class="row mb-3">
-  <calendar-component [year]="year!" [data]="calendarData"></calendar-component>
+    <calendar-component
+        [year]="year!"
+        [data]="calendarData"
+    ></calendar-component>
 </div>
 }
