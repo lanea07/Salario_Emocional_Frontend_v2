@@ -11,7 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { tokenInterceptor } from './shared/interceptors/token.interceptor';
+import { httpInterceptor } from './shared/interceptors/token.interceptor';
 import { PrimengModule } from './primeng/primeng.module';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
@@ -26,7 +26,7 @@ registerLocaleData( es );
   ],
   imports: [
     AppRoutingModule,
-    DataTablesModule, 
+    DataTablesModule,
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
@@ -35,19 +35,19 @@ registerLocaleData( es );
   ],
   providers: [
     provideHttpClient(
-      withInterceptors( [ tokenInterceptor ] ),
+      withInterceptors( [ httpInterceptor ] ),
     ),
     { provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: { locale: 'es', dateFormat: 'medium', timezone: 'es-CO' } },
     ConfirmationService,
     MessageService,
-    providePrimeNG({
+    providePrimeNG( {
       theme: {
         preset: Lara,
         options: {
           darkModeSelector: false
         }
       }
-    })
+    } )
   ],
   bootstrap: [ AppComponent ],
 } )
